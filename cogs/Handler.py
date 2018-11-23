@@ -23,8 +23,6 @@ class Error_Handler:
             return await ctx.send(f"I am missing `{error.missing_perms[0].replace('_', ' ')}` permission(s) to run this command")
         elif isinstance(error, commands.MissingPermissions):
             return await ctx.send(f"You are missing `{error.missing_perms[0].replace('_', ' ')}` permission(s) to run this command")
-        elif isinstance(error, commands.MissingRequiredArgument):
-            return await ctx.send(f"`{error.param}` is a required argument")
         elif isinstance(error, commands.CheckFailure):
             return await ctx.send(f"You do not have permissions to use the `{ctx.command}` command")
         else:
