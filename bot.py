@@ -41,6 +41,7 @@ class PewDiePieBot(commands.AutoShardedBot):
             embed.set_author(name=f"Thanks for inviting me")
             embed.set_thumbnail(url=self.user.avatar_url)
             embed.add_field(name="Getting Started", value=f"My Prefix is `p.` and you can do `p.help` for an list of commands\nfor any Support, [Click Here]({config['server']})")
+            embed.add_field(name="Helping me", value="Although this isnt required, it would be appreciated of you upvote me at the following links\n[Upvote Me on Discord Bot List](https://discordbots.org/bot/508143906811019269/vote)\n[Upvote Me on Discord Bots Group](https://discordbots.group/bot/508143906811019269)")
             embed.set_footer(text=f"I use to have {len(self.guilds)-1} servers, thanks to you i now have {len(self.guilds)} servers")
             await guild.system_channel.send(embed=embed)
         except:
@@ -61,7 +62,7 @@ class PewDiePieBot(commands.AutoShardedBot):
 
 
     async def on_connect(self):
-        await self.change_presence(status=discord.Status.dnd, activity=discord.Streaming(name="Connecting to DB..", url="https://twitch.tv/dnd"))
+        await self.change_presence(status=discord.Status.dnd, activity=discord.Streaming(name="Connecting to DB.."))
         print("Connecting to the database")
         creds = config['db-creds']
         try:
