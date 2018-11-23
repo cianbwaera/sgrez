@@ -47,7 +47,7 @@ class PewDieCoin:
                 await self.bot.db.execute("UPDATE pdp_economy SET user_money= user_money - $1 WHERE user_id=$2", amt, ctx.author.id)
 
     @commands.command()
-    async def give(self, ctx, amt, user: discord.User):
+    async def give(self, ctx, amt :int, user: discord.User):
         author_count = await self.bot.db.fetchval("SELECT user_money FROM pdp_economy WHERE user_id=$1", ctx.author.id)
         if amt == 'all':
             amt = author_count
