@@ -29,7 +29,7 @@ class PewDieCoin:
 
     @commands.command()
     async def coinflip(self, ctx, side: str, amount_of_coins):
-        result = random.choice(['head', 'tail'])
+        result = random.choice(['h', 't'])
         amt = int(amount_of_coins)
         count = await self.bot.db.fetchval("SELECT user_money FROM pdp_economy WHERE user_id=$1", ctx.author.id)
         if amt == 'all':
