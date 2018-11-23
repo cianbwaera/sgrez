@@ -62,7 +62,7 @@ class PewDiePieBot(commands.AutoShardedBot):
 
 
     async def on_connect(self):
-        await self.change_presence(status=discord.Status.dnd, activity=discord.Streaming(name="Connecting to DB.."))
+        await self.change_presence(status=discord.Status.dnd, activity=discord.Listening(name="Connecting to DB.."))
         print("Connecting to the database")
         creds = config['db-creds']
         try:
