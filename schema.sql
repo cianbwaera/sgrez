@@ -11,4 +11,10 @@ CREATE TABLE IF NOT EXISTS bank (
 CREATE TABLE IF NOT EXISTS shop (
     role_id BIGINT UNIQUE NOT NULL,
     guild_id BIGINT PRIMARY KEY NOT NULL,
+);
+
+CREATE TABLE IF NOT EXISTS cooldowns (
+    user_id BIGINT PRIMARY KEY NOT NULL,
+    start_time INT NOT NULL,
+    end_time INT NOT NULL
 )
