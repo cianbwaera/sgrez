@@ -19,7 +19,7 @@ class PewDieCoin:
 
     @commands.cooldown(1, 14400, commands.BucketType.user)
     @commands.command()
-    async def daily(self, ctx):
+    async def timely(self, ctx):
         count = await self.bot.db.fetchval("SELECT user_money FROM pdp_economy WHERE user_id=$1", ctx.author.id)
         if count is None:
             count = 0
@@ -36,7 +36,7 @@ class PewDieCoin:
         if amt > count:
             return await ctx.send("Seems like you ")
         else:
-            result = random.choice(['heads', 'tails'])
+            result = random.choice(['h', 't'])
             if result == side:
                 await ctx.send(embed=discord.Embed(description=f"Congrats fellow Pewd, you won {amt} coins", color=discord.Color.green()))
                 await self.bot.db.execute("UPDATE pdp_economy SET user_money= user_money + $1 WHERE user_id=$2", amt, ctx.author.id)

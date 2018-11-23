@@ -30,24 +30,7 @@ class MainClass:
 
     @commands.command()
     async def help(self, ctx):
-        embed = discord.Embed(color=discord.Color(value=def_color))
-        embed.set_author(name="PewDiePie's Available Commands")
-        embed.set_thumbnail(url=self.bot.user.avatar_url)
-        embed.add_field(name="subcount", value="Gets The Subscriber Count of PewDiePie and T-Series")
-        embed.add_field(name=f"@{ctx.me} prefix", value="shows the current prefix in this server", inline=False)
-        embed.add_field(name="invite", value="Lets you invite me to your servers", inline=False)
-        embed.add_field(name="support", value=f"Sends you my [support server]({config['server']})", inline=False)
-        embed.add_field(name="ping", value="gives my websocket latency",inline=False)
-        embed.add_field(name="perms", value="give your current permissions in this guild", inline=False)
-        embed.add_field(name="uptime", value="how long the bot is on", inline=False)
-        embed.add_field(name="userinfo", value="gives the information of an user", inline=False)
-        embed.add_field(name="serverinfo", value="gives the information of the server your on",inline=False)
-        embed.add_field(name="poll", value="Create a poll for your server", inline=False)
-        embed.add_field(name="clear", value="Purges messages in the channel you invoked it in", inline=False)
-        embed.add_field(name="stats", value="Shows current bot info",inline=False)
-        embed.add_field(name="\uFEFF", value="[PewDiePie's YouTube](https://youtube.com/PewDiePie)", inline=False)
-        embed.set_footer(text=config['ver'], icon_url=self.bot.user.avatar_url)
-        await ctx.send(embed=embed)
+        await ctx.send(embed=discord.Embed(color=discord.Color(value=def_color), description=f"Click [Here](https://goo.gl/Mx7bJL) for all of my commands"))
         
     @commands.command()
     async def prefix(self, ctx):
