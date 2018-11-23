@@ -30,7 +30,7 @@ class MainClass:
 
     @commands.command()
     async def help(self, ctx):
-        await ctx.send(embed=discord.Embed(color=discord.Color(value=def_color), description=f"Click [Here](https://goo.gl/Mx7bJL) for all of my commands"))
+        await ctx.send(embed=discord.Embed(color=discord.Color(value=def_color), title="PewDiePie Help Page", description=f"[Click Here](https://goo.gl/Mx7bJL) for all of my commands"))
         
     @commands.command()
     async def prefix(self, ctx):
