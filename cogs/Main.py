@@ -89,7 +89,7 @@ class MainClass:
 
         cpu_stats = f"{psutil.cpu_percent()}%"
         vir_mem = f"{psutil.virtual_memory()[2]}%"
-        commands_used = await self.bot.db.fetchval("SELECT cmdcount FROM commands_used")
+        commands_used = await self.bot.db.fetchval("SELECT num FROM commands")
         dpy_ver = str(pkg_resources.get_distribution('discord.py').version)
         python_ver = str(platform.python_version())
         latency = str(round(self.bot.latency * 1000))

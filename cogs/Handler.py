@@ -35,7 +35,7 @@ class Error_Handler:
             pass
 
     async def on_command_completion(self, ctx):
-        await self.bot.db.execute("UPDATE commands_used SET cmdcount = cmdcount + 1")
+        await self.bot.db.execute("UPDATE commands SET num = num + 1")
 
 
 def setup(bot):
