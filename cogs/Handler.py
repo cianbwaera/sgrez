@@ -13,7 +13,7 @@ class Error_Handler:
             seconds = round(seconds, 2)
             hours, remainder = divmod(int(seconds), 3600)
             minutes, seconds = divmod(remainder, 60)
-            if ctx.command.name == 'daily':
+            if ctx.command.name == 'timely':
                 return await ctx.send(embed=discord.Embed(color=discord.Color(value=0xae2323), description=f'You already got your timely reward, try again in **{hours}**h, **{minutes}**m, and **{seconds}**s'))
             else:
                 return await ctx.send(f"You can run the {ctx.command} command again in **{hours}** hours, **{minutes}** minutes, and **{seconds}** seconds")                
