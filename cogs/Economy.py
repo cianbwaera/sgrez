@@ -28,9 +28,11 @@ class PewDieCoin:
         await ctx.send(f"Added `75` coins to your coin pouch, your current amount is now `{after_money}` coins")
 
     @commands.command()
-    async def coinflip(self, ctx, side: str, amount_of_coins: int):
+    async def coinflip(self, ctx, side: str, amount_of_coins):
         amt = amount_of_coins
         count = await self.bot.db.fetchval("SELECT user_money FROM pdp_economy WHERE user_id=$1", ctx.author.id)
+        if amt == 'all':
+            amt = count
         if count is None:
             count = 0
         if amt > count:
@@ -45,8 +47,10 @@ class PewDieCoin:
                 await self.bot.db.execute("UPDATE pdp_economy SET user_money= user_money - $1 WHERE user_id=$2", amt, ctx.author.id)
 
     @commands.command()
-    async def give(self, ctx, amt: int, user: discord.User):
+    async def give(self, ctx, amt, user: discord.User):
         author_count = await self.bot.db.fetchval("SELECT user_money FROM pdp_economy WHERE user_id=$1", ctx.author.id)
+        if amt == 'all':
+            amt = author_count
         if author_count is None:
             author_count = 0
         if user.bot:
