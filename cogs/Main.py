@@ -102,6 +102,7 @@ class MainClass:
         embed.add_field(name="Bot Info", value=f"I have been running for approx. **{days}** days, **{hours}** hours, **{minutes}** minutes, and **{seconds}** seconds\nI have {len(self.bot.guilds)} servers\n{commands_used} commands were used in my guilds", inline=False)
         embed.add_field(name="Versions:", value=f"PewDiePie's Version: {config['ver']}\nDiscord.py Version: {dpy_ver}\nPython Version: {python_ver}", inline=False)
         embed.add_field(name="System Info:", value=f"I am using {cpu_stats} of my CPU with a latency of {latency}ms and {vir_mem} of my memory has been used", inline=False)
+        embed.add_field(name="Support Us", value="[Upvote Me on Discord Bot List](https://discordbots.org/bot/508143906811019269/vote)\n[Upvote Me on Discord Bots Group](https://discordbots.group/bot/508143906811019269)", inline=False)
         embed.add_field(name="Updates", value=f"```fix\n[PewDiePie:{gh_branch}] | [{commit}]:\n{gh['commit']['author']['name']} - {message}\n```")
         await ctx.send(embed=embed)
 

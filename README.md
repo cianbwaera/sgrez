@@ -42,7 +42,7 @@ join the [Support Server](https://discord.gg/vtJJmWQ)
 | Command       | Usage                                    | Information                                                                    |
 | ------------- | ---------------------------------------- | ------------------------------------------------------------------------------ |
 | `balance`     | `p.balance` or `p.bank` or `p.$`         | Gets how much coins you have in your pouch                                     |
-| `daily`       | `p.timely`                               | Get 75 coins each 4 hours                                                      |
+| `timely`      | `p.timely`                               | Get 75 coins each 4 hours                                                      |
 | `coinflip`    | `p.coinflip (h or t) (amount to gamble)` | Flips a coin, you either win that amount or lose that amount                   |
 | ALPHA: `give` | `p.give (amount) @User#1234`             | PewDiePie gives away a specific amount of coins away to that user (No Refunds) |
 
