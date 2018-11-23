@@ -29,16 +29,16 @@ class PewDieCoin:
 
     @commands.command()
     async def coinflip(self, ctx, side: str, amount_of_coins):
-        amt = amount_of_coins
+        result = random.choice(['head', 'tail'])
+        amt = int(amount_of_coins)
         count = await self.bot.db.fetchval("SELECT user_money FROM pdp_economy WHERE user_id=$1", ctx.author.id)
         if amt == 'all':
             amt = count
         if count is None:
             count = 0
         if amt > count:
-            return await ctx.send("Seems like you ")
+            return await ctx.send("Seems like you don't have enough coin")
         else:
-            result = random.choice(['h', 't'])
             if result == side:
                 await ctx.send(embed=discord.Embed(description=f"Congrats fellow Pewd, you won {amt} coins", color=discord.Color.green()))
                 await self.bot.db.execute("UPDATE pdp_economy SET user_money= user_money + $1 WHERE user_id=$2", amt, ctx.author.id)
