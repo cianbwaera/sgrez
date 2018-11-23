@@ -17,4 +17,4 @@ CREATE TABLE IF NOT EXISTS cooldowns (
     user_id BIGINT PRIMARY KEY NOT NULL,
     start_time INT NOT NULL,
     end_time INT NOT NULL
-);
+)
