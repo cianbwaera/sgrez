@@ -2,6 +2,7 @@ import discord
 import asyncio
 import asyncpg
 import random
+from datetime import datetime, timedelta
 from discord.ext import commands
 # nothing rn
 
@@ -10,10 +11,6 @@ class PewDieCoin:
     def __init__(self, bot):
         self.bot = bot
 
-
-    """async def cooldown(self, user : discord.Member, seconds : int):
-        await self.bot.db.execute("INSERT INTO cooldowns(user_id, start_time, end_time) VALUES ($1, $2, $3)")"""
-
     @commands.command(aliases=['$', 'balance'])
     async def bank(self, ctx):
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
@@ -21,6 +18,7 @@ class PewDieCoin:
             count = 0
         await ctx.send(f"You currently have `{count}` coins")
 
+    @commands.cooldown(1, 14400, commands.BucketType.user)
     @commands.command()
     async def timely(self, ctx):
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
