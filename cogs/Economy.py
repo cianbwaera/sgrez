@@ -2,7 +2,6 @@ import discord
 import asyncio
 import asyncpg
 import random
-from datetime import datetime, timedelta
 from discord.ext import commands
 # nothing rn
 
@@ -28,7 +27,7 @@ class PewDieCoin:
         after_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         await ctx.send(f"Added `75` coins to your coin pouch, your current amount is now `{after_money}` coins")
 
-    @commands.command()
+    @commands.command(alias='cf')
     async def coinflip(self, ctx, side: str, amount_of_coins):
         result = random.choice(['h', 't'])
         amt = amount_of_coins
