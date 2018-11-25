@@ -82,7 +82,7 @@ class PewDieCoin:
                                          DO UPDATE 
                                          SET user_money = $3 + $2
                                          """, user.id, amt, current_money)
-            await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"I have given {user.mention} `{amt}` coins, You now have {current_money}"))
+            await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"I have given {user.mention} `{amt}` coins"))
 
     """@commands.is_owner()
     @commands.group()
