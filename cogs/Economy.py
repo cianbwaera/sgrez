@@ -83,7 +83,7 @@ class PewDieCoin:
             return await ctx.send(r"Why, why are you trying to give money to your self ¯\_(ツ)_/¯")
         else:
             await self.bot.db.execute("UPDATE bank SET user_money=user_money-$1 WHERE user_id=$2;", amount, ctx.author.id)
-            await self.bot.db.execute("INSERT INTO bank (user_id, user_money) VALUES ($1, $2) ON CONFLICT (bank.user_id) DO UPDATE SET user_money = user_money+$2;", user.id, amount)
+            await self.bot.db.execute("INSERT INTO bank (user_id, user_money) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET user_money = user_money+$2;", user.id, amount)
             author_coin = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1;", ctx.author.id)
             await ctx.send(embed=discord.Embed(description=f"Gave {amount} coins to {user.mention}, your current amount is now `{author_coin}` coins"))
 
