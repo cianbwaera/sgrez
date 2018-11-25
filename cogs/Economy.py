@@ -82,7 +82,7 @@ class PewDieCoin:
             user_coin = await self.bot.db.execute("SELECT user_money FROM bank WHERE user_id=$1", user.id)
             if user_coin is None:
                 user_coin = 0
-            await self.bot.db.execute("INSERT INTO bank (user_id, user_money) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET user_money = $2 + $3;", int(user.id), amount, int(user_coin))
+            await self.bot.db.execute("INSERT INTO bank (user_id, user_money) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET user_money = $2 + $3;", int(user.id), amount, user_coin)
             author_coin = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1;", ctx.author.id)
             await ctx.send(embed=discord.Embed(description=f"Gave {amount} coins to {user.mention}, your current amount is now `{author_coin}` coins"))
 
