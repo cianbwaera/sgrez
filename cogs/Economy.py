@@ -98,9 +98,9 @@ class PewDieCoin:
         emb = discord.Embed(color=discord.Color(value=0xae2323), title="Leaderboard for the Most Coins")
         c = 0
         for _ in stats:
-            e.add_field(name=str(self.bot.get_user(stats[c]['user_id']).name), value=f"coins - {stats[c]['user_money']}", inline=False)
+            emb.add_field(name=str(self.bot.get_user(stats[c]['user_id']).name), value=f"coins - {stats[c]['user_money']}", inline=False)
             c+=1
-        await ctx.send(embed=e)
+        await ctx.send(embed=emb)
         
 
 
