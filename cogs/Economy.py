@@ -82,7 +82,28 @@ class PewDieCoin:
                                          DO UPDATE 
                                          SET user_money = $3 + $2
                                          """, user.id, amt, current_money)
-            await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"I have given {user.mention} `{amt}` coins"))
+            await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"I have given {user.mention} `{amt}` coins, You now have {current_money}"))
+
+    @commands.is_owner()
+    @commands.group()
+    async def shop(self, ctx):
+        """if ctx.invoked_subcommand is None:
+            embed = discord.Embed(color=discord.Color.red(), title=f"{ctx.guild}'s Shop", description="Here you will find a list of roles to buy, if none specified, then your server doesnt have the shop set up")
+            embed.add_field"""
+        pass
+    
+    @commands.command()
+    async def leaderboard(self, ctx):
+        stats = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money DESC LIMIT 5")
+        emb = discord.Embed(color=discord.Color(value=0xae2323), title="Leaderboard for the Most Coins")
+        c = 0
+        for _ in stats:
+            e.add_field(name=str(self.bot.get_user(stats[c]['user_id']).name), value=f"coins - {stats[c]['user_money']}", inline=False)
+            c+=1
+        await ctx.send(embed=e)
+        
+
+
 
 
 def setup(bot):

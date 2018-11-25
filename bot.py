@@ -65,6 +65,7 @@ class PewDiePieBot(commands.AutoShardedBot):
         await self.change_presence(status=discord.Status.dnd, activity=discord.Game(name="Connecting to DB.."))
         print("Connecting to the database")
         creds = config['db-creds']
+        await self.handler()
         try:
             self.db = await asyncpg.create_pool(**creds)
             print("Connected!")
