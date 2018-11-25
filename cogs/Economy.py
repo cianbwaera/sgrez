@@ -54,36 +54,7 @@ class PewDieCoin:
                 await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"Lost to T-Series by {amt} coins"))
                 await self.bot.db.execute("UPDATE bank SET user_money= user_money - $1 WHERE user_id=$2", amt, ctx.author.id)
 
-    @commands.command()
-    async def give(self, ctx, amt, user: discord.User):
-        author_count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
-        if amt == 'all':
-            amt = author_count
-        else:
-            amt = int(amt)
-        if author_count is None:
-            author_count = 0
-        if user.bot:
-            return await ctx.send("Bot Accounts do not get money")
-        if user.id == ctx.author.id:
-            return await ctx.send("You cannot give money to yourself")
-        if amt > author_count:
-            return await ctx.send(f"You have insufficient funds to give to {user.name}")
-        else:
-            current_money = await self.bot.db.fetchval("SELECT * FROM bank WHERE user_id=$1", user.id)
-            if current_money is None:
-                current_money = 0
-            await self.bot.db.execute("""UPDATE bank 
-                                         SET user_money = user_money - $1
-                                         WHERE user_id = $2""", amt, ctx.author.id)
-
-            await self.bot.db.execute("""INSERT INTO bank (user_id, user_money)
-                                         VALUES ($1, $2) ON CONFLICT (user_id)
-                                         DO UPDATE 
-                                         SET user_money = $3 + $2
-                                         """, user.id, amt, current_money)
-            await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"I have given {user.mention} `{amt}` coins"))
-
+ 
     """@commands.is_owner()
     @commands.group()
     async def shop(self, ctx):
@@ -101,6 +72,34 @@ class PewDieCoin:
             emb.add_field(name=str(self.bot.get_user(stats[c]['user_id']).name), value=f"coins - {stats[c]['user_money']}", inline=False)
             c+=1
         await ctx.send(embed=emb)
+
+
+    @commands.command()
+    async def give(self, ctx, user : discord.Member, amount : int):
+        author_coin = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
+        if amount is not int and amount == "all":
+            amount = int(author_coin)
+        else: 
+            pass
+        if int(amount) > (author_coin):
+            return await ctx.send("Insufficient coins to give")
+        if user.bot:
+            return await ctx.send("Bot Accounts cannot have coins")
+        elif user.id == ctx.author.id:
+            return await ctx.send(r"Why, why are you trying to give money to your self ¯\_(ツ)_/¯")
+        else:
+            await self.bot.db.execute("UPDATE bank SET user_money=user_money-$1 WHERE user_id=$2", amount, ctx.author.id)
+            await self.bot.db.execute("INSERT INTO bank(user_id, user_money) VALUES($1,$2) ON CONFLICT (user_id) DO UPDATE SET user_money=user_money + $2", user.id, amount)
+
+
+
+        
+        
+        
+        
+
+        
+
         
 
 
