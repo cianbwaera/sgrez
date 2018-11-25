@@ -75,12 +75,12 @@ class PewDieCoin:
 
 
     @commands.command()
-    async def give(self, ctx, user : discord.Member, amount : int):
+    async def give(self, ctx, user : discord.Member, amount):
         author_coin = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if amount is not int and amount == "all":
             amount = int(author_coin)
         else: 
-            pass
+            amount = int(amount)
         if int(amount) > (author_coin):
             return await ctx.send("Insufficient coins to give")
         if user.bot:
