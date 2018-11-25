@@ -84,13 +84,13 @@ class PewDieCoin:
                                          """, user.id, amt, current_money)
             await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"I have given {user.mention} `{amt}` coins, You now have {current_money}"))
 
-    @commands.is_owner()
+    """@commands.is_owner()
     @commands.group()
     async def shop(self, ctx):
-        """if ctx.invoked_subcommand is None:
+     if ctx.invoked_subcommand is None:
             embed = discord.Embed(color=discord.Color.red(), title=f"{ctx.guild}'s Shop", description="Here you will find a list of roles to buy, if none specified, then your server doesnt have the shop set up")
-            embed.add_field"""
-        pass
+            embed.add_field
+        pass"""
     
     @commands.command()
     async def leaderboard(self, ctx):
