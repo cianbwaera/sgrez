@@ -29,9 +29,9 @@ class MainClass:
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def hell(self, ctx):
+    async def help(self, ctx):
         emb = discord.Embed(title="PewDiePie's Commands", description=f"A list of commands that everyone can use with the bot, if you have any trouble, you can join the [Support Server]({config['server']}) for more help!", color=discord.Color(value=def_color))
-        emb.set_thumbnail(url=self.bot.avatar_url)
+        emb.set_thumbnail(url=self.bot.user.avatar_url)
         emb.add_field(name="@PewDiePie#7718 prefix", value="The prefix is p., but it is here just in case!")
         emb.add_field(name="p.invite", value="PewDiePie sends you his invite")
         emb.add_field(name="p.support or p.server", value=f"PewDiePie sends you his super awesome [Support Server]({config['server']})")
@@ -52,6 +52,7 @@ class MainClass:
         emb.add_field(name="p.give", value="Exchange coins with other Users")
         emb.set_footer(text="Economy (PewDieCoin) Commands Are in BETA | " + config['ver'])
         await ctx.author.send(embed=emb)
+        await ctx.send("**Check you DMs :mailbox_with_mail:**")
 
     @commands.command()
     async def prefix(self, ctx):
