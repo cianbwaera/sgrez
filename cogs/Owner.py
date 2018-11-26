@@ -1,4 +1,4 @@
-import discord, asyncio, json, time, io, traceback, inspect, textwrap, datetime, os, sys, subprocess, copy, typing
+import discord, asyncio, json, time, io, traceback, inspect, textwrap, datetime, os, sys, subprocess, copy, typing, aiohttp
 from typing import Union
 from time import ctime
 from contextlib import redirect_stdout
@@ -115,7 +115,7 @@ class OwnerCommands:
     @commands.command(aliases=['ul'])
     async def unload(self, ctx, cog):
         self.bot.unload_extension(f"cogs.{cog}")
-        await ctx.send(embed=discord.Embed(description=f"Unloaded Extension `cogs.{cog}`{config['tickyes']}"))
+        await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Unloaded Extension `cogs.{cog}`{config['tickyes']}"))
 
 def setup(bot):
     bot.add_cog(OwnerCommands(bot))

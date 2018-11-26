@@ -3,21 +3,23 @@ import asyncio
 import asyncpg
 import random
 from discord.ext import commands
-# nothing rn
-
 
 class PewDieCoin:
+    """
+    The Plugin for Economy, it includes many fun commands like coin flip
+    ,timely money, leaderboard, exchanging money and so much more going to be added
+    """
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=['$', 'balance'])
+    @commands.command(aliases=['$', 'balance', 'bal'])
     async def bank(self, ctx):
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if count is None:
             count = 0
         await ctx.send(f"You currently have `{count}` coins")
 
-    @commands.cooldown(1, 14400, commands.BucketType.user)
+    @commands.cooldown(1, 3600, commands.BucketType.user)
     @commands.command()
     async def timely(self, ctx):
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
@@ -55,7 +57,7 @@ class PewDieCoin:
                 await self.bot.db.execute("UPDATE bank SET user_money= user_money - $1 WHERE user_id=$2", amt, ctx.author.id)
 
     @commands.command()
-    async def give(self, ctx, amt : int, user: discord.User):
+    async def give(self, ctx, amt: int, user: discord.User):
         author_count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if author_count is None:
             author_count = 0
@@ -69,32 +71,20 @@ class PewDieCoin:
             current_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", user.id)
             if current_money is None:
                 current_money = 0
-            await self.bot.db.execute("""UPDATE bank 
-                                         SET user_money = user_money - $1
-                                         WHERE user_id = $2""", amt, ctx.author.id)
-
-            await self.bot.db.execute("""INSERT INTO bank (user_id, user_money)
-                                         VALUES ($1, $2) ON CONFLICT (user_id)
-                                         DO UPDATE 
-                                         SET user_money = $3 + $2
-                                         """, user.id, amt, current_money)
+            await self.bot.db.execute("UPDATE bank SET user_money = user_money - $1WHERE user_id = $2", amt, ctx.author.id)
+            await self.bot.db.execute("INSERT INTO bank (user_id, user_money) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET user_money = $3 + $2", user.id, amt, current_money)
             a = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
             await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"I have given {user.mention} `{amt}` coins, You now have {a}"))
 
-  
-    
     @commands.command()
     async def leaderboard(self, ctx):
         stats = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money DESC LIMIT 5")
-        emb = discord.Embed(color=discord.Color(value=0xae2323), title="Leaderboard for the Most Coins")
+        emb = discord.Embed(color=discord.Color(value=0xae2323), title="PewDieCoin Leaderboard - coins")
         c = 0
         for _ in stats:
             emb.add_field(name=str(self.bot.get_user(stats[c]['user_id']).name), value=f"coins - {stats[c]['user_money']}", inline=False)
-            c+=1
+            c += 1
         await ctx.send(embed=emb)
-        
-
-
 
 
 def setup(bot):

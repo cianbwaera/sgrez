@@ -13,7 +13,7 @@ class MainClass:
         self.bot = bot
      
 
-    @commands.command()
+    @commands.command(aliases=['server'])
     async def support(self, ctx):
         await ctx.send(embed=discord.Embed(color=discord.Color(value=def_color), title="Here's My Support Server", description=f"[Click Here]({config['server']})"))
 
@@ -29,9 +29,30 @@ class MainClass:
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def help(self, ctx):
-        await ctx.send(embed=discord.Embed(color=discord.Color(value=def_color), title="PewDiePie Help Page", description=f"[Click Here](https://goo.gl/Mx7bJL) for all of my commands"))
-        
+    async def hell(self, ctx):
+        emb = discord.Embed(title="PewDiePie's Commands", description=f"A list of commands that everyone can use with the bot, if you have any trouble, you can join the [Support Server]({config['server']}) for more help!", color=discord.Color(value=def_color))
+        emb.set_thumbnail(url=self.bot.avatar_url)
+        emb.add_field(name="@PewDiePie#7718 prefix", value="The prefix is p., but it is here just in case!")
+        emb.add_field(name="p.invite", value="PewDiePie sends you his invite")
+        emb.add_field(name="p.support or p.server", value=f"PewDiePie sends you his super awesome [Support Server]({config['server']})")
+        emb.add_field(name="p.ping", value="You can get my speed of the discord websocket connection")
+        emb.add_field(name="p.stats", value="You can get my current statistics such as guild count, commands used, etc")
+        emb.add_field(name="p.uptime", value="You can get how long i have been running for")
+        emb.add_field(name="p.help", value="Shows you this message, you should know that though")
+        emb.add_field(name="p.clear (amount)", value="Purges messages specifically in that channel")
+        emb.add_field(name="p.userinfo", value="I send you the current information of you or an user")
+        emb.add_field(name="p.serverinfo", value="I send you the current information of your server")
+        emb.add_field(name="p.perms", value="You recieve the current permissions of you/an user in your server")
+        emb.add_field(name="p.subcount", value="This command gets the subcount of T-Series and PewDiePie")
+        emb.add_field(name="p.poll (poll message)", value="Creates a poll to debate over!")
+        emb.add_field(name="p.8ball (question)", value="You can ask a question to the 8ball and it will respond")
+        emb.add_field(name="p.bal or p.$ or p.balance", value="How many pewdiecoins do yo have :thinking:")
+        emb.add_field(name="p.timely", value="Free 75 coins each hour")
+        emb.add_field(name="p.coinflip or p.cf", value="Flips a coin, you either win that amount or lose that amount if you get it correct")
+        emb.add_field(name="p.give", value="Exchange coins with other Users")
+        emb.set_footer(text="Economy (PewDieCoin) Commands Are in BETA | " + config['ver'])
+        await ctx.author.send(embed=emb)
+
     @commands.command()
     async def prefix(self, ctx):
         if self.bot.user.mentioned_in(ctx.message):

@@ -22,6 +22,10 @@ class FunCommands:
         embed.add_field(name=query, value=random.choice(choices))
         embed.set_author(name="Eight Ball")
         embed.set_footer(text=config['ver'], icon_url=self.bot.user.avatar_url)
+        try:
+            ctx.message.delete()
+        except:
+            pass
         await ctx.send(embed=embed)
 
     @commands.cooldown(2, 15, BucketType.channel)
@@ -38,15 +42,16 @@ class FunCommands:
         embed.set_author(name="Current Statistics")
         embed.add_field(name="PewDiePie Count", value=subcount, inline=False)
         embed.add_field(name="T-Series Count", value=tssubcount, inline=False)
-        embed.add_field(name="Sub Difference", value=f"only {int(rawdiff)} subscribers until PewDiePie gets dethroned", inline=False)
+        embed.add_field(name="Sub Difference", value=f"only {int(rawdiff)} subscribers to beat Pewd", inline=False)
         embed.add_field(name="Live Sub Counts", value="[PewDiePie Subcount](https://socialblade.com/youtube/user/pewdiepie/realtime), [T-Series Subcount](https://socialblade.com/youtube/user/tseries/realtime)")
         embed.set_footer(text="PewDiePie SubCount Tracker™ | " + config['ver'], icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed)
 
+    @commands.guild_only()
     @commands.command()
     async def poll(self, ctx, *, poll_message):
         embed = discord.Embed(description=poll_message, color=discord.Color(value=0xae2323))
-        embed.set_author(name=f"New Poll from {ctx.author}", icon_url=ctx.author.avatar_url)
+        embed.set_author(name=f"New poll from {ctx.author}", icon_url=ctx.author.avatar_url)
         try:
             await ctx.message.delete()
         except:
@@ -93,8 +98,11 @@ class FunCommands:
             roles = "None"
 
         try:
-            authoracttype = await self.activitytype(user.activity.type)
-            activity = f"{authoracttype} {user.activity.name}"
+            if user.status.offline:
+                activity = f"{user.name} is offline"
+            else:
+                authoracttype = await self.activitytype(user.activity.type)
+                activity = f"{authoracttype} {user.activity.name}"
         except:
             activity = f"{user.name} isn't playing anything"
 
