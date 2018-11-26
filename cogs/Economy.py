@@ -80,6 +80,7 @@ class PewDieCoin:
     async def leaderboard(self, ctx):
         stats = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money DESC LIMIT 5")
         emb = discord.Embed(color=discord.Color(value=0xae2323), title="PewDieCoin Leaderboard - coins")
+        emb.set_thumbnail(url=self.bot.user.avatar_url)
         c = 0
         for _ in stats:
             emb.add_field(name=str(self.bot.get_user(stats[c]['user_id']).name), value=f"coins - {stats[c]['user_money']}", inline=False)

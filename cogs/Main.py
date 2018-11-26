@@ -49,6 +49,7 @@ class MainClass:
         emb.add_field(name="p.bal or p.$ or p.balance", value="How many pewdiecoins do yo have :thinking:", inline=False)
         emb.add_field(name="p.timely", value="Free 75 coins each hour", inline=False)
         emb.add_field(name="p.coinflip or p.cf", value="Flips a coin, you either win that amount or lose that amount if you get it correct", inline=False)
+        emb.add_field(name="p.leaderboard or p.lb", value="Who has the most coins >:(", inline=False)
         emb.add_field(name="p.give", value="Exchange coins with other Users", inline=False)
         emb.set_footer(text="Economy (PewDieCoin) Commands Are in BETA | " + config['ver'])
         await ctx.author.send(embed=emb)
