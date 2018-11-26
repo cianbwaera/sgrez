@@ -9,22 +9,37 @@ class Error_Handler:
         if isinstance(error, commands.CommandNotFound):
             return
         elif isinstance(error, commands.CommandOnCooldown):
-            seconds = error.retry_after
-            seconds = round(seconds, 2)
-            hours, remainder = divmod(int(seconds), 3600)
-            minutes, seconds = divmod(remainder, 60)
-            if ctx.command.name == 'timely':
-                return await ctx.send(embed=discord.Embed(color=discord.Color(value=0xae2323), description=f'You already got your timely reward, try again in **{hours}**h, **{minutes}**m, and **{seconds}**s'))
-            else:
-                return await ctx.send(f"You can run the {ctx.command} command again in **{hours}** hours, **{minutes}** minutes, and **{seconds}** seconds")                
+            try:
+                seconds = error.retry_after
+                seconds = round(seconds, 2)
+                hours, remainder = divmod(int(seconds), 3600)
+                minutes, seconds = divmod(remainder, 60)
+                if ctx.command.name == 'timely':
+                    return await ctx.send(embed=discord.Embed(color=discord.Color(value=0xae2323), description=f'You already got your timely reward, try again in **{hours}**h, **{minutes}**m, and **{seconds}**s'))
+                else:
+                    return await ctx.send(f"You can run the {ctx.command} command again in **{hours}** hours, **{minutes}** minutes, and **{seconds}** seconds") 
+            except:
+                pass               
         elif isinstance(error, commands.NoPrivateMessage):
-            return await ctx.send(f"**This command cannot be used in a DM, please try this in a server**")
+            try:
+                return await ctx.send(f"**This command cannot be used in a DM, please try this in a server**")
+            except:
+                pass
         elif isinstance(error, commands.BotMissingPermissions):
-            return await ctx.send(f"I am missing `{error.missing_perms[0].replace('_', ' ')}` permission(s) to run this command")
+            try:
+                return await ctx.send(f"I am missing `{error.missing_perms[0].replace('_', ' ')}` permission(s) to run this command")
+            except:
+                pass
         elif isinstance(error, commands.MissingPermissions):
-            return await ctx.send(f"You are missing `{error.missing_perms[0].replace('_', ' ')}` permission(s) to run this command")
+            try:
+                return await ctx.send(f"You are missing `{error.missing_perms[0].replace('_', ' ')}` permission(s) to run this command")
+            except:
+                pass
         elif isinstance(error, commands.CheckFailure):
-            return await ctx.send(f"You do not have permissions to use the `{ctx.command}` command")
+            try:
+                return await ctx.send(f"You do not have permissions to use the `{ctx.command}` command")
+            except:
+                pass
         else:
             print(error)
         

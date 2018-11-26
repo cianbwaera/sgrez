@@ -18,23 +18,21 @@ join the [Support Server](https://discord.gg/vtJJmWQ)
 | `uptime`            | `p.uptime`          | You can get how long i have been running for                                       |
 | `clear`             | `p.clear (number)`  | Purges messages specifically in that channel                                       |
 
-
-
 # Utility Commands 
 
-| Command      | Usage                                   | Information                                                         |
-| ------------ | --------------------------------------- | ------------------------------------------------------------------- |
-| `userinfo`   | `p.userinfo` or `p.userinfo @User#1234` | I send you the current information of you or an user                |
-| `serverinfo` | `p.serverinfo`                          | I send you the current information of your server                   |
-| `perms`      | `p.perms` or `p.perms @User#1234`       | You get the current permissions of you/an user in your server       |
-| `poll`       | `p.poll {poll_message}`                 | You can send a poll of what to debate over in your discord channel! |
+| Command      | Usage                                   | Information                                                   |
+| ------------ | --------------------------------------- | ------------------------------------------------------------- |
+| `userinfo`   | `p.userinfo` or `p.userinfo @User#1234` | I send you the current information of you or an user          |
+| `serverinfo` | `p.serverinfo`                          | I send you the current information of your server             |
+| `perms`      | `p.perms` or `p.perms @User#1234`       | You get the current permissions of you/an user in your server |
 
 
 # Fun Commands
 
-| Command    | Usage        | Information                                              |
-| ---------- | ------------ | -------------------------------------------------------- |
-| `subcount` | `p.subcount` | This command gets the subcount of T-Series and PewDiePie |
+| Command    | Usage                   | Information                                                         |
+| ---------- | ----------------------- | ------------------------------------------------------------------- |
+| `subcount` | `p.subcount`            | This command gets the subcount of T-Series and PewDiePie            |
+| `poll`     | `p.poll {poll_message}` | You can send a poll of what to debate over in your discord channel! |
 
 
 # PewDieCoin Commands
@@ -44,12 +42,7 @@ join the [Support Server](https://discord.gg/vtJJmWQ)
 | `balance`     | `p.balance` or `p.bank` or `p.$`         | Gets how much coins you have in your pouch                                     |
 | `timely`      | `p.timely`                               | Get 75 coins each 4 hours                                                      |
 | `coinflip`    | `p.coinflip (h or t) (amount to gamble)` | Flips a coin, you either win that amount or lose that amount                   |
-| ALPHA: `give` | `p.give (amount) @User#1234`             | PewDiePie gives away a specific amount of coins away to that user (No Refunds) |
-
-3 things to note in the new commands:
-
-* My first time making and doing this
-* the `give` command might give you your own money (ALL REPORTS ARE REWARDED)
-* i am new to DBs and stuffs
+| `give`        | `p.give (amount) @User#1234`             | PewDiePie gives away a specific amount of coins away to that user (No Refunds) |
+| `leaderboard` | `p.lb` or `p.leaderboard`                | Who has the most pewdiecoins >:)                                               |
 
 Thank you for using PewDiePie and we hope you use it in the future to come

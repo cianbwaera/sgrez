@@ -5,10 +5,6 @@ import random
 from discord.ext import commands
 
 class PewDieCoin:
-    """
-    The Plugin for Economy, it includes many fun commands like coin flip
-    ,timely money, leaderboard, exchanging money and so much more going to be added
-    """
     def __init__(self, bot):
         self.bot = bot
 
@@ -83,7 +79,7 @@ class PewDieCoin:
         emb.set_thumbnail(url=self.bot.user.avatar_url)
         c = 0
         for _ in stats:
-            emb.add_field(name=str(self.bot.get_user(stats[c]['user_id']).name), value=f"coins - {stats[c]['user_money']}", inline=False)
+            emb.add_field(name=str(self.bot.get_user(stats[c]['user_id']).name), value=f"{stats[c]['user_money']} coins", inline=False)
             c += 1
         await ctx.send(embed=emb)
 

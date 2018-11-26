@@ -53,7 +53,10 @@ class MainClass:
         emb.add_field(name="p.give", value="Exchange coins with other Users", inline=False)
         emb.set_footer(text="Economy (PewDieCoin) Commands Are in BETA | " + config['ver'])
         await ctx.author.send(embed=emb)
-        await ctx.send("**Check you DMs For Help:mailbox_with_mail:**")
+        try:
+            await ctx.send("**Check you DMs For Help:mailbox_with_mail:**")
+        except:
+            pass
 
     @commands.command()
     async def prefix(self, ctx):
