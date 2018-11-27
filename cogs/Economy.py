@@ -98,6 +98,7 @@ class PewDieCoin:
             emb.add_field(name=f"{ctx.guild.get_role(roles[c]['role_id']).name} | {roles[c]['shop_num']}", value=f"{roles[c]['amount']} coins to buy", inline=False)
             c+=1
         emb.set_footer(text="Please report any bugs to my owner | " + config['ver'])
+        await ctx.send(embed=emb)
 
     @commands.command()
     @commands.has_permissions(manage_server=True)
