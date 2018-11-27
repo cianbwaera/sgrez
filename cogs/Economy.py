@@ -102,7 +102,13 @@ class PewDieCoin:
 
     @commands.command()
     @commands.is_owner()
-    async def sell(self, ctx, amount : int, * , role : discord.Role):
+    async def sell(self, ctx, amount : int, * , role : discord.Role): 
+        roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
+        for i in roles:
+            if i['role_id'] == role.id:
+                return
+            else:
+                continue   
         shop_pos = await self.bot.db.fetchval("SELECT COUNT(*) FROM shop WHERE guild_id=$1", ctx.guild.id)
         if shop_pos is None:
             shop_pos = 0
@@ -116,20 +122,24 @@ class PewDieCoin:
             await ctx.send(f'```py\n{e}\n```')
 
     @commands.command()
-    @commands.is_owner()
     async def remove(self, ctx, shop_position : int):
         role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
         try:
             await self.bot.db.execute("DELETE FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
             await ctx.send(embed=discord.Embed(description=f"{ctx.guild.get_role(role).name} has been removed from the shop!", color=discord.Color.green()))
         except Exception as e:
-            await ctx.send(f'```py\n{e}\n```')
+            print(e)
 
 
     @commands.command()
     async def buy(self, ctx, shop_position : int):
-        # Helpers
         role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
+        for i in ctx.author.roles:
+            if i.id == role:
+                return
+            else:
+                continue   
+        # Helpers
         buyer_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if buyer_money is None:
             buyer_money = 0
