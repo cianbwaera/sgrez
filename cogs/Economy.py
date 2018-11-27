@@ -95,7 +95,7 @@ class PewDieCoin:
         emb = discord.Embed(title="PewDieCoin Shop", description="Current roles listed in your server's shop!", color=discord.Color(value=0xae2323))
         c = 0 
         for _ in roles:
-            emb.add_field(name=f"{ctx.guild.get_role(roles[c]['role_id']).name} | {roles[c]['shop_num']}", value=f"{roles[c]['amount']} coins to buy", inline=False)
+            emb.add_field(name=f"#{roles[c]['shop_num']} {ctx.guild.get_role(roles[c]['role_id']).name}", value=f"{roles[c]['amount']} coins to buy", inline=False)
             c+=1
         emb.set_footer(text="Please report any bugs to my owner | " + config['ver'])
         await ctx.send(embed=emb)
@@ -108,21 +108,26 @@ class PewDieCoin:
             shop_pos = 0
         shop_pos+=1
         if amount > 9999:
-            return await ctx.send("Items Amounts cannot be higher then `9999`, please try again")
+            return await ctx.send(embed=discord.Embed(description="Items Amounts cannot be higher then `9999`, please try again", color=discord.Color.red()))
         try:
             await self.bot.db.execute('INSERT INTO shop VALUES($1,$2,$3,$4);', role.id, ctx.guild.id,shop_pos, amount)
+            await ctx.send(embed=discord.Embed(description=f"Role: `{role}` has been sold for `{amount}` coins", color=discord.Color.green()))
         except Exception as e:
             await ctx.send(f'```py\n{e}\n```')
 
     @commands.command()
     @commands.is_owner()
     async def remove(self, ctx, shop_position : int):
+        role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
+        if ctx.author.top_role.position <= ctx.guild.get_role(role).position:
+            return await ctx.send(embed=discord.Embed(description="You need to be higher then this role to remove it from shop :(", color=discord.Color.red()))
         try:
             await self.bot.db.execute("DELETE FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
-            role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1", ctx.guild.id)
-            await ctx.send(f"{ctx.guild.get_role(role).name} has been removed from the shop")
+            await ctx.send(embed=discord.Embed(description=f"{ctx.guild.get_role(role).name} has been removed from the shop!", color=discord.Color.green()))
         except Exception as e:
             await ctx.send(f'```py\n{e}\n```')
+
+    
 
 
 
