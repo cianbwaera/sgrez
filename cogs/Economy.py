@@ -101,7 +101,7 @@ class PewDieCoin:
         await ctx.send(embed=emb)
 
     @commands.command()
-    @commands.is_owner()
+    @commands.has_permissions(manage_server=True)
     async def sell(self, ctx, amount : int, * , role : discord.Role): 
         roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
         for i in roles:
@@ -121,6 +121,7 @@ class PewDieCoin:
         except Exception as e:
             await ctx.send(f'```py\n{e}\n```')
 
+    @commands.has_permissions(manage_server=True)
     @commands.command()
     async def remove(self, ctx, shop_position : int):
         role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
