@@ -28,7 +28,18 @@ class FunCommands:
             pass
         await ctx.send(embed=embed)
 
-    @commands.cooldown(2, 15, BucketType.channel)
+    @commands.guild_only()
+    @commands.command()
+    @commands.cooldown(1, 1800, BucketType.user)
+    async def feedback(self, ctx, * , feedback : str):
+        channel = await self.bot.get_channel(517107620042244098)
+        embed = discord.Embed(description=f"User ID: {ctx.author.id} | User Name: {ctx.author}", title="Feedback Submission :pencil:", color=discord.Color(value=0xae2323))
+        embed.add_field(name="Feedback", value=feedback, inline=False)
+        embed.set_footer(text=f"From {ctx.guild.name} ({ctx.guild.id})")
+        await channel.send(embed=embed)
+        await ctx.send(f"**Your Feedback Has Been Submitted {config['tickyes']}**")
+
+    @commands.cooldown(1, 7, BucketType.user)
     @commands.command()
     async def subcount(self, ctx):
         pewdiepie = await get(f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UC-lHJZR3Gqxm24_Vd_AJ5Yw&key=" + config['yt'])
