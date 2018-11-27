@@ -121,7 +121,7 @@ class PewDieCoin:
         except Exception as e:
             await ctx.send(f'```py\n{e}\n```')
 
-    @commands.has_permissions(manage_server=True)
+    @commands.has_permissions(manage_roles=True)
     @commands.command()
     async def remove(self, ctx, shop_position : int):
         role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
