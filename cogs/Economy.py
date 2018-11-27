@@ -111,15 +111,15 @@ class PewDieCoin:
             return await ctx.send("Items Amounts cannot be higher then `9999`, please try again")
         try:
             await self.bot.db.execute('INSERT INTO shop VALUES($1,$2,$3,$4);', role.id, ctx.guild.id,shop_pos, amount)
-        except:
-            await ctx.send("Item is already in shop :(")
+        except Exception as e:
+            await ctx.send(f'```py\n{e}\n```')
 
     @commands.command()
     @commands.is_owner()
     async def remove(self, ctx, shop_position : int):
         try:
             await self.bot.db.execute("DELETE FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
-            role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
+            role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1", ctx.guild.id)
             await ctx.send(f"{ctx.guild.get_role(role).name} has been removed from the shop")
         except Exception as e:
             await ctx.send(f'```py\n{e}\n```')
