@@ -62,11 +62,11 @@ class PewDieCoin:
         if author_count is None:
             author_count = 0
         if user.bot:
-            return await ctx.send("Bot Accounts do not get money")
+            return await ctx.send(embed=discord.Embed(description="Bot Accounts do not get money", color=discord.Color.red()))
         if user.id == ctx.author.id:
-            return await ctx.send("You cannot give money to yourself")
+            return await ctx.send(embed=discord.Embed(color=discord.Color.red(), description="You cannot give money to yourself"))
         if amt > author_count:
-            return await ctx.send(f"You have insufficient funds to give to {user.name}")
+            return await ctx.send(embed=discord.Embed(description=f"You have insufficient funds to give to {user.name}", color=discord.Color.red()))
         else:
             current_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", user.id)
             if current_money is None:
@@ -121,7 +121,7 @@ class PewDieCoin:
             await self.bot.db.execute('INSERT INTO shop VALUES($1,$2,$3,$4);', role.id, ctx.guild.id,shop_pos, amount)
             await ctx.send(embed=discord.Embed(description=f"Role: `{role}` has been sold for `{amount}` coins", color=discord.Color.green()))
         except Exception as e:
-            await ctx.send(f'```py\n{e}\n```')
+            print(e)
 
     @commands.has_permissions(manage_roles=True)
     @commands.command()
@@ -142,6 +142,8 @@ class PewDieCoin:
                 return
             else:
                 continue   
+        if ctx.me.top_role.positon <= role.position:
+            return await ctx.send(embed=discord.Embed(description="Role Hierarchy Error!", color=discord.Color.red()))
         # Helpers
         buyer_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if buyer_money is None:
