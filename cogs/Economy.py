@@ -142,7 +142,7 @@ class PewDieCoin:
                 return
             else:
                 continue   
-        if ctx.me.top_role.positon <= role.position:
+        if ctx.me.top_role.positon <= ctx.guild.get_role(role).position:
             return await ctx.send(embed=discord.Embed(description="Role Hierarchy Error!", color=discord.Color.red()))
         # Helpers
         buyer_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
