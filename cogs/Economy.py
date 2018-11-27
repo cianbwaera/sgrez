@@ -95,7 +95,7 @@ class PewDieCoin:
         emb = discord.Embed(title="PewDieCoin Shop", description="Current roles listed in your server's shop!", color=discord.Color(value=0xae2323))
         c = 0 
         for _ in roles:
-            emb.add_field(name=f"#{roles[c]['shop_num']} {ctx.guild.get_role(roles[c]['role_id']).name}", value=f"{roles[c]['amount']} coins to buy", inline=False)
+            emb.add_field(name=f"#{roles[c]['shop_num']} - {ctx.guild.get_role(roles[c]['role_id']).name}", value=f"{roles[c]['amount']} coins to buy", inline=False)
             c+=1
         emb.set_footer(text="Please report any bugs to my owner | " + config['ver'])
         await ctx.send(embed=emb)
@@ -127,8 +127,27 @@ class PewDieCoin:
         except Exception as e:
             await ctx.send(f'```py\n{e}\n```')
 
-    
 
+    @commands.command()
+    async def buy(self, ctx, shop_position : int):
+        # Helpers
+        role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
+        buyer_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
+        guild_owner_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.guild.owner.id)
+        if buyer_money is None:
+            buyer_money = 0
+        if guild_owner_money is None:
+            guild_owner_money = 0
+        role_cost = await self.bot.db.fetchval("SELECT amount FROM shop WHERE shop_num=$1 AND guild_id=$2", shop_position, ctx.guild.id)
+
+        if buyer_money < role_cost:
+            return await ctx.send(embed=discord.Embed(description="You have insufficient funds to buy this role", color=discord.Color.red()))
+        else:
+            await self.bot.db.execute("UPDATE bank SET user_money=$1-$2 WHERE user_id=$3", buyer_money, role_cost, ctx.author.id)
+            role_after_taxes = int(round(role_cost - (role_cost * .1)))
+            await self.bot.db.execute("INSERT INTO bank(user_id, user_money) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET user_money=$3 + $4", ctx.guild.owner.id, role_after_taxes, guild_owner_money, role_after_taxes)
+            await ctx.guild.add_roles(ctx.guild.get_role(role), reason=f"User: {ctx.author.name} bought this")
+            await ctx.send(embed=discord.Embed(description=f"Successfully Withdrawed `{role_cost}` coins", color=discord.Color.green()))
 
 
 def setup(bot):
