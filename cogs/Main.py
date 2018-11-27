@@ -46,17 +46,17 @@ class MainClass:
         emb.add_field(name="p.subcount", value="This command gets the subcount of T-Series and PewDiePie", inline=False)
         emb.add_field(name="p.poll (poll message)", value="Creates a poll to debate over!", inline=False)
         emb.add_field(name="p.8ball (question)", value="You can ask a question to the 8ball and it will respond", inline=False)
-        emb.add_field(name="p.bal or p.$ or p.balance", value="How many pewdiecoins do yo have :thinking:", inline=False)
+        emb.add_field(name="p.bal or p.$ or p.balance", value="How many pewdiecoins do you have", inline=False)
         emb.add_field(name="p.timely", value="Free 75 coins each hour", inline=False)
-        emb.add_field(name="p.coinflip or p.cf", value="Flips a coin, you either win that amount or lose that amount if you get it correct", inline=False)
-        emb.add_field(name="p.leaderboard or p.lb", value="Who has the most coins >:(", inline=False)
+        emb.add_field(name="p.coinflip", value="Flips a coin, you either win that amount or lose that amount if you get it correct", inline=False)
+        emb.add_field(name="p.leaderboard or p.lb", value="PewDieCoin Leaderboard", inline=False)
         emb.add_field(name="p.give", value="Exchange coins with other Users", inline=False)
         emb.set_footer(text="Economy (PewDieCoin) Commands Are in BETA | " + config['ver'])
-        await ctx.author.send(embed=emb)
         try:
+            await ctx.author.send(embed=emb)
             await ctx.send("**Check you DMs For Help:mailbox_with_mail:**")
         except:
-            pass
+            await ctx.send(f"{ctx.author.mention}, please have open DMs so i can send you help!")
 
     @commands.command()
     async def prefix(self, ctx):
@@ -122,7 +122,7 @@ class MainClass:
         gh_branch = "master"
         gh = await self.get("https://api.github.com/repos/EnterNewName/PewDiePie/commits/" + gh_branch)
         sha = gh['sha']
-        commit = sha[0:6]        
+        commit = sha[0:7]        
         message = gh['commit']['message']
         embed = discord.Embed(color=discord.Color(value=def_color), title=f"{self.bot.user}", description=f"A discord bot made from Enter New Name orginally made for showing the subcount of PewDiePie and T-Series")
         embed.add_field(name="Bot Info", value=f"I have been running for approx. **{days}** days, **{hours}** hours, **{minutes}** minutes, and **{seconds}** seconds\nI have {len(self.bot.guilds)} servers\n{commands_used} commands were used in my guilds", inline=False)

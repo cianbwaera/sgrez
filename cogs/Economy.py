@@ -2,7 +2,11 @@ import discord
 import asyncio
 import asyncpg
 import random
+import json
 from discord.ext import commands
+
+with open('db/config.json', 'r') as file:
+    config = json.load(file)
 
 class PewDieCoin:
     def __init__(self, bot):
@@ -82,6 +86,43 @@ class PewDieCoin:
             emb.add_field(name=str(self.bot.get_user(stats[c]['user_id']).name), value=f"{stats[c]['user_money']} coins", inline=False)
             c += 1
         await ctx.send(embed=emb)
+
+
+
+    @commands.command()
+    async def shop(self, ctx):
+        roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
+        emb = discord.Embed(title="PewDieCoin Shop", description="Current roles listed in your server's shop!", color=discord.Color(value=0xae2323))
+        c = 0 
+        for _ in roles:
+            emb.add_field(name=f"{ctx.guild.get_role(roles[c]['role_id']).name} | {roles[c]['shop_num']}", value=f"{roles[c]['amount']} coins to buy", inline=False)
+            c+=1
+        emb.set_footer(text="Please report any bugs to my owner | " + config['ver'])
+
+    @commands.command()
+    @commands.has_permissions(manage_server=True)
+    async def sell(self, ctx, amount : int, * , role : discord.Role):
+        shop_pos = await self.bot.db.fetchval("SELECT COUNT(*) FROM shop WHERE guild_id=$1", ctx.guild.id)
+        if shop_pos is None:
+            shop_pos = 0
+        shop_pos+=1
+        if amount > 9999:
+            return await ctx.send("Items Amounts cannot be higher then `9999`, please try again")
+        try:
+            await self.bot.db.execute('INSERT INTO shop VALUES($1,$2,$3,$4);', role.id, ctx.guild.id,shop_pos, amount)
+        except:
+            await ctx.send("Item is already in shop :(")
+
+    @commands.command()
+    @commands.has_permissions(manage_server=True)
+    async def remove(self, ctx, shop_position : int):
+        try:
+            await self.bot.db.execute("DELETE FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
+            role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
+            await ctx.send(f"{ctx.guild.get_role(role).name} has been removed from the shop")
+        except Exception as e:
+            await ctx.send(f'```py\n{e}\n```')
+
 
 
 def setup(bot):
