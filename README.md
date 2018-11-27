@@ -44,5 +44,10 @@ join the [Support Server](https://discord.gg/vtJJmWQ)
 | `coinflip`    | `p.coinflip (h or t) (amount to gamble)` | Flips a coin, you either win that amount or lose that amount                   |
 | `give`        | `p.give (amount) @User#1234`             | PewDiePie gives away a specific amount of coins away to that user (No Refunds) |
 | `leaderboard` | `p.lb` or `p.leaderboard`                | Who has the most pewdiecoins >:)                                               |
+| `shop`        | `p.shop`                                 | Shows you roles for sell                                                       |
+| `sell`        | `p.sell (amount) (role name or role id)` | Sells a role to the Shop                                                       |
+| `buy`         | `p.buy (role_number)`                    | Buys an role off the shop                                                      |
+| `remove`      | `p.remove (role_number)`                 | Removes a role off the shop                                                    |
+
 
 Thank you for using PewDiePie and we hope you use it in the future to come
