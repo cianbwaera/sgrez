@@ -121,11 +121,11 @@ class OwnerCommands:
     async def init(self, ctx, command : str):
         while not self.bot.is_closed():
             msg = copy.copy(ctx.message)
-            msg.author = ctx.author
+            msg.author = ctx.me
             msg.content = ctx.prefix + command
             new_ctx = await self.bot.get_context(msg)
             await self.bot.invoke(new_ctx)
-            await asyncio.sleep(25)
+            await asyncio.sleep(30)
             
 def setup(bot):
     bot.add_cog(OwnerCommands(bot))

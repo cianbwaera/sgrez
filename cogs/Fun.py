@@ -98,7 +98,7 @@ class FunCommands:
             roles = "None"
 
         try:
-            if user.status.offline:
+            if str(user.status) == 'offline':
                 activity = f"{user.name} is offline"
             else:
                 authoracttype = await self.activitytype(user.activity.type)

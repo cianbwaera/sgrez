@@ -53,5 +53,15 @@ class Error_Handler:
         await self.bot.db.execute("UPDATE commands SET num = num + 1")
 
 
+    # Helper for the shop
+    async def on_guild_role_delete(self, role):
+        role_id = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", role.guild.id)
+        for i in role_id:
+            if i == role.id:
+                await self.bot.db.execute("DELETE FROM shop WHERE role_id=$1 AND guild_id=$2", role.id, role.guild.id)
+            else:
+                continue
+
+
 def setup(bot):
     bot.add_cog(Error_Handler(bot))
