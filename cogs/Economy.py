@@ -141,10 +141,10 @@ class PewDieCoin:
         if buyer_money < role_cost:
             return await ctx.send(embed=discord.Embed(description="You have insufficient funds to buy this role", color=discord.Color.red()))
         else:
-            await self.bot.db.execute("UPDATE bank SET user_money=$1-$2 WHERE user_id=$3", buyer_money, role_cost, ctx.author.id)
-            role_after_taxes = int(round(role_cost - (role_cost * .1)))
-            await self.bot.db.execute("INSERT INTO bank(user_id, user_money) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET user_money=$3 + $4", ctx.guild.owner.id, role_after_taxes, guild_owner_money, role_after_taxes)
-            await ctx.guild.add_roles(ctx.guild.get_role(role), reason=f"User: {ctx.author.name} bought this")
+            await self.bot.db.execute("UPDATE bank SET user_money=user_money - $1 WHERE user_id=$2", role_cost, ctx.author.id)
+            role_after_taxes = round(role_cost - (role_cost * .1))
+            await self.bot.db.execute("INSERT INTO bank(user_id, user_money) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET user_money=$2", ctx.author.id, role_after_taxes)
+            await ctx.guild.add_roles(role, reason=f"User: {ctx.author.name} bought this")
             await ctx.send(embed=discord.Embed(description=f"Successfully Withdrawed `{role_cost}` coins", color=discord.Color.green()))
 
 
