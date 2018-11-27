@@ -101,7 +101,7 @@ class PewDieCoin:
         await ctx.send(embed=emb)
 
     @commands.command()
-    @commands.has_permissions(manage_server=True)
+    @commands.is_owner()
     async def sell(self, ctx, amount : int, * , role : discord.Role):
         shop_pos = await self.bot.db.fetchval("SELECT COUNT(*) FROM shop WHERE guild_id=$1", ctx.guild.id)
         if shop_pos is None:
@@ -115,7 +115,7 @@ class PewDieCoin:
             await ctx.send("Item is already in shop :(")
 
     @commands.command()
-    @commands.has_permissions(manage_server=True)
+    @commands.is_owner()
     async def remove(self, ctx, shop_position : int):
         try:
             await self.bot.db.execute("DELETE FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
