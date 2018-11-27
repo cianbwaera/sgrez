@@ -101,7 +101,7 @@ class PewDieCoin:
         await ctx.send(embed=emb)
 
     @commands.command()
-    @commands.has_permissions(manage_server=True)
+    @commands.has_permissions(manage_roles=True)
     async def sell(self, ctx, amount : int, * , role : discord.Role): 
         roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
         for i in roles:
@@ -109,6 +109,8 @@ class PewDieCoin:
                 return
             else:
                 continue   
+        if ctx.author.top_role.position < role.position:
+            return
         shop_pos = await self.bot.db.fetchval("SELECT COUNT(*) FROM shop WHERE guild_id=$1", ctx.guild.id)
         if shop_pos is None:
             shop_pos = 0
