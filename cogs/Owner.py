@@ -117,5 +117,15 @@ class OwnerCommands:
         self.bot.unload_extension(f"cogs.{cog}")
         await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Unloaded Extension `cogs.{cog}`{config['tickyes']}"))
 
+    @commands.command()
+    async def init(self, ctx, command : str):
+        while not self.bot.is_closed():
+            msg = copy.copy(ctx.message)
+            msg.author = ctx.author
+            msg.content = ctx.prefix + command
+            new_ctx = await self.bot.get_context(msg)
+            await self.bot.invoke(new_ctx)
+            await asyncio.sleep(25)
+            
 def setup(bot):
     bot.add_cog(OwnerCommands(bot))

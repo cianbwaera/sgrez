@@ -119,8 +119,6 @@ class PewDieCoin:
     @commands.is_owner()
     async def remove(self, ctx, shop_position : int):
         role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
-        if ctx.author.top_role.position <= ctx.guild.get_role(role).position:
-            return await ctx.send(embed=discord.Embed(description="You need to be higher then this role to remove it from shop :(", color=discord.Color.red()))
         try:
             await self.bot.db.execute("DELETE FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
             await ctx.send(embed=discord.Embed(description=f"{ctx.guild.get_role(role).name} has been removed from the shop!", color=discord.Color.green()))
