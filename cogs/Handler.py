@@ -57,7 +57,7 @@ class Error_Handler:
     async def on_guild_role_delete(self, role):
         role_id = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", role.guild.id)
         for i in role_id:
-            if i == role.id:
+            if i['role_id'] == role.id:
                 await self.bot.db.execute("DELETE FROM shop WHERE role_id=$1 AND guild_id=$2", role.id, role.guild.id)
             else:
                 continue

@@ -44,6 +44,7 @@ class MainClass:
         emb.add_field(name="p.serverinfo", value="I send you the current information of your server", inline=False)
         emb.add_field(name="p.perms", value="You recieve the current permissions of you/an user in your server", inline=False)
         emb.add_field(name="p.subcount", value="This command gets the subcount of T-Series and PewDiePie", inline=False)
+        emb.add_field(name="p.feedback (feedback)", value="You can send feedback to us, please do not abuse though")
         emb.add_field(name="p.poll (poll message)", value="Creates a poll to debate over!", inline=False)
         emb.add_field(name="p.8ball (question)", value="You can ask a question to the 8ball and it will respond", inline=False)
         emb.add_field(name="p.bal or p.$ or p.balance", value="How many pewdiecoins do you have", inline=False)

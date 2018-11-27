@@ -8,15 +8,16 @@ join the [Support Server](https://discord.gg/vtJJmWQ)
 # General Commands
 
 
-| Command             | Usage               | Information                                                                        |
-| ------------------- | ------------------- | ---------------------------------------------------------------------------------- |
-| `@PewDiePie prefix` | `@PewDiePie prefix` | The prefix is `p.`, but it is here just in case                                    |
-| `invite`            | `p.invite`          | PewDiePie sends you his invite                                                     |
-| `support`           | `p.support`         | PewDiePie sends you his super awesome [Support Server](https://discord.gg/vtJJmWQ) |
-| `ping`              | `p.ping`            | You can get my speed of the discord websocket connection                           |
-| `stats`             | `p.stats`           | You can get my current statistics such as guild count, commands used, etc          |
-| `uptime`            | `p.uptime`          | You can get how long i have been running for                                       |
-| `clear`             | `p.clear (number)`  | Purges messages specifically in that channel                                       |
+| Command             | Usage                   | Information                                                                        |
+| ------------------- | ----------------------- | ---------------------------------------------------------------------------------- |
+| `@PewDiePie prefix` | `@PewDiePie prefix`     | The prefix is `p.`, but it is here just in case                                    |
+| `invite`            | `p.invite`              | PewDiePie sends you his invite                                                     |
+| `support`           | `p.support`             | PewDiePie sends you his super awesome [Support Server](https://discord.gg/vtJJmWQ) |
+| `ping`              | `p.ping`                | You can get my speed of the discord websocket connection                           |
+| `stats`             | `p.stats`               | You can get my current statistics such as guild count, commands used, etc          |
+| `uptime`            | `p.uptime`              | You can get how long i have been running for                                       |
+| `clear`             | `p.clear (number)`      | Purges messages specifically in that channel                                       |
+| `feedback`          | `p.eeedback {feedback}` | Send feedback to us, please do not abuse                                           |
 
 # Utility Commands 
 
