@@ -136,5 +136,17 @@ class MainClass:
         embed.add_field(name="Updates", value=f"```fix\n[PewDiePie:{gh_branch}] | [{commit}]:\n{gh['commit']['author']['name']} - {message}\n```")
         await ctx.send(embed=embed)
 
+
+    @commands.guild_only()
+    @commands.command()
+    @commands.cooldown(1, 1800, BucketType.user)
+    async def feedback(self, ctx, * , feedback : str):
+        channel = self.bot.get_channel(517107620042244098)
+        embed = discord.Embed(description=f"User ID: {ctx.author.id} | User Name: {ctx.author}", title="Feedback Submission :pencil:", color=discord.Color(value=0xae2323))
+        embed.add_field(name="Feedback", value=feedback, inline=False)
+        embed.set_footer(text=f"From {ctx.guild.name} ({ctx.guild.id})")
+        await channel.send(embed=embed)
+        await ctx.send(f"**Your Feedback Has Been Submitted {config['tickyes']}**")
+
 def setup(bot):
     bot.add_cog(MainClass(bot))
