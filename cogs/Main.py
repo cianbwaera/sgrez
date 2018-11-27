@@ -51,6 +51,10 @@ class MainClass:
         emb.add_field(name="p.coinflip", value="Flips a coin, you either win that amount or lose that amount if you get it correct", inline=False)
         emb.add_field(name="p.leaderboard or p.lb", value="PewDieCoin Leaderboard", inline=False)
         emb.add_field(name="p.give", value="Exchange coins with other Users", inline=False)
+        emb.add_field(name="p.shop", value="Shows the availible items (roles) are on the shop")
+        emb.add_field(name="p.buy (item_id)", value="Buy a role off the shop", inline=False)
+        emb.add_field(name="p.sell (amount) (role_name/id)", value="Add a role to the shop")
+        emb.add_field(name="p.remove (item_id)", value="Remoes a role off the shop", inline=False)
         emb.set_footer(text="Economy (PewDieCoin) Commands Are in BETA | " + config['ver'])
         try:
             await ctx.author.send(embed=emb)

@@ -87,17 +87,17 @@ class PewDieCoin:
             c += 1
         await ctx.send(embed=emb)
 
-
-
     @commands.command()
     async def shop(self, ctx):
         roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
-        emb = discord.Embed(title="PewDieCoin Shop", description="Current roles listed in your server's shop!", color=discord.Color(value=0xae2323))
+        emb = discord.Embed(description="Here's some roles you can buy", color=discord.Color(value=0xae2323))
+        emb.set_author(name="PewDieCoin Shop", icon_url="https://cdn.discordapp.com/attachments/511746692593483788/516882228890959904/pewdiecoin.jpg")
         c = 0 
         for _ in roles:
             emb.add_field(name=f"#{roles[c]['shop_num']} - {ctx.guild.get_role(roles[c]['role_id']).name}", value=f"{roles[c]['amount']} coins to buy", inline=False)
             c+=1
-        emb.set_footer(text="Please report any bugs to my owner | " + config['ver'])
+        emb.set_thumbnail(url=ctx.guild.icon_url)
+        emb.set_footer(text="PewDieCoin | " + config['ver'])
         await ctx.send(embed=emb)
 
     @commands.command()
