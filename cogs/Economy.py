@@ -93,7 +93,7 @@ class PewDieCoin:
         if str(roles) == '[]':
             bio = "Your server currently has no roles to buy at the moment"
         else:
-            bio = "Here's some roles you can buy"
+            bio = "Here's some roles you can buy, buy them by `p.buy number`\n\uFEFF\n"
         emb = discord.Embed(description=bio, color=discord.Color(value=0xae2323))
         
         emb.set_author(name=f"{ctx.guild.name}'s Shop")
