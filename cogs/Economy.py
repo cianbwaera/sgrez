@@ -79,7 +79,7 @@ class PewDieCoin:
     @commands.command(aliases=['lb'])
     async def leaderboard(self, ctx):
         stats = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money DESC LIMIT 5")
-        emb = discord.Embed(color=discord.Color(value=0xae2323), title="PewDieCoin Leaderboard - coins")
+        emb = discord.Embed(color=discord.Color(value=0xae2323), title="Global Leaderboard - coins")
         emb.set_thumbnail(url=self.bot.user.avatar_url)
         c = 0
         for _ in stats:
@@ -102,7 +102,7 @@ class PewDieCoin:
         for _ in roles:
             emb.add_field(name=f"#{roles[c]['shop_num']} - {ctx.guild.get_role(roles[c]['role_id']).name}", value=f"{roles[c]['amount']} coins to buy", inline=False)
             c+=1
-        emb.set_thumbnail(url="https://cdn.discordapp.com/attachments/511746692593483788/516882228890959904/pewdiecoin.jpg")
+        emb.set_thumbnail(url=ctx.guild.icon_url)
         emb.set_footer(text="PewDieCoin | " + config['ver'])
         await ctx.send(embed=emb)
 
