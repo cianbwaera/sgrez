@@ -38,7 +38,7 @@ class FunCommands:
         rawdiff = (int(rawsubcount) - int(tsrawcount))
         embed = discord.Embed(color=discord.Color(value=0xae2323))
         embed.add_field(name="PewDiePie Count", value=f"{rawsubcount:,d}", inline=False)
-        embed.add_field(name="T-Series Count", value=f"{tssubcount:,d}", inline=False)
+        embed.add_field(name="T-Series Count", value=f"{tsrawcount:,d}", inline=False)
         embed.add_field(name="Sub Difference", value=f"only {rawdiff:,d} subscribers to beat Pewd", inline=False)
         embed.add_field(name="Live Sub Counts", value="[PewDiePie Subcount](https://socialblade.com/youtube/user/pewdiepie/realtime), [T-Series Subcount](https://socialblade.com/youtube/user/tseries/realtime)")
         embed.set_footer(text="PewDiePie SubCount Tracker™ | " + config['ver'], icon_url=self.bot.user.avatar_url)
