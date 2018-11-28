@@ -136,7 +136,7 @@ class PewDieCoin:
         role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
         try:
             await self.bot.db.execute("DELETE FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
-            await ctx.send(embed=discord.Embed(description=f"{ctx.guild.get_role(role).name} has been removed from the shop!", color=discord.Color.green()))
+            await ctx.send(embed=discord.Embed(description=f"Role: `{ctx.guild.get_role(role).name}` has been removed from the shop!", color=discord.Color.green()))
         except Exception as e:
             print(e)
 
