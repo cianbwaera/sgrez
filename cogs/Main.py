@@ -30,38 +30,12 @@ class MainClass:
 
     @commands.command()
     async def help(self, ctx):
-        emb = discord.Embed(title="PewDiePie's Commands", description=f"A list of commands that everyone can use with the bot, if you have any trouble, you can join the [Support Server]({config['server']}) for more help!", color=discord.Color(value=def_color))
-        emb.set_thumbnail(url=self.bot.user.avatar_url)
-        emb.add_field(name="@PewDiePie#7718 prefix", value="The prefix is p., but it is here just in case!", inline=False)
-        emb.add_field(name="p.invite", value="PewDiePie sends you his invite", inline=False)
-        emb.add_field(name="p.support or p.server", value=f"PewDiePie sends you his super awesome [Support Server]({config['server']})", inline=False)
-        emb.add_field(name="p.ping", value="You can get my speed of the discord websocket connection", inline=False)
-        emb.add_field(name="p.stats", value="You can get my current statistics such as guild count, commands used, etc", inline=False)
-        emb.add_field(name="p.uptime", value="You can get how long i have been running for", inline=False)
-        emb.add_field(name="p.help", value="Shows you this message, you should know that though", inline=False)
-        emb.add_field(name="p.clear (amount)", value="Purges messages specifically in that channel", inline=False)
-        emb.add_field(name="p.userinfo", value="I send you the current information of you or an user", inline=False)
-        emb.add_field(name="p.serverinfo", value="I send you the current information of your server", inline=False)
-        emb.add_field(name="p.perms", value="You recieve the current permissions of you/an user in your server", inline=False)
-        emb.add_field(name="p.subcount", value="This command gets the subcount of T-Series and PewDiePie", inline=False)
-        emb.add_field(name="p.feedback (feedback)", value="You can send feedback to us, please do not abuse though")
-        emb.add_field(name="p.poll (poll message)", value="Creates a poll to debate over!", inline=False)
-        emb.add_field(name="p.8ball (question)", value="You can ask a question to the 8ball and it will respond", inline=False)
-        emb.add_field(name="p.bal or p.$ or p.balance", value="How many pewdiecoins do you have", inline=False)
-        emb.add_field(name="p.timely", value="Free 75 coins each hour", inline=False)
-        emb.add_field(name="p.coinflip", value="Flips a coin, you either win that amount or lose that amount if you get it correct", inline=False)
-        emb.add_field(name="p.leaderboard or p.lb", value="PewDieCoin Leaderboard", inline=False)
-        emb.add_field(name="p.give", value="Exchange coins with other Users", inline=False)
-        emb.add_field(name="p.shop", value="Shows the availible items (roles) are on the shop")
-        emb.add_field(name="p.buy (item_id)", value="Buy a role off the shop", inline=False)
-        emb.add_field(name="p.sell (amount) (role_name/id)", value="Add a role to the shop")
-        emb.add_field(name="p.remove (item_id)", value="Remoes a role off the shop", inline=False)
-        emb.set_footer(text="Economy (PewDieCoin) Commands Are in BETA | " + config['ver'])
+        
         try:
-            await ctx.author.send(embed=emb)
+            await ctx.author.send("**Heres my Help Page**\nhttps://enternewname.me/pewdiepie")
             await ctx.send("**Check you DMs For Help:mailbox_with_mail:**")
         except:
-            await ctx.send(f"{ctx.author.mention}, please have open DMs so i can send you help!")
+            await ctx.send("**Heres my Help Page**\nhttps://enternewname.me/pewdiepie")
 
     @commands.command()
     async def prefix(self, ctx):
