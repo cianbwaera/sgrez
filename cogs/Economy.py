@@ -91,7 +91,7 @@ class PewDieCoin:
     async def shop(self, ctx):
         roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
         if str(roles) == '[]':
-            bio = "Your server currently has no roles to buy at the moment"
+            bio = "Your server currently has no roles to buy at the moment, try asking a moderator to add some"
         else:
             bio = "Here's some roles you can buy, buy them by `p.buy number`\n\uFEFF\n"
         emb = discord.Embed(description=bio, color=discord.Color(value=0xae2323))
@@ -100,7 +100,7 @@ class PewDieCoin:
         
         c = 0 
         for _ in roles:
-            emb.add_field(name=f"#{roles[c]['shop_num']} - {ctx.guild.get_role(roles[c]['role_id']).name}", value=f"{roles[c]['amount']} coins to buy", inline=False)
+            emb.add_field(name=f"#{roles[c]['shop_num']} - {ctx.guild.get_role(roles[c]['role_id']).name}", value=f"`{roles[c]['amount']}` coins to buy", inline=False)
             c+=1
         emb.set_thumbnail(url=ctx.guild.icon_url)
         emb.set_footer(text="PewDieCoin | " + config['ver'])
