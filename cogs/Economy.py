@@ -103,7 +103,7 @@ class PewDieCoin:
             emb.add_field(name=f"#{roles[c]['shop_num']} - {ctx.guild.get_role(roles[c]['role_id']).name}", value=f"`{roles[c]['amount']}` coins to buy", inline=False)
             c+=1
         emb.set_thumbnail(url=ctx.guild.icon_url)
-        emb.add_field(name='\uFEFF', value="End Of The Shop List :(")
+        emb.add_field(name='\uFEFF', value="\uFEFF")
         emb.set_footer(text="PewDieCoin | " + config['ver'])
         await ctx.send(embed=emb)
 
