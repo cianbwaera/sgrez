@@ -33,16 +33,13 @@ class FunCommands:
     async def subcount(self, ctx):
         pewdiepie = await get(f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UC-lHJZR3Gqxm24_Vd_AJ5Yw&key=" + config['yt'])
         tes = await get(f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UCq-Fj5jknLsUf-MWSy4_brA&key=" + config['yt'])        
-        rawsubcount = pewdiepie['items'][0]['statistics']['subscriberCount']
-        tsrawcount = tes['items'][0]['statistics']['subscriberCount']
-        subcount = rawsubcount[:2]+','+rawsubcount[2:5]+','+rawsubcount[5:]        
-        tssubcount = tsrawcount[:2]+','+tsrawcount[2:5]+','+tsrawcount[5:]
+        rawsubcount = int(pewdiepie['items'][0]['statistics']['subscriberCount'])
+        tsrawcount = int(tes['items'][0]['statistics']['subscriberCount'])
         rawdiff = (int(rawsubcount) - int(tsrawcount))
         embed = discord.Embed(color=discord.Color(value=0xae2323))
-        embed.set_author(name="Current Statistics")
-        embed.add_field(name="PewDiePie Count", value=subcount, inline=False)
-        embed.add_field(name="T-Series Count", value=tssubcount, inline=False)
-        embed.add_field(name="Sub Difference", value=f"only {int(rawdiff)} subscribers to beat Pewd", inline=False)
+        embed.add_field(name="PewDiePie Count", value=f"{subcount:,d}", inline=False)
+        embed.add_field(name="T-Series Count", value=f"{tssubcount:,d}", inline=False)
+        embed.add_field(name="Sub Difference", value=f"only {rawdiff:,d} subscribers to beat Pewd", inline=False)
         embed.add_field(name="Live Sub Counts", value="[PewDiePie Subcount](https://socialblade.com/youtube/user/pewdiepie/realtime), [T-Series Subcount](https://socialblade.com/youtube/user/tseries/realtime)")
         embed.set_footer(text="PewDiePie SubCount Tracker™ | " + config['ver'], icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed)
