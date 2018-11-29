@@ -30,7 +30,7 @@ class PewDieCoin:
         await ctx.send(f"Added `75` coins to your coin pouch, your current amount is now `{after_money}` coins")
 
     @commands.command(alias='cf')
-    async def coinflip(self, ctx, side: str, amount_of_coins):
+    async def coinflip(self, ctx, amount_of_coins, side: str,):
         result = random.choice(['h', 't'])
         amt = amount_of_coins
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
