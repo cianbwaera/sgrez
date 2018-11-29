@@ -122,7 +122,7 @@ class OwnerCommands:
         # Executes PSQL. Its very unique from others cuz
         # it changes execution from different kws like SELECT because your selecting a value
         t1 = time.perf_counter()
-        if ["SELECT",  "select"] in ctx.message.content:
+        if "SELECT" in ctx.message.content:
             try:
                 meth = await self.bot.db.fetch(query)
             except Exception as e:
