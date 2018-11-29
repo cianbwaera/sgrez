@@ -118,14 +118,26 @@ class OwnerCommands:
         await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Unloaded Extension `cogs.{cog}`{config['tickyes']}"))
 
     @commands.command()
-    async def init(self, ctx, command : str):
-        while not self.bot.is_closed():
-            msg = copy.copy(ctx.message)
-            msg.author = ctx.me
-            msg.content = ctx.prefix + command
-            new_ctx = await self.bot.get_context(msg)
-            await self.bot.invoke(new_ctx)
-            await asyncio.sleep(30)
+    async def sql(self, ctx, * , query : str):
+        # Executes PSQL. Its very unique from others cuz
+        # it changes execution from different kws like SELECT because your selecting a value
+        t1 = time.perf_counter()
+        if ["SELECT",  "select"] in ctx.message.content:
+            try:
+                meth = await self.bot.db.fetch(query)
+            except Exception as e:
+                meth = e
+        else:
+            try:
+                meth = await self.bot.db.execute(query)
+            except Exception as e:
+                meth = e
+        e = discord.Embed(title="SQL Query Evaluation",color=discord.Color(value=0xae2323))                
+        e.add_field(name="Input :inbox_tray:", value=f"```sql\n{ctx.message.content}\n```", inline=False)
+        a.add_field(name="Output :outbox_tray:", value=f'```sql\n{meth}\n```', inline=False)
+        t2 = time.perf_counter()
+        e.set_footer(text=f"Executed in {round(t2-t1)}ms")
+        await ctx.send(embed=e)
             
 def setup(bot):
     bot.add_cog(OwnerCommands(bot))

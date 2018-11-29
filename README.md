@@ -17,7 +17,7 @@ join the [Support Server](https://discord.gg/vtJJmWQ)
 | `stats`             | `p.stats`               | You can get my current statistics such as guild count, commands used, etc          |
 | `uptime`            | `p.uptime`              | You can get how long i have been running for                                       |
 | `clear`             | `p.clear (number)`      | Purges messages specifically in that channel                                       |
-| `feedback`          | `p.eeedback {feedback}` | Send feedback to us, please do not abuse                                           |
+| `feedback`          | `p.feedback {feedback}` | Send feedback to us, please do not abuse                                           |
 
 # Utility Commands 
 
