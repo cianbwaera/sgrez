@@ -134,7 +134,7 @@ class OwnerCommands:
                 meth = e
         e = discord.Embed(title="SQL Query Evaluation",color=discord.Color(value=0xae2323))                
         e.add_field(name="Input :inbox_tray:", value=f"```sql\n{ctx.message.content}\n```", inline=False)
-        e.add_field(name="Output :outbox_tray:", value=f'```sql\n{meth}\n```', inline=False)
+        e.add_field(name="Output :outbox_tray:", value=f'```sql\n{str(meth)}\n```', inline=False)
         t2 = time.perf_counter()
         e.set_footer(text=f"Executed in {round(t2-t1)}ms")
         await ctx.send(embed=e)
