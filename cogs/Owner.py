@@ -119,12 +119,9 @@ class OwnerCommands:
 
     @commands.command()
     async def sql(self, ctx, * , query : str):
-        # Executes PSQL. Its very unique from others cuz
-        # it changes execution from different kws like SELECT because your selecting a value
-        t1 = time.perf_counter()
-        if "SELECT" in ctx.message.content:
+        if "SELECT" or "select" in ctx.message.content:
             try:
-                meth = await self.bot.db.fetch(query)
+                meth = await self.bot.db.fetchval(query)
             except Exception as e:
                 meth = e
         else:
@@ -133,10 +130,8 @@ class OwnerCommands:
             except Exception as e:
                 meth = e
         e = discord.Embed(title="SQL Query Evaluation",color=discord.Color(value=0xae2323))                
-        e.add_field(name="Input :inbox_tray:", value=f"```sql\n{ctx.message.content}\n```", inline=False)
+        e.add_field(name="Input :inbox_tray:", value=f"```sql\n{query}\n```", inline=False)
         e.add_field(name="Output :outbox_tray:", value=f'```sql\n{str(meth)}\n```', inline=False)
-        t2 = time.perf_counter()
-        e.set_footer(text=f"Executed in {round(t2-t1)}ms")
         await ctx.send(embed=e)
             
 def setup(bot):
