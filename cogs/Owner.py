@@ -126,7 +126,8 @@ class OwnerCommands:
                 meth = e
         else:
             try:
-                meth = await self.bot.db.execute(query)
+                await self.bot.db.execute(query)
+                meth = "Successfully Executed"
             except Exception as e:
                 meth = e
         e = discord.Embed(title="SQL Query Evaluation",color=discord.Color(value=0xae2323))                
