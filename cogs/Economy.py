@@ -87,29 +87,30 @@ class PewDieCoin:
             c += 1
         await ctx.send(embed=emb)
 
-    @commands.command()
+    @commands.group()
     async def shop(self, ctx):
-        roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
-        if str(roles) == '[]':
-            bio = "Your server currently has no roles to buy at the moment, try asking a moderator to add some"
-        else:
-            bio = "Here's some roles you can buy, buy them by `p.buy number`\n\uFEFF\n"
-        emb = discord.Embed(description=bio, color=discord.Color(value=0xae2323))
-        
-        emb.set_author(name=f"{ctx.guild.name}'s Shop")
-        
-        c = 0 
-        for _ in roles:
-            emb.add_field(name=f"#{roles[c]['shop_num']} - {ctx.guild.get_role(roles[c]['role_id']).name}", value=f"`{roles[c]['amount']}` coins to buy", inline=False)
-            c+=1
-        emb.set_thumbnail(url=ctx.guild.icon_url)
-        emb.add_field(name='\uFEFF', value="\uFEFF")
-        emb.set_footer(text="PewDieCoin | " + config['ver'])
-        await ctx.send(embed=emb)
+        if ctx.invoked_subcommand is None:
+            roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
+            if str(roles) == '[]':
+                bio = "Your server currently has no roles to buy at the moment, try asking a moderator to add some"
+            else:
+                bio = "Here's some roles you can buy, buy them by `p.buy number`\n\uFEFF\n"
+            emb = discord.Embed(description=bio, color=discord.Color(value=0xae2323))
+            
+            emb.set_author(name=f"{ctx.guild.name}'s Shop")
+            
+            c = 0 
+            for _ in roles:
+                emb.add_field(name=f"#{roles[c]['shop_num']} - {ctx.guild.get_role(roles[c]['role_id']).name}", value=f"`{roles[c]['amount']}` coins to buy", inline=False)
+                c+=1
+            emb.set_thumbnail(url=ctx.guild.icon_url)
+            emb.add_field(name='\uFEFF', value="\uFEFF")
+            emb.set_footer(text="PewDieCoin | " + config['ver'])
+            await ctx.send(embed=emb)
 
-    @commands.command()
+    @shop.command()
     @commands.has_permissions(manage_roles=True)
-    async def sell(self, ctx, amount : int, * , role : discord.Role): 
+    async def add(self, ctx, amount : int, * , role : discord.Role): 
         roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
         for i in roles:
             if i['role_id'] == role.id:
@@ -131,7 +132,7 @@ class PewDieCoin:
             print(e)
 
     @commands.has_permissions(manage_roles=True)
-    @commands.command()
+    @shop.command()
     async def remove(self, ctx, shop_position : int):
         role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
         try:
@@ -141,7 +142,7 @@ class PewDieCoin:
             print(e)
 
 
-    @commands.command()
+    @shop.command()
     async def buy(self, ctx, shop_position : int):
         role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
         for i in ctx.author.roles:

@@ -38,17 +38,17 @@ join the [Support Server](https://discord.gg/vtJJmWQ)
 
 # PewDieCoin Commands
 
-| Command       | Usage                                    | Information                                                                    |
-| ------------- | ---------------------------------------- | ------------------------------------------------------------------------------ |
-| `balance`     | `p.balance` or `p.bank` or `p.$`         | Gets how much coins you have in your pouch                                     |
-| `timely`      | `p.timely`                               | Get 75 coins each 4 hours                                                      |
-| `coinflip`    | `p.coinflip (h or t) (amount to gamble)` | Flips a coin, you either win that amount or lose that amount                   |
-| `give`        | `p.give (amount) @User#1234`             | PewDiePie gives away a specific amount of coins away to that user (No Refunds) |
-| `leaderboard` | `p.lb` or `p.leaderboard`                | Who has the most pewdiecoins >:)                                               |
-| `shop`        | `p.shop`                                 | Shows you roles for sell                                                       |
-| `sell`        | `p.sell (amount) (role name or role id)` | Sells a role to the Shop                                                       |
-| `buy`         | `p.buy (role_number)`                    | Buys an role off the shop                                                      |
-| `remove`      | `p.remove (role_number)`                 | Removes a role off the shop                                                    |
+| Command       | Usage                                        | Information                                                                    |
+| ------------- | -------------------------------------------- | ------------------------------------------------------------------------------ |
+| `balance`     | `p.balance` or `p.bank` or `p.$`             | Gets how much coins you have in your pouch                                     |
+| `timely`      | `p.timely`                                   | Get 75 coins each 4 hours                                                      |
+| `coinflip`    | `p.coinflip (h or t) (amount to gamble)`     | Flips a coin, you either win that amount or lose that amount                   |
+| `give`        | `p.give (amount) @User#1234`                 | PewDiePie gives away a specific amount of coins away to that user (No Refunds) |
+| `leaderboard` | `p.lb` or `p.leaderboard`                    | Who has the most pewdiecoins >:)                                               |
+| `Shop`        | `p.shop`                                     | Shows you roles for sell                                                       |
+| `Shop Add`    | `p.shop add (amount) (role name or role id)` | Sells a role to the Shop                                                       |
+| `Shop Buy`    | `p.shop buy (role_number)`                   | Buys an role off the shop                                                      |
+| `Shop Remove` | `p.shop remove (role_number)`                | Removes a role off the shop                                                    |
 
 
 Thank you for using PewDiePie and we hope you use it in the future to come
