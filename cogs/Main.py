@@ -17,7 +17,7 @@ class MainClass:
     async def support(self, ctx):
         try:
             await ctx.author.send(f"**Here's My Support Server**\n{config['server']}")
-            await ctx.send("**Check DMs for Support Server**")
+            await ctx.send("**Check DMs for Support Server :mailbox_with_mail:**")
         except:
             await ctx.send(f"**Here's My Support Server**\n{config['server']}")
 
@@ -35,12 +35,11 @@ class MainClass:
 
     @commands.command()
     async def help(self, ctx):
-        
         try:
-            await ctx.author.send("**Heres my Help Page**\nhttps://enternewname.me/pewdiepie")
-            await ctx.send("**Check you DMs For Help:mailbox_with_mail:**")
+            await ctx.author.send("**Here's my Help Page**\nhttps://enternewname.me/pewdiepie")
+            await ctx.send("**Check you DM's For Help:mailbox_with_mail:**")
         except:
-            await ctx.send("**Heres my Help Page**\nhttps://enternewname.me/pewdiepie")
+            await ctx.send("**Here's my Help Page**\nhttps://enternewname.me/pewdiepie")
 
     @commands.command()
     async def prefix(self, ctx):
@@ -83,7 +82,7 @@ class MainClass:
         try:
             perms = discord.Permissions.all()
             await ctx.author.send(f"**Here's My Invite Link**\n**{discord.utils.oauth_url(self.bot.user.id, perms)}**")
-            await ctx.send("**Check DMs FOr Bot Invite :mailbox_with_mail:**")
+            await ctx.send("**Check DM's FOr Bot Invite :mailbox_with_mail:**")
         except:
             await ctx.send(f"**Here's My Invite Link**\n**{discord.utils.oauth_url(self.bot.user.id, perms)}**")
 
