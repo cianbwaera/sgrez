@@ -31,8 +31,10 @@ class PewDieCoin:
 
     @commands.command(alias='cf')
     async def coinflip(self, ctx, amount_of_coins, side: str,):
-        result = random.choice(['h', 't'])
         amt = amount_of_coins
+        if amt <= 0:
+            return await ctx.send(embed=discord.Embed(description="You cannot give an negative number to someone", color=discord.Color.red()))
+        result = random.choice(['h', 't'])
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if amt == 'all':
             amt = count
@@ -58,6 +60,8 @@ class PewDieCoin:
 
     @commands.command()
     async def give(self, ctx, amt: int, user: discord.User):
+        if amt <= 0:
+            return await ctx.send(embed=discord.Embed(description="You cannot give an negative number to someone", color=discord.Color.red()))
         author_count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if author_count is None:
             author_count = 0
@@ -71,9 +75,11 @@ class PewDieCoin:
             current_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", user.id)
             if current_money is None:
                 current_money = 0
-            await self.bot.db.execute("UPDATE bank SET user_money = user_money - $1WHERE user_id = $2", amt, ctx.author.id)
+            await self.bot.db.execute("UPDATE bank SET user_money = user_money - $1 WHERE user_id = $2", amt, ctx.author.id)
             await self.bot.db.execute("INSERT INTO bank (user_id, user_money) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET user_money = $3 + $2", user.id, amt, current_money)
             a = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
+            if a is None:
+                a = 0
             await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"I have given {user.mention} `{amt}` coins, You now have {a}"))
 
     @commands.command(aliases=['lb'])
