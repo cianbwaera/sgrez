@@ -82,7 +82,7 @@ class MainClass:
         try:
             perms = discord.Permissions.all()
             await ctx.author.send(f"**Here's My Invite Link**\n**{discord.utils.oauth_url(self.bot.user.id, perms)}**")
-            await ctx.send("**Check DM's FOr Bot Invite :mailbox_with_mail:**")
+            await ctx.send("**Check DM's For Bot Invite :mailbox_with_mail:**")
         except:
             await ctx.send(f"**Here's My Invite Link**\n**{discord.utils.oauth_url(self.bot.user.id, perms)}**")
 
