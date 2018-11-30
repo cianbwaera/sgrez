@@ -15,7 +15,12 @@ class MainClass:
 
     @commands.command(aliases=['server'])
     async def support(self, ctx):
-        await ctx.send(embed=discord.Embed(color=discord.Color(value=def_color), title="Here's My Support Server", description=f"[Click Here]({config['server']})"))
+        try:
+            await ctx.author.send(f"**Here's My Support Server**\n{config['server']}")
+            await ctx.send("**Check DMs for Support Server**")
+        except:
+            await ctx.send(f"**Here's My Support Server**\n{config['server']}")
+
 
     @commands.command()
     async def perms(self, ctx, user: discord.Member=None):
@@ -75,8 +80,12 @@ class MainClass:
             
     @commands.command()
     async def invite(self, ctx):
-        perms = discord.Permissions.all()
-        await ctx.send(embed=discord.Embed(color=discord.Color(value=def_color), title="Here's My Invite",description=f"[Click Here!]({discord.utils.oauth_url(self.bot.user.id, perms)})"))
+        try:
+            perms = discord.Permissions.all()
+            await ctx.author.send(f"**Here's My Invite Link**\n**{discord.utils.oauth_url(self.bot.user.id, perms)}**")
+            await ctx.send("**Check DMs FOr Bot Invite :mailbox_with_mail:**")
+        except:
+            await ctx.send(f"**Here's My Invite Link**\n**{discord.utils.oauth_url(self.bot.user.id, perms)}**")
 
     async def get(self, url):
         async with aiohttp.ClientSession() as session:
