@@ -100,9 +100,10 @@ class OwnerCommands:
         if len(content) > 2000:
             fp = io.BytesIO(content.encode('utf-8'))
             return await ctx.send("Can't send full size..", file=discord.File(fp, 'bashresults.txt'))
-        if len(content) == '':
+        if content == '':
             return await ctx.send("Nothing to send..")
-        await ctx.send(f"```fix\n{content}\n```")
+        else:
+            await ctx.send(f"```fix\n{content}\n```")
 
     @commands.command(aliases=['l'])
     async def load(self, ctx, cog):
@@ -131,8 +132,8 @@ class OwnerCommands:
             except Exception as e:
                 meth = e
         e = discord.Embed(title="SQL Query Evaluation",color=discord.Color(value=0xae2323))                
-        e.add_field(name="Input :inbox_tray:", value=f"```sql\n{query}\n```", inline=False)
-        e.add_field(name="Output :outbox_tray:", value=f'```sql\n{str(meth)}\n```', inline=False)
+        e.add_field(name=":inbox_tray: Input", value=f"```sql\n{query}\n```", inline=False)
+        e.add_field(name=":outbox_tray: Output" , value=f'```sql\n{str(meth)}\n```', inline=False)
         await ctx.send(embed=e)
             
 def setup(bot):
