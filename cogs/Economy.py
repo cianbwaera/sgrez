@@ -32,7 +32,7 @@ class PewDieCoin:
     @commands.command(alias='cf')
     async def coinflip(self, ctx, amount_of_coins, side: str,):
         amt = amount_of_coins
-        if amt <= 0:
+        if int(amt) <= 0:
             return await ctx.send(embed=discord.Embed(description="You cannot give an negative number to someone", color=discord.Color.red()))
         result = random.choice(['h', 't'])
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
