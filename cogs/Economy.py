@@ -67,7 +67,7 @@ class PewDieCoin:
         if author_count is None:
             author_count = 0
         if user.bot:
-            return await ctx.send(embed=discord.Embed(description="Bot Accounts do not get money", color=discord.Color.red()))
+            return await ctx.send(embed=discord.Embed(description="Bot accounts do not get money", color=discord.Color.red()))
         if user.id == ctx.author.id:
             return await ctx.send(embed=discord.Embed(color=discord.Color.red(), description="You cannot give money to yourself"))
         if amt > author_count:
@@ -101,7 +101,7 @@ class PewDieCoin:
             if str(roles) == '[]':
                 bio = "Your server currently has no roles to buy at the moment, try asking a moderator to add some"
             else:
-                bio = "Here's some roles you can buy, buy them by `p.buy number`\n\uFEFF\n"
+                bio = "Here's some roles you can buy, buy them by `p.shop buy number`\n\uFEFF\n"
             emb = discord.Embed(description=bio, color=discord.Color(value=0xae2323))
             
             emb.set_author(name=f"{ctx.guild.name}'s Shop")
