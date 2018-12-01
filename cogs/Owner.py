@@ -116,7 +116,7 @@ class OwnerCommands:
     @commands.command(aliases=['ul'])
     async def unload(self, ctx, cog):
         self.bot.unload_extension(f"cogs.{cog}")
-        await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Unloaded Extension `cogs.{cog}`{config['tickyes']}"))
+        await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Unloaded Extension `cogs.{cog}` {config['tickyes']}"))
 
     @commands.command()
     async def sql(self, ctx, * , query : str):
@@ -127,7 +127,8 @@ class OwnerCommands:
                 meth = e
         else:
             try:
-                meth = await self.bot.db.execute(query)                
+                await self.bot.db.execute(query)                
+                meth = 'Executed!'
             except Exception as e:
                 meth = e
         e = discord.Embed(title="SQL Query Evaluation",color=discord.Color(value=0xae2323))                

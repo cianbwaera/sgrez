@@ -19,8 +19,6 @@ class PewDiePieBot(commands.AutoShardedBot):
         self.db = None
 
     async def on_ready(self):
-        with open('schema.sql', 'r') as sql:
-            await self.db.execute(sql.read())
         print(f"{self.user} is ready")
         print("Python Version: " + str(platform.python_version()))
         print("Discord.py Version: " + str(pkg_resources.get_distribution('discord.py').version))
@@ -69,6 +67,9 @@ class PewDiePieBot(commands.AutoShardedBot):
         try:
             self.db = await asyncpg.create_pool(**creds)
             print("Connected!")
+            with open('schema.sql', 'r') as sql:
+                await self.db.execute(sql.read())
+            print("Done Executing schema.sql")
         except asyncio.TimeoutError:
             print("Could not connect to the database:\nInvalid Host Address")
         except asyncpg.InvalidPasswordError:

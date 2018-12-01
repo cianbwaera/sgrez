@@ -40,7 +40,7 @@ class FunCommands:
         embed = discord.Embed(color=discord.Color(value=0xae2323))
         embed.add_field(name="PewDiePie Count", value=f"{rawsubcount:,d}", inline=False)
         embed.add_field(name="T-Series Count", value=f"{tsrawcount:,d}", inline=False)
-        embed.add_field(name="Sub Difference", value= inline=False)
+        embed.add_field(name="Sub Difference", value=subcount, inline=False)
         embed.add_field(name="Live Sub Counts", value="[PewDiePie Subcount](https://socialblade.com/youtube/user/pewdiepie/realtime) | [T-Series Subcount](https://socialblade.com/youtube/user/tseries/realtime)")
         embed.set_footer(text="PewDiePie SubCount Tracker™ | " + config['ver'], icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed)
@@ -49,7 +49,7 @@ class FunCommands:
     @commands.command()
     async def poll(self, ctx, *, poll_message):
         embed = discord.Embed(description=poll_message, color=discord.Color(value=0xae2323))
-        embed.set_author(name=f"New poll from {ctx.author}", icon_url=ctx.author.avatar_url)
+        embed.set_author(name=f"New Poll from {ctx.author}", icon_url=ctx.author.avatar_url)
         try:
             await ctx.message.delete()
         except:
