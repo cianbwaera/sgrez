@@ -38,7 +38,7 @@ class PewDieCoin:
         else:
             amt = int(amt)
         if amt <= 0:
-            return await ctx.send(embed=discord.Embed(description="You cannot give an negative number to someone", color=discord.Color.red()))
+            return await ctx.send(embed=discord.Embed(description="You cannot give an negative amount to someone", color=discord.Color.red()))
         result = random.choice(['h', 't'])
         
         if (side == 'head' or side == 'heads') and result == 'h':
@@ -62,7 +62,7 @@ class PewDieCoin:
     @commands.command()
     async def give(self, ctx, amt: int, user: discord.User):
         if amt <= 0:
-            return await ctx.send(embed=discord.Embed(description="You cannot give an negative number to someone", color=discord.Color.red()))
+            return await ctx.send(embed=discord.Embed(description="You cannot give an negative amount to someone", color=discord.Color.red()))
         author_count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if author_count is None:
             author_count = 0

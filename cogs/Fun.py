@@ -34,10 +34,13 @@ class FunCommands:
         rawsubcount = int(pewdiepie['items'][0]['statistics']['subscriberCount'])
         tsrawcount = int(tes['items'][0]['statistics']['subscriberCount'])
         rawdiff = (int(rawsubcount) - int(tsrawcount))
+        subcount = f"T-Series needs {rawdiff:,d} subscribers to beat Pewd"
+        if rawdiff <= 0:
+            subcount = "T-Series has more subscribers then PewDiePie :cry:"
         embed = discord.Embed(color=discord.Color(value=0xae2323))
         embed.add_field(name="PewDiePie Count", value=f"{rawsubcount:,d}", inline=False)
         embed.add_field(name="T-Series Count", value=f"{tsrawcount:,d}", inline=False)
-        embed.add_field(name="Sub Difference", value=f"only {rawdiff:,d} subscribers to beat Pewd", inline=False)
+        embed.add_field(name="Sub Difference", value= inline=False)
         embed.add_field(name="Live Sub Counts", value="[PewDiePie Subcount](https://socialblade.com/youtube/user/pewdiepie/realtime) | [T-Series Subcount](https://socialblade.com/youtube/user/tseries/realtime)")
         embed.set_footer(text="PewDiePie SubCount Tracker™ | " + config['ver'], icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed)
