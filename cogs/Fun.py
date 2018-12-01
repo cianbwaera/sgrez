@@ -21,7 +21,7 @@ class FunCommands:
         embed = discord.Embed(color=discord.Color(value=0xae2323), title=query, description=random.choice(choices))
         embed.set_footer(text=config['ver'], icon_url=self.bot.user.avatar_url)
         try:
-            ctx.message.delete()
+            await ctx.message.delete()
         except:
             pass
         await ctx.send(embed=embed)
