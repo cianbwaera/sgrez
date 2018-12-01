@@ -38,7 +38,7 @@ class PewDieCoin:
         else:
             amt = int(amt)
         if amt <= 0:
-            return await ctx.send(embed=discord.Embed(description="You cannot give an negative amount to someone", color=discord.Color.red()))
+            return await ctx.send(embed=discord.Embed(description="You cannot give an negative amount", color=discord.Color.red()))
         result = random.choice(['h', 't'])
         
         if (side == 'head' or side == 'heads') and result == 'h':
