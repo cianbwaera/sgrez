@@ -43,14 +43,13 @@ class Error_Handler:
         else:
             print(error)
         
-    async def on_command(self, ctx):
+    async def on_command_completion(self, ctx):
         if ctx.cog.__class__.__name__ != "OwnerCommands":
             print(f"{ctx.author} used {ctx.command} at {ctx.channel.id}")
         else:
             pass
-
-    async def on_command_completion(self, ctx):
         await self.bot.db.execute("UPDATE commands SET num = num + 1")
+        
 
 
     # Helper for the shop

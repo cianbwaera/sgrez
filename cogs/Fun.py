@@ -18,9 +18,7 @@ class FunCommands:
     @commands.command(aliases=['8ball'])
     async def eightball(self, ctx, * , query):
         choices = config['8ball']
-        embed = discord.Embed(color=discord.Color(value=0xae2323))
-        embed.add_field(name=query, value=random.choice(choices))
-        embed.set_author(name="Eight Ball")
+        embed = discord.Embed(color=discord.Color(value=0xae2323), title=query, description=random.choice(choices))
         embed.set_footer(text=config['ver'], icon_url=self.bot.user.avatar_url)
         try:
             ctx.message.delete()
@@ -61,7 +59,7 @@ class FunCommands:
             await msg.delete()
             await ctx.send("Make sure i can add reactions to the poll")
 
-
+    # I may have hardcoded this, but i personally like this
     async def activitytype(self, activitytype):
         if str(activitytype) == "ActivityType.playing":
             return "Playing"
@@ -114,7 +112,7 @@ class FunCommands:
         embed.add_field(name="Joined Discord", value=f"{joined_discord}, {created_account_length} Days ago", inline=False)
         if ctx.guild:
             embed.add_field(name="Roles", value=roles)
-        embed.set_footer(text=f"User ID: {user.id}")
+        embed.set_footer(text=f"User ID: {user.id} | " + config['ver'], icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed)
 
     @commands.guild_only()
@@ -136,7 +134,7 @@ class FunCommands:
         embed.add_field(name="Online", value=f"{online_count}/{membercount}", inline=False)
         embed.add_field(name="Server Region", value=server.region, inline=False)
         embed.add_field(name="Roles", value=len(roles), inline=False)
-        embed.set_footer(text=f"Server ID: {server.id}")
+        embed.set_footer(text=f"Server ID: {server.id} | "+ config['ver'], icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed)
 
 

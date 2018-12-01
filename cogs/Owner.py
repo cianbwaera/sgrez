@@ -127,13 +127,12 @@ class OwnerCommands:
                 meth = e
         else:
             try:
-                await self.bot.db.execute(query)
-                meth = "Successfully Executed"
+                meth = await self.bot.db.execute(query)                
             except Exception as e:
                 meth = e
         e = discord.Embed(title="SQL Query Evaluation",color=discord.Color(value=0xae2323))                
         e.add_field(name=":inbox_tray: Input", value=f"```sql\n{query}\n```", inline=False)
-        e.add_field(name=":outbox_tray: Output" , value=f'```sql\n{str(meth)}\n```', inline=False)
+        e.add_field(name=":outbox_tray: Output" , value=f'```sql\n{meth}\n```', inline=False)
         await ctx.send(embed=e)
             
 def setup(bot):
