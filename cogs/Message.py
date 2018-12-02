@@ -29,7 +29,7 @@ class Message:
 
     @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
-    @commands.command()
+    @commands.command(aliases=['slowmo'])
     async def slowmode(self, ctx, seconds: int=0):
         if seconds > 120:
             return await ctx.send(f"*{config['tickno']} Slowmode Rate Cannot Be Over 120 Seconds*")
