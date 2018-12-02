@@ -1,7 +1,7 @@
 # PewDiePie Commands
 
 This will explain throughly on how each availiable command works and will show how it is used, for more help and support, you can 
-join the [Support Server](https://discord.gg/vtJJmWQ)
+join the [Support Server](https://discord.gg/vtJJmWQ). Please be reminded that these commands may not be all and i always update [https://enternewname.me/pewdiepie](https://enternewname.me/pewdiepie) regulary to ensure commands are always updated
 
 
 
@@ -16,7 +16,6 @@ join the [Support Server](https://discord.gg/vtJJmWQ)
 | `ping`              | `p.ping`                | You can get my speed of the discord websocket connection                           |
 | `stats`             | `p.stats`               | You can get my current statistics such as guild count, commands used, etc          |
 | `uptime`            | `p.uptime`              | You can get how long i have been running for                                       |
-| `clear`             | `p.clear (number)`      | Purges messages specifically in that channel                                       |
 | `feedback`          | `p.feedback {feedback}` | Send feedback to us, please do not abuse                                           |
 
 # Utility Commands 
@@ -26,6 +25,19 @@ join the [Support Server](https://discord.gg/vtJJmWQ)
 | `userinfo`   | `p.userinfo` or `p.userinfo @User#1234` | I send you the current information of you or an user          |
 | `serverinfo` | `p.serverinfo`                          | I send you the current information of your server             |
 | `perms`      | `p.perms` or `p.perms @User#1234`       | You get the current permissions of you/an user in your server |
+
+# Moderation Commands
+
+| Command      | Usage                                 | Information                                                                   |
+| ------------ | ------------------------------------- | ----------------------------------------------------------------------------- |
+| `clear`      | `p.clear (number)`                    | Purges messages specifically in that channel                                  |
+| `giverole`   | `p.giverole (user) (role)`            | Gives an user an role if the bots role is higher                              |
+| `removerole` | `p.removerole (user) (role)`          | Removes an user's existing role, make sure pewds role is higher and has Admin |
+| `kick`       | `p.kick (user) (reason: optional)`    | Kicks an user from the server                                                 |
+| `ban`        | `p.ban (user) (reason: optional)`     | Bans an user from the server                                                  |
+| `softban`    | `p.softban (user) (reason: optional)` | Softbans an user from the server                                              |
+| `slowmode`   | `p.slowmode (integer < 120)`          | Puts the channel on slowmode                                                  |
+
 
 
 # Fun Commands
