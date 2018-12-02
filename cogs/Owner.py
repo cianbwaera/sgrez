@@ -122,7 +122,9 @@ class OwnerCommands:
     async def sql(self, ctx, * , query : str):
         if "SELECT" or "select" in ctx.message.content:
             try:
-                meth = await self.bot.db.fetchval(query)
+                meth = await self.bot.db.fetch(query)
+            except discord.HTTPException:
+                meth = "2000 word limit"
             except Exception as e:
                 meth = e
         else:
