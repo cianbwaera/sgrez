@@ -1,7 +1,7 @@
 import discord, json, asyncio, datetime
 from discord.ext import commands
 
-with open("config.json", "r") as f:
+with open("db/config.json", "r") as f:
     config = json.load(f)
 
 class Role:
