@@ -62,7 +62,7 @@ class User:
             if user == ctx.author:
                 return await ctx.send(f"***{config['tickno']} You can't softban yourself...***")
             await user.ban(reason=softbanReason)
-            await user.unban()
+            await user.unban(reason="Softbanned an user")
             if not softbanReason:
                 await ctx.send(f"**{config['tickyes']} I have softbanned {user} from the server**")
             else:

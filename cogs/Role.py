@@ -1,6 +1,9 @@
 import discord, json, asyncio, datetime
 from discord.ext import commands
 
+with open("config.json", "r") as f:
+    config = json.load(f)
+
 class Role:
     def __init__(self, bot):
         self.bot = bot
@@ -12,7 +15,7 @@ class Role:
     async def giverole(self, ctx, user : discord.Member, *, role : discord.Role):
         if ctx.author.top_role > user.top_role or ctx.author == ctx.guild.owner:
             await user.add_roles(role)
-            await ctx.send(f"***<:tickYes:490607182010777620> Gave {user.mention} Role: `{role}`***")
+            await ctx.send(f"***{config['tickyes']} Gave {user.mention} Role: `{role}`***")
             try:
                 embed = discord.Embed(timestamp=datetime.datetime.utcnow(), color=discord.Color(value=0xae2323))
                 embed.set_author(name=f"Moderator Action: {ctx.command}")
@@ -32,7 +35,7 @@ class Role:
     async def removerole(self, ctx, user : discord.Member, *, role : discord.Role):
         if ctx.author.top_role >= user.top_role or ctx.author == ctx.guild.owner:
             await user.remove_roles(role)
-            await ctx.send(f"***<:tickYes:490607182010777620> Ok, {user.mention} has been removed from role: `{role}`***")
+            await ctx.send(f"***{config['tickyes']} Ok, {user.mention} has been removed from role: `{role}`***")
             try:
                 embed = discord.Embed(timestamp=datetime.datetime.utcnow(), color=discord.Color(value=0xae2323))
                 embed.set_author(name=f"Moderator Action: {ctx.command}")
