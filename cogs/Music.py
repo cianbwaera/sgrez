@@ -17,7 +17,7 @@ class Music:
 
     @disstrack.command()
     async def play(self, ctx):
-        if not await ctx.author.voice.channel.connect():
+        if ctx.author.voice.channel is None:
             return await ctx.send("You are currently not connected to a Voice Channel")
         else:
             await ctx.author.voice.channel.connect()
@@ -27,7 +27,7 @@ class Music:
 
     @disstrack.command()
     async def stop(self, ctx):
-        if not ctx.voice_client:
+        if ctx.voice_client is None:
             await ctx.send("Not connected to an voice channel")
         elif len(ctx.me.voice.channel.members) < 2:
             if ctx.author == ctx.guild.owner:
