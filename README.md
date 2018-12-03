@@ -1,22 +1,9 @@
-<style>
-  
- #upvotebutton {border-radius: 10%}
- 
-#edit, #delete, #support, #github, #websitelink
-{background-color: #142634;color:#BDC7C1;}
-code {background-color: #BDC7C1 !important;border-radius: 5%;color: black;}
-.titleandvote {color:#BDC7C1;}
-a {color: black;}
-
-
-</style>
-
 
 
 # PewDiePie Commands
 
 This will explain throughly on how each availiable command works and will show how it is used, for more help and support, you can 
-join the [Support Server](https://discord.gg/vtJJmWQ). Please be reminded that these commands may not be all and i always update [https://enternewname.me/pewdiepie](https://enternewname.me/pewdiepie) regulary to ensure commands are always updated
+join the [Support Server](https://discord.gg/vtJJmWQ). Please be reminded that these commands may not be all of them and i always update [https://enternewname.me/pewdiepie](https://enternewname.me/pewdiepie) regulary to ensure commands are always updated
 
 
 

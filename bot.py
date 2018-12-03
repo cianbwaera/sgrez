@@ -13,7 +13,7 @@ with open("./db/config.json") as f:
 
 cogs = config['cogs']
 
-class PewDiePieBot(commands.AutoShardedBot):
+class PewDiePieBot(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=commands.when_mentioned_or(config['prefix']), case_insensitive=True)
         self.db = None
