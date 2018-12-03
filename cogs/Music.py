@@ -21,9 +21,10 @@ class Music:
             await ctx.send("You are currently not connected to a Voice Channel")
         else:
             await ctx.author.voice.channel.connect()
+            await ctx.send(f"Now playing `Bitch Lasanga` in `{ctx.author.voice.channel.name}`")
             music = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio("./db/song1.mp3"))
             await ctx.voice_client.play(music, after=lambda e: print(e) if e else None)
-            await ctx.send(f"Now playing `Bitch Lasanga` in `{ctx.author.voice.channel.name}`")
+            
 
     @disstrack.command()
     async def stop(self, ctx):
