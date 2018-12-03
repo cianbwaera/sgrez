@@ -26,6 +26,7 @@ class Music:
             await ctx.send(f"Now playing `Bitch Lasanga` in `{ctx.author.voice.channel.name}`")
             music = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio("./db/song1.mp3"))
             await ctx.voice_client.play(music)
+            await ctx.voice_client.disconnect()
             
     @commands.guild_only()
     @disstrack.command()
