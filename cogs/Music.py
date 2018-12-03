@@ -25,14 +25,14 @@ class Music:
             await ctx.author.voice.channel.connect()
             await ctx.send(f"Now playing `Bitch Lasanga` in `{ctx.author.voice.channel.name}`")
             music = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio("./db/song1.mp3"))
-            await ctx.voice_client.play(music, after=lambda e: print(e) if e else None)
+            await ctx.voice_client.play(music)
             
     @commands.guild_only()
     @disstrack.command()
     async def stop(self, ctx):
         if ctx.me.voice is None:
             await ctx.send("Not connected to an voice channel")
-        elif len(ctx.me.voice.channel.members) < 2:
+        elif len(ctx.me.voice.channel.members) >= 2:
             if ctx.author == ctx.guild.owner:
                 await ctx.voice_client.disconnect()
                 await ctx.send("Disconnected")
