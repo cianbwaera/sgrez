@@ -18,7 +18,7 @@ class Music:
     @disstrack.command()
     async def play(self, ctx):
         if ctx.author.voice.channel is None:
-            return await ctx.send("You are currently not connected to a Voice Channel")
+            await ctx.send("You are currently not connected to a Voice Channel")
         else:
             await ctx.author.voice.channel.connect()
             music = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio("./db/song1.mp3"))
@@ -27,11 +27,11 @@ class Music:
 
     @disstrack.command()
     async def stop(self, ctx):
-        if ctx.voice_client is None:
+        if ctx.me.voice_channel is None:
             await ctx.send("Not connected to an voice channel")
         elif len(ctx.me.voice.channel.members) < 2:
             if ctx.author == ctx.guild.owner:
-                await ctx.me.voice.channel.disconnect()
+                await ctx.voice_client.disconnect()
                 await ctx.send("Disconnected")
             else:
                 await ctx.send("There are members in the channel")
