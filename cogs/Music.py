@@ -10,11 +10,13 @@ class Music:
     def __init__(self, bot):
         self.bot = bot
     
+    @commands.guild_only()
     @commands.group()
     async def disstrack(self, ctx):
         if ctx.invoked_subcommand is None:
             await ctx.send("Invalid Arguments")
 
+    @commands.guild_only()
     @disstrack.command()
     async def play(self, ctx):
         if ctx.author.voice is None:
@@ -25,7 +27,7 @@ class Music:
             music = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio("./db/song1.mp3"))
             await ctx.voice_client.play(music, after=lambda e: print(e) if e else None)
             
-
+    @commands.guild_only()
     @disstrack.command()
     async def stop(self, ctx):
         if ctx.me.voice is None:
