@@ -47,6 +47,7 @@ join the [Support Server](https://discord.gg/vtJJmWQ). Please be reminded that t
 | Command    | Usage                   | Information                                                         |
 | ---------- | ----------------------- | ------------------------------------------------------------------- |
 | `subcount` | `p.subcount`            | This command gets the subcount of T-Series and PewDiePie            |
+| `disstrack`| `p.disstrack`           | Plays the T-Series disstrack in the voice channel you're in.
 | `poll`     | `p.poll {poll_message}` | You can send a poll of what to debate over in your discord channel! |
 
 
