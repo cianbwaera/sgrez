@@ -76,6 +76,7 @@ class PewDiePieBot(commands.Bot):
             print("Invalid Password")
         except Exception as e:
             print(e)
+            
 
     def run(self):
         json.dump({"uptimestats" : str(datetime.datetime.utcnow())}, open("db/uptime.json", "w+"))
