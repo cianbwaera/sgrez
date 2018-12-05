@@ -5,6 +5,9 @@
 This will explain throughly on how each availiable command works and will show how it is used, for more help and support, you can 
 join the [Support Server](https://discord.gg/vtJJmWQ). Please be reminded that these commands may not be all of them and i always update [https://enternewname.me/pewdiepie](https://enternewname.me/pewdiepie) regulary to ensure commands are always updated
 
+# What about that, T-Series bot?
+
+I honestly have nothing against it, me and the owner is good friends (hopefully lol) and you can invite my counterpart by [Clicking Here](https://discordapp.com/oauth2/authorize?client_id=500868806776979462&scope=bot&permissions=72710)
 
 
 # General Commands
