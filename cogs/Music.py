@@ -21,7 +21,10 @@ class Music:
         if ctx.author.voice is None:
             await ctx.send("You are currently not connected to a Voice Channel")
         else:
-            await ctx.author.voice.channel.connect()
+            try:
+                await ctx.author.voice.channel.connect()
+            except:
+                pass
             await ctx.send(f"Now playing `Bitch Lasanga` in `{ctx.author.voice.channel.name}`")
             music = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio("./db/song1.mp3"))
             await ctx.voice_client.play(music)
@@ -32,15 +35,17 @@ class Music:
     async def stop(self, ctx):
         if ctx.me.voice is None:
             await ctx.send("Not connected to an voice channel")
-        elif len(ctx.me.voice.channel.members) >= 2:
+        elif len(ctx.me.voice.channel.members) > 2:
+            ch = ctx.author.voice.channel.name
             if ctx.author == ctx.guild.owner:
                 await ctx.voice_client.disconnect()
-                await ctx.send("Disconnected")
+                await ctx.send(f"Disconnected from `{ch}`")
             else:
                 await ctx.send("There are members in the channel")
         else:
+            ch = ctx.author.voice.channel.name
             await ctx.voice_client.disconnect()
-            await ctx.send("Disconnected")
+            await ctx.send(f"Disconnected from `{ch}`")
 
 def setup(bot):
     bot.add_cog(Music(bot))
