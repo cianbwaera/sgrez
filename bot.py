@@ -47,9 +47,9 @@ class PewDiePieBot(commands.Bot):
 
     async def handler(self):
         await self.change_presence(activity=discord.Streaming(name=f"p.help in {len(self.guilds)} servers!", url="https://twitch.tv/PewDiePie"))
-        async with aiohttp.ClientSession() as session:
-            await session.post("https://discordbots.org/api/bots/508143906811019269/stats", headers={'Authorization': config['tokens']['dbltoken']},data={'server_count': len(self.guilds)})
-            await session.post("https://discordbots.group/api/bot/508143906811019269", headers={'Authorization' : config['tokens']['dbgtoken']}, data={'server_count': len(self.guilds)})
+        #async with aiohttp.ClientSession() as session:
+         #   await session.post("https://discordbots.org/api/bots/508143906811019269/stats", headers={'Authorization': config['tokens']['dbltoken']},data={'server_count': len(self.guilds)})
+          #  await session.post("https://discordbots.group/api/bot/508143906811019269", headers={'Authorization' : config['tokens']['dbgtoken']}, data={'server_count': len(self.guilds)})
 
     async def start(self, token, bot=True, reconnect=True):
         await self.login(token, bot=bot)
@@ -92,7 +92,11 @@ class PewDiePieBot(commands.Bot):
             loop.run_until_complete(self.logout())
         
     async def logout(self):
-        await self.db.close()
+        print("\nLogging out!\n")
+        try:
+            await self.db.close()
+        except:
+            pass
         await super().logout()
         
 

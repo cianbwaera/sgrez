@@ -19,6 +19,25 @@ class PewDieCoin:
             count = 0
         await ctx.send(f"You currently have `{count}` coins")
 
+    @commands.command()
+    async def rolldice(self, ctx, bet : int, guess : int):
+        money = self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
+        if money is None:
+            money = 0
+        else:
+            money = int(money)
+        if guess <= 0 or guess > 6 or bet <= 0:
+            return await ctx.send(embed=discord.Embed(description="Invalid roll/bet!", color=discord.Color.red()))
+        elif bet > money:
+            return await ctx.send(embed=discord.Embed(description="You do not have enough funds for this bet", color=discord.Color.red()))
+        else:
+            result = random.randint(1, 6)
+            if result != guess:
+                await ctx.send(embed=discord.Embed(color=discord.Color.red, description=f"So sad, you lost {bet}"))
+                await self.bot.db.execute("UPDATE bank SET user_money = $1 - $2 WHERE user_id=$3", money, bet, ctx.author.id)
+            else:
+                await ctx.send(embed=discord.Embed(description=f"Congrats!, you won `{bet}` coins", color=discord.Color.green()))
+                
     @commands.cooldown(1, 3600, commands.BucketType.user)
     @commands.command()
     async def timely(self, ctx):
