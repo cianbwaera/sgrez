@@ -13,7 +13,7 @@ class Music:
     @commands.guild_only()
     @commands.group()
     async def disstrack(self, ctx):
-        await ctx.send("This is not a command of ")
+        await ctx.send("This is not a subcommand")
 
     @commands.guild_only()
     @disstrack.command()
