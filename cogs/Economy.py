@@ -37,6 +37,7 @@ class PewDieCoin:
                 await self.bot.db.execute("UPDATE bank SET user_money = bank.user_money - $1 WHERE user_id=$2", bet, ctx.author.id)
             else:
                 await ctx.send(embed=discord.Embed(description=f"Congrats!, you won `{bet}` coins", color=discord.Color.green()))
+                await self.bot.db.execute("UPDATE bank SET user_money = bank.user_money + $1 WHERE user_id=$2", bet, ctx.author.id)
 
     @commands.cooldown(1, 3600, commands.BucketType.user)
     @commands.command()
