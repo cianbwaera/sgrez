@@ -33,7 +33,7 @@ class PewDieCoin:
         else:
             result = random.randint(1, 6)
             if result != guess:
-                await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"So sad, you lost {bet}"))
+                await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"So sad, you lost `{bet}` coins lolol"))
                 await self.bot.db.execute("UPDATE bank SET user_money = bank.user_money - $1 WHERE user_id=$2", bet, ctx.author.id)
             else:
                 await ctx.send(embed=discord.Embed(description=f"Congrats!, you won `{bet}` coins", color=discord.Color.green()))
