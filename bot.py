@@ -63,18 +63,21 @@ class PewDiePieBot(commands.Bot):
         await self.change_presence(status=discord.Status.dnd, activity=discord.Game(name="Connecting to DB.."))
         print("Connecting to the database")
         creds = config['db-creds']
-        await self.handler()
         try:
             self.db = await asyncpg.create_pool(**creds)
+            await self.handler()
             print("Connected!")
             with open('schema.sql', 'r') as sql:
                 await self.db.execute(sql.read())
             print("Done Executing schema.sql")
         except asyncio.TimeoutError:
+            await self.change_presence(status=discord.Status.dnd, activity=discord.Game(name="DB Connection failed!"))
             print("Could not connect to the database:\nInvalid Host Address")
         except asyncpg.InvalidPasswordError:
+            await self.change_presence(status=discord.Status.dnd, activity=discord.Game(name="DB Connection failed!"))
             print("Invalid Password")
         except Exception as e:
+            await self.change_presence(status=discord.Status.dnd, activity=discord.Game(name="DB Connection failed!"))
             print(e)
             
 
