@@ -16,7 +16,7 @@ class Error_Handler:
             if ctx.command.name == 'timely':
                 return await ctx.send(embed=discord.Embed(color=discord.Color(value=0xae2323), description=f'You already got your timely reward, try again in **{hours}**h, **{minutes}**m, and **{seconds}**s'))
             else:
-                return await ctx.send(f"You can run the {ctx.command} command again in **{hours}** hours, **{minutes}** minutes, and **{seconds}** seconds") 
+                return await ctx.send(f"You can run the {ctx.command} command again in **{math.ceil(error.retry_after)}** seconds") 
         elif isinstance(error, commands.NoPrivateMessage):
             return await ctx.send(f"**This command cannot be used in a DM, please try this in a server**")
         elif isinstance(error, commands.BotMissingPermissions):
@@ -33,7 +33,7 @@ class Error_Handler:
         
     async def on_command_completion(self, ctx):
         if ctx.cog.__class__.__name__ != "OwnerCommands":
-            print(f"{ctx.author} used {ctx.command} at {ctx.channel.id}")
+            print(f"{ctx.author} used {ctx.command} at {ctx.channel.id} | {ctx.guild.name}")
         else:
             pass
         await self.bot.db.execute("UPDATE commands SET num = num + 1")
