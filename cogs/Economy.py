@@ -3,6 +3,7 @@ import asyncio
 import asyncpg
 import random
 import json
+from datetime import datetime, timedelta
 from discord.ext import commands
 
 with open('db/config.json', 'r') as file:
@@ -11,6 +12,49 @@ with open('db/config.json', 'r') as file:
 class PewDieCoin:
     def __init__(self, bot):
         self.bot = bot
+        self.task = self.bot.loop.create_task(self.check_cooldown_task())
+
+
+    # As making these commands and reloading the extension, it refreshed the cooldown so which i have made my pre custom made ones that the database handles
+    async def __unload(self):
+        await self.task.cancel()
+
+    # Returns a bool type 
+    async def has_cooldown(self, user_id:int):
+        user = await self.bot.db.fetchrow("SELECT * FROM cooldowns WHERE user_id=$1", user_id)
+        if user is not None:#user['end_time']
+            return True
+        else:
+            return False
+
+    # Get the countdown from seconds
+    async def get_cooldown_time(self, user_id: int):
+        end = await self.bot.db.fetchval("SELECT end_time FROM cooldowns WHERE user_id=$1", user_id)
+        start = datetime.utcnow()
+        return (end-start).seconds
+
+    # Creates a cooldown
+    async def create_cooldown(self, time, user):
+        if await self.has_cooldown(user_id=user) is True:
+            raise ValueError("This user already has a cooldown")
+        else:
+            end_time = timedelta(seconds=time) + datetime.utcnow()
+            await self.bot.db.execute("INSERT INTO cooldowns VALUES ($1,$2)", user, end_time)
+
+    # Checks the database to see if an user is done with the cooldown
+    async def check_cooldown_task(self):
+        await self.bot.wait_until_ready()
+        iterable = await self.bot.db.fetch("SELECT * FROM cooldowns")
+        while not self.bot.is_closed():
+            for cb in iterable:
+                if cb['time'] > datetime.datetime.utcnow():
+                    user_id = cb['user_id']
+                    time = cb['time']
+                    await self.bot.db.execute("DELETE FROM cooldowns WHERE userid=$1 AND time=$2", user_id, time)
+                else:
+                    continue
+            await asyncio.sleep(5)
+
 
     @commands.command(aliases=['$', 'balance', 'bal'])
     async def bank(self, ctx):
@@ -39,9 +83,16 @@ class PewDieCoin:
                 await ctx.send(embed=discord.Embed(description=f"Congrats!, you won `{bet}` coins", color=discord.Color.green()))
                 await self.bot.db.execute("UPDATE bank SET user_money = bank.user_money + $1 WHERE user_id=$2", bet, ctx.author.id)
 
-    @commands.cooldown(1, 3600, commands.BucketType.user)
     @commands.command()
     async def timely(self, ctx):
+        if await self.has_cooldown(ctx.author.id):
+            seconds = await self.get_cooldown_time(ctx.author.id)
+            seconds = round(seconds, 2)
+            hours, remainder = divmod(int(seconds), 3600)
+            minutes, seconds = divmod(remainder, 60)
+            return await ctx.send(embed=discord.Embed(color=discord.Color(value=0xae2323), description=f'You already got your timely reward, try again in **{hours}**h, **{minutes}**m, and **{seconds}**s'))
+        else:
+            await self.create_cooldown(time=3600, user=ctx.author.id)
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if count is None:
             count = 0
@@ -51,8 +102,12 @@ class PewDieCoin:
 
     @commands.command(alias='cf')
     async def coinflip(self, ctx, amount_of_coins, side: str,):
+        if side != ("heads" or "tails" or "t" or "h"):
+            return 
         amt = amount_of_coins
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
+        if count is None:
+            count = 0
         if amt == 'all':
             amt = int(count)
         else:
@@ -67,8 +122,7 @@ class PewDieCoin:
             side = 't'
         else:
             side = side
-        if count is None:
-            count = 0
+        
         if amt > count:
             return await ctx.send("Seems like you don't have enough coin")
         else:
@@ -178,7 +232,7 @@ class PewDieCoin:
             else:
                 continue   
         if ctx.me.top_role.position <= ctx.guild.get_role(role).position:
-            return await ctx.send(embed=discord.Embed(description="Role Hierarchy Error!", color=discord.Color.red()))
+            return await ctx.send(embed=discord.Embed(description="Seems like i can't give you this role due to my role position, don't panic, your money is not touched", color=discord.Color.red()))
         # Helpers
         buyer_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if buyer_money is None:

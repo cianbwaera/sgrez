@@ -13,3 +13,8 @@ CREATE TABLE IF NOT EXISTS shop (
     shop_num INT NOT NULL,
     amount BIGINT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS cooldowns (
+    user_id BIGINT NOT NULL,
+    end_time TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc')
+);
