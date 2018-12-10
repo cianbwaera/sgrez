@@ -102,7 +102,7 @@ class PewDieCoin:
 
     @commands.command(alias='cf')
     async def coinflip(self, ctx, amount_of_coins, side: str,):
-        if side != ("heads" or "tails" or "t" or "h"):
+        if side != "heads" or side != "tails" or side != "t" or side != "h":
             return 
         amt = amount_of_coins
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
