@@ -16,8 +16,8 @@ class PewDieCoin:
 
 
     # As making these commands and reloading the extension, it refreshed the cooldown so which i have made my pre custom made ones that the database handles
-    async def __unload(self):
-        await self.task.cancel()
+    def __unload(self):
+        self.task.cancel()
 
     # Returns a bool type 
     async def has_cooldown(self, user_id:int):
