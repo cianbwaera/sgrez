@@ -14,6 +14,23 @@ with open('db/config.json') as file:
 class FunCommands:
     def __init__(self, bot):
         self.bot = bot
+        self.ts_subcount = None
+        self.pdp_subcount = None
+        self.task = self.bot.loop.create_task(self.get_subcounts())
+
+    def __unload(self):
+        self.task.cancel()
+
+    async def get_subcounts(self):
+        await self.bot.wait_until_ready()
+        while not self.bot.is_closed():
+            pewdiepie = await get(f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UC-lHJZR3Gqxm24_Vd_AJ5Yw&key=" + config['yt'])
+            tes = await get(f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UCq-Fj5jknLsUf-MWSy4_brA&key=" + config['yt'])
+            rawsubcount = int(pewdiepie['items'][0]['statistics']['subscriberCount'])
+            tsrawcount = int(tes['items'][0]['statistics']['subscriberCount']) 
+            self.ts_subcount = tsrawcount
+            self.pdp_subcount = rawsubcount
+            await asyncio.sleep(1800)
 
     @commands.command(aliases=['8ball'])
     async def eightball(self, ctx, * , query):
@@ -33,16 +50,22 @@ class FunCommands:
         tes = await get(f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UCq-Fj5jknLsUf-MWSy4_brA&key=" + config['yt'])        
         rawsubcount = int(pewdiepie['items'][0]['statistics']['subscriberCount'])
         tsrawcount = int(tes['items'][0]['statistics']['subscriberCount'])
+
         rawdiff = (int(rawsubcount) - int(tsrawcount))
-        subcount = f"T-Series needs {rawdiff:,d} subscribers to beat Pewd"
+        subcount = f"T-Series needs {rawdiff:,d} subscribers to beat PewDiePie"
+
         if rawdiff <= 0:
-            subcount = "T-Series has more subscribers then PewDiePie :cry:"
+            subcount = "T-Series has beaten PewDiePie :cry:"
+
         embed = discord.Embed(color=discord.Color(value=0xae2323))
         embed.add_field(name="PewDiePie Count", value=f"{rawsubcount:,d}", inline=False)
         embed.add_field(name="T-Series Count", value=f"{tsrawcount:,d}", inline=False)
         embed.add_field(name="Sub Difference", value=subcount, inline=False)
-        embed.add_field(name="Live Sub Counts", value="[PewDiePie Subcount](https://socialblade.com/youtube/user/pewdiepie/realtime) | [T-Series Subcount](https://socialblade.com/youtube/user/tseries/realtime)")
-        embed.set_footer(text="PewDiePie SubCount Tracker™ | " + config['ver'], icon_url=self.bot.user.avatar_url)
+        pdp = rawsubcount- self.pdp_subcount
+        ts = tsrawcount - self.ts_subcount
+        con = pdp - ts
+        embed.add_field(name="\uFEFF", value=f"**PewDiePie** has gained over **{pdp:,d}** subscribers per 30 minutes\n**T-Series** has gained over **{ts:,d}** subscribers per 30 minutes\n**PewDiePie** has gained over **{con:,d}** more subscribers then T-Series within 30 minutes")
+        embed.set_footer(text="PewDiePie's Subcount Tracker™ | " + config['ver'], icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed)
 
     @commands.guild_only()

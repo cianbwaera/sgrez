@@ -31,19 +31,6 @@ I honestly have nothing against it, me and the owner is good friends (hopefully 
 | `serverinfo` | `p.serverinfo`                          | I send you the current information of your server             |
 | `perms`      | `p.perms` or `p.perms @User#1234`       | You get the current permissions of you/an user in your server |
 
-# Moderation Commands
-
-| Command      | Usage                                 | Information                                                                   |
-| ------------ | ------------------------------------- | ----------------------------------------------------------------------------- |
-| `clear`      | `p.clear (number)`                    | Purges messages specifically in that channel                                  |
-| `giverole`   | `p.giverole (user) (role)`            | Gives an user an role if the bots role is higher                              |
-| `removerole` | `p.removerole (user) (role)`          | Removes an user's existing role, make sure pewds role is higher and has Admin |
-| `kick`       | `p.kick (user) (reason: optional)`    | Kicks an user from the server                                                 |
-| `ban`        | `p.ban (user) (reason: optional)`     | Bans an user from the server                                                  |
-| `softban`    | `p.softban (user) (reason: optional)` | Softbans an user from the server                                              |
-| `slowmode`   | `p.slowmode (integer < 120)`          | Puts the channel on slowmode                                                  |
-
-
 
 # Fun Commands
 

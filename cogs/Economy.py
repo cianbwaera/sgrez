@@ -30,11 +30,9 @@ class PewDieCoin:
             for a in users:
                 if a["end_time"] <= 0:
                     await self.bot.db.execute("DELETE FROM cooldowns WHERE user_id=$1", int(a["user_id"]))
-                    await asyncio.sleep(1)
                 else:
                     await self.bot.db.execute("UPDATE cooldowns SET end_time=cooldowns.end_time - 1 WHERE user_id=$1", int(a['user_id']))
-                    await asyncio.sleep(1)
-            await asyncio.sleep(1)
+                await asyncio.sleep(1.6)
         
     async def get_cooldown(self, user:int):
         cd = await self.bot.db.fetchval("SELECT end_time FROM cooldowns WHERE user_id=$1",user)
@@ -58,7 +56,7 @@ class PewDieCoin:
             seconds = round(seconds, 2)
             hours, remainder = divmod(int(seconds), 3600)
             minutes, seconds = divmod(remainder, 60)
-            return await ctx.send(embed=discord.Embed(description=f"You already claimed your timely reward, try again in **{hours}**hrs, **{minutes}**m, **{seconds}**s"))
+            return await ctx.send(embed=discord.Embed(color=discord.Color(value=0xae2323), title="Already recieved!", description=f"You already claimed your timely reward, try again in **{hours}**hrs, **{minutes}**m, **{seconds}**s"))
         else:
             await self.add_cooldown(timer=3600, user_id=ctx.author.id)
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
@@ -89,10 +87,8 @@ class PewDieCoin:
                 await self.bot.db.execute("UPDATE bank SET user_money = bank.user_money + $1 WHERE user_id=$2", bet, ctx.author.id)
 
 
-    @commands.command(alias='cf')
+    @commands.command(aliases=['cf'])
     async def coinflip(self, ctx, amount_of_coins, side: str,):
-        if side != "heads" or side != "tails" or side != "t" or side != "h":
-            return 
         amt = amount_of_coins
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if count is None:
