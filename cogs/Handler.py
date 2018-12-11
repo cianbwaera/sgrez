@@ -22,7 +22,7 @@ class Error_Handler:
             except:
                 pass
         else:
-            print(error)
+            return await ctx.send("```py\n"+str(error)+"\n```")
         
     async def on_command_completion(self, ctx):
         if ctx.cog.__class__.__name__ != "OwnerCommands":
