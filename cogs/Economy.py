@@ -12,7 +12,7 @@ with open('db/config.json', 'r') as file:
 class PewDieCoin:
     def __init__(self, bot):
         self.bot = bot
-        self.task = self.bot.loop.create_task(self.cooldowns_task())
+        #self.task = self.bot.loop.create_task(self.cooldowns_task())
 
     def __unload(self):
         self.task.cancel()
@@ -24,15 +24,14 @@ class PewDieCoin:
             return
    
     async def cooldowns_task(self):
-        await self.bot.wait_until_ready()
         while not self.bot.is_closed():
-            users = await self.bot.db.fetch("SELECT * FROM cooldowns ORDER BY end_time")
+            users = await self.bot.db.fetch("SELECT * FROM cooldowns")
             for a in users:
                 if a["end_time"] <= 0:
                     await self.bot.db.execute("DELETE FROM cooldowns WHERE user_id=$1", int(a["user_id"]))
                 else:
-                    await self.bot.db.execute("UPDATE cooldowns SET end_time=cooldowns.end_time - 1 WHERE user_id=$1", int(a['user_id']))
-                awai
+                    await self.bot.db.execute("UPDATE cooldowns SET end_time = end_time - 1 WHERE user_id=$1", int(a['user_id']))
+            
         
     async def get_cooldown(self, user:int):
         cd = await self.bot.db.fetchval("SELECT end_time FROM cooldowns WHERE user_id=$1",user)
@@ -48,17 +47,22 @@ class PewDieCoin:
         await ctx.send(f"You currently have `{count}` coins")
 
 
-    @commands.command()
-    async def timely(self, ctx):
-        a = await self.get_cooldown(ctx.author.id)
+
+"""a = await self.get_cooldown(ctx.author.id)
         if a != 0:
             seconds = int(a)
             seconds = round(seconds, 2)
             hours, remainder = divmod(int(seconds), 3600)
             minutes, seconds = divmod(remainder, 60)
             return await ctx.send(embed=discord.Embed(color=discord.Color(value=0xae2323), title="Already recieved!", description=f"You already claimed your timely reward, try again in **{hours}**hrs, **{minutes}**m, **{seconds}**s"))
-        else:
-            await self.add_cooldown(timer=3600, user_id=ctx.author.id)
+       else:
+            await self.add_cooldown(timer=3600, user_id=ctx.author.id)"""
+
+
+
+    @commands.cooldown(1, 3600, commands.BucketType.user)
+    @commands.command()
+    async def timely(self, ctx):
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if count is None:
             count = 0
