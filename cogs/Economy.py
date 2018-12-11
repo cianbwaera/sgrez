@@ -14,8 +14,8 @@ class PewDieCoin:
         self.bot = bot
         #self.task = self.bot.loop.create_task(self.cooldowns_task())
 
-    def __unload(self):
-        self.task.cancel()
+    #def __unload(self):
+        #self.task.cancel()
 
     async def add_cooldown(self, timer : int, user_id: int):
         try:
@@ -48,7 +48,7 @@ class PewDieCoin:
 
 
 
-"""a = await self.get_cooldown(ctx.author.id)
+    """a = await self.get_cooldown(ctx.author.id)
         if a != 0:
             seconds = int(a)
             seconds = round(seconds, 2)
