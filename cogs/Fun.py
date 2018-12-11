@@ -43,7 +43,6 @@ class FunCommands:
             pass
         await ctx.send(embed=embed)
 
-    @commands.cooldown(1, 7, BucketType.user)
     @commands.command()
     async def subcount(self, ctx):
         pewdiepie = await get(f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UC-lHJZR3Gqxm24_Vd_AJ5Yw&key=" + config['yt'])
