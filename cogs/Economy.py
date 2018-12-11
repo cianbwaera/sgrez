@@ -32,7 +32,7 @@ class PewDieCoin:
                     await self.bot.db.execute("DELETE FROM cooldowns WHERE user_id=$1", int(a["user_id"]))
                 else:
                     await self.bot.db.execute("UPDATE cooldowns SET end_time=cooldowns.end_time - 1 WHERE user_id=$1", int(a['user_id']))
-                await asyncio.sleep(1.6)
+                await asyncio.sleep(.976)
         
     async def get_cooldown(self, user:int):
         cd = await self.bot.db.fetchval("SELECT end_time FROM cooldowns WHERE user_id=$1",user)
