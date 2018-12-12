@@ -82,9 +82,9 @@ class FunCommands:
             await msg.add_reaction("\N{THUMBS DOWN SIGN}")
         except:
             await msg.delete()
-            await ctx.send("Make sure i can add reactions to the poll")
+            await ctx.send("Error!, i can't add reactions to the embed")
 
-    # I may have hardcoded this, but i personally like this
+
     async def activitytype(self, activitytype):
         if str(activitytype) == "ActivityType.playing":
             return "Playing"

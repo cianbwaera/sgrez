@@ -12,32 +12,7 @@ with open('db/config.json', 'r') as file:
 class PewDieCoin:
     def __init__(self, bot):
         self.bot = bot
-        #self.task = self.bot.loop.create_task(self.cooldowns_task())
-
-    #def __unload(self):
-        #self.task.cancel()
-
-    async def add_cooldown(self, timer : int, user_id: int):
-        try:
-            await self.bot.db.execute("INSERT INTO cooldowns VALUES($1,$2)", user_id, timer)
-        except:
-            return
    
-    async def cooldowns_task(self):
-        while not self.bot.is_closed():
-            users = await self.bot.db.fetch("SELECT * FROM cooldowns")
-            for a in users:
-                if a["end_time"] <= 0:
-                    await self.bot.db.execute("DELETE FROM cooldowns WHERE user_id=$1", int(a["user_id"]))
-                else:
-                    await self.bot.db.execute("UPDATE cooldowns SET end_time = end_time - 1 WHERE user_id=$1", int(a['user_id']))
-            
-        
-    async def get_cooldown(self, user:int):
-        cd = await self.bot.db.fetchval("SELECT end_time FROM cooldowns WHERE user_id=$1",user)
-        if cd is None:
-            cd = 0
-        return cd
         
     @commands.command(aliases=['$', 'balance', 'bal'])
     async def bank(self, ctx):
@@ -45,19 +20,6 @@ class PewDieCoin:
         if count is None:
             count = 0
         await ctx.send(f"You currently have `{count}` coins")
-
-
-
-    """a = await self.get_cooldown(ctx.author.id)
-        if a != 0:
-            seconds = int(a)
-            seconds = round(seconds, 2)
-            hours, remainder = divmod(int(seconds), 3600)
-            minutes, seconds = divmod(remainder, 60)
-            return await ctx.send(embed=discord.Embed(color=discord.Color(value=0xae2323), title="Already recieved!", description=f"You already claimed your timely reward, try again in **{hours}**hrs, **{minutes}**m, **{seconds}**s"))
-       else:
-            await self.add_cooldown(timer=3600, user_id=ctx.author.id)"""
-
 
 
     @commands.cooldown(1, 3600, commands.BucketType.user)
