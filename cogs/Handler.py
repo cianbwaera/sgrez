@@ -1,7 +1,7 @@
 import discord, asyncio, math, datetime
 from discord.ext import commands
 
-class Error_Handler:
+class Background_Handler:
     def __init__(self, bot):
         self.bot = bot
 
@@ -32,7 +32,7 @@ class Error_Handler:
             return await ctx.send("```py\n"+str(error)+"\n```")
         
     async def on_command_completion(self, ctx):
-        if ctx.cog.__class__.__name__ != "OwnerCommands":
+        if ctx.cog.__class__.__name__ != "Developer_Tools":
             try:
                 print(f"{ctx.author} used {ctx.command} at {ctx.channel.id} | {ctx.guild.name}")
             except:
@@ -54,4 +54,4 @@ class Error_Handler:
 
 
 def setup(bot):
-    bot.add_cog(Error_Handler(bot))
+    bot.add_cog(Background_Handler(bot))

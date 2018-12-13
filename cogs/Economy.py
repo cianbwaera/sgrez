@@ -115,7 +115,7 @@ class PewDieCoin:
         emb.set_thumbnail(url=self.bot.user.avatar_url)
         c = 0
         for _ in stats:
-            emb.add_field(name=str(self.bot.get_user(stats[c]['user_id']).name), value=f"{stats[c]['user_money']} coins", inline=False)
+            emb.add_field(name=str(self.bot.get_user(stats[c]['user_id']).name), value=f"{(stats[c]['user_money']):,d} coins", inline=False)
             c += 1
         await ctx.send(embed=emb)
 

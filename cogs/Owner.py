@@ -7,7 +7,7 @@ from discord.ext import commands
 with open('db/config.json') as bitch:
     config = json.load(bitch)
 
-class OwnerCommands:
+class Developer_Tools:
     def __init__(self, bot):
         self.bot = bot
         self._last_result = None
@@ -139,4 +139,4 @@ class OwnerCommands:
         await ctx.send(embed=e)
             
 def setup(bot):
-    bot.add_cog(OwnerCommands(bot))
+    bot.add_cog(Developer_Tools(bot))

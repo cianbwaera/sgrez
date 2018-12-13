@@ -8,11 +8,10 @@ with open('db/config.json') as file:
 
 def_color = 0xae2323
 
-class MainClass:
+class Main_Commands:
     def __init__(self, bot):
         self.bot = bot
-     
-
+  
     @commands.command(aliases=['server'])
     async def support(self, ctx):
         try:
@@ -20,7 +19,6 @@ class MainClass:
             await ctx.send("**Check DMs for Support Server :mailbox_with_mail:**")
         except:
             await ctx.send(f"**Here's My Support Server**\n{config['server']}")
-
 
     @commands.command()
     async def perms(self, ctx, user: discord.Member=None):
@@ -132,4 +130,4 @@ class MainClass:
         await ctx.send(f"**Your Feedback Has Been Submitted {config['tickyes']}**")
 
 def setup(bot):
-    bot.add_cog(MainClass(bot))
+    bot.add_cog(Main_Commands(bot))

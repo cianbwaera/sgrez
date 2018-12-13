@@ -11,7 +11,7 @@ async def get(url):
 with open('db/config.json') as file:
     config = json.load(file)
 
-class FunCommands:
+class Fun_Commands:
     def __init__(self, bot):
         self.bot = bot
         self.ts_subcount = None
@@ -164,4 +164,4 @@ class FunCommands:
 
 
 def setup(bot):
-    bot.add_cog(FunCommands(bot))
+    bot.add_cog(Fun_Commands(bot))
