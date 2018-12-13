@@ -2,9 +2,6 @@ import discord
 import asyncio
 from discord.ext import commands
 
-ffmpeg_options = {
-    'option' : "-vn"
-}
 
 class Music:
     def __init__(self, bot):
@@ -28,16 +25,16 @@ class Music:
                 pass
             await ctx.send(f"Now playing `Bitch Lasagna` in `{ctx.author.voice.channel.name}`")
             music = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio("./db/song1.mp3"))
-            await ctx.voice_client.play(music)
+            ctx.voice_client.play(music)
             
             
     @commands.guild_only()
     @disstrack.command()
     async def stop(self, ctx):
-        if ctx.me.voice is None:
+        if ctx.voice_client.channel is None:
             await ctx.send("Not connected to an voice channel")
-        elif len(ctx.me.voice.channel.members) > 3:
-            ch = ctx.author.voice.channel.name
+        elif len(ctx.voice_client.channel.members) > 3:
+            ch = ctx.voice_client.channel.name
             if ctx.author == ctx.guild.owner:
                 await ctx.voice_client.disconnect()
                 await ctx.send(f"Disconnected from `{ch}`")
