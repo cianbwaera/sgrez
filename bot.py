@@ -66,7 +66,6 @@ class PewDiePie(commands.Bot):
         creds = config['db-creds']
         try:
             self.db = await asyncpg.create_pool(**creds)
-            await self.handler()
             print("Connected!")
             with open('schema.sql', 'r') as sql:
                 await self.db.execute(sql.read())
@@ -99,7 +98,7 @@ class PewDiePie(commands.Bot):
         print("\nLogging out!\n")
         try:
             await self.db.close()
-            print("\n\nDB is Closed")
+            print("\n\n<--->DB is Closed <--->")
         except:
             pass
         await super().logout()

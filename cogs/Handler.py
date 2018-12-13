@@ -28,8 +28,11 @@ class Background_Handler:
                 return await ctx.send(f"You do not have permissions to use the `{ctx.command}` command")
             except:
                 pass
+        elif isinstance(error, commands.MissingRequiredArgument):
+            return await ctx.send(f"You are missing an required argument, `{error.param.name}`")
         else:
-            return await ctx.send("```py\n"+str(error)+"\n```")
+            print("ERROR:\n\n:{}\n\nEND OF ERROR!".format(error))
+            
         
     async def on_command_completion(self, ctx):
         if ctx.cog.__class__.__name__ != "Developer_Tools":

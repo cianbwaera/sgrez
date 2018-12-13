@@ -56,21 +56,29 @@ class PewDieCoin:
     @commands.command(aliases=['cf'])
     async def coinflip(self, ctx, amount_of_coins, side: str,):
         amt = amount_of_coins
+        if side != "heads" or side != "head" or side != "tails" or side != "tail" or side != "t" or side != "h":
+            return await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"Sorry, but {side} is not heads or tails!"))
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if count is None:
             count = 0
+
         if amt == 'all':
             amt = int(count)
+
         else:
             amt = int(amt)
+
         if amt <= 0:
             return await ctx.send(embed=discord.Embed(description="You cannot give an negative amount", color=discord.Color.red()))
+
         result = random.choice(['h', 't'])
         
         if (side == 'head' or side == 'heads') and result == 'h':
             side = 'h'
+
         elif (side == 'tail' or side == 'tails') and result == 't':
             side = 't'
+
         else:
             side = side
         
@@ -110,13 +118,14 @@ class PewDieCoin:
 
     @commands.command(aliases=['lb'])
     async def leaderboard(self, ctx):
-        stats = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money DESC LIMIT 5")
+        stats = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money DESC LIMIT 8")
         emb = discord.Embed(color=discord.Color(value=0xae2323), title="Global Leaderboard - coins")
         emb.set_thumbnail(url=self.bot.user.avatar_url)
         c = 0
         for _ in stats:
-            emb.add_field(name=str(self.bot.get_user(stats[c]['user_id']).name), value=f"{(stats[c]['user_money']):,d} coins", inline=False)
+            emb.add_field(name=str(self.bot.get_user(stats[c]['user_id']).name), value=f"Currently has {(stats[c]['user_money']):,d} coins", inline=False)
             c += 1
+        emb.set_footer(text="Global Leaderboard - List of the Global Users' Coin Count")
         await ctx.send(embed=emb)
 
     @commands.group()
@@ -124,7 +133,7 @@ class PewDieCoin:
         if ctx.invoked_subcommand is None:
             roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
             if str(roles) == '[]':
-                bio = "Your server currently has no roles to buy at the moment, try asking a moderator to add some"
+                bio = "Your server currently has no available roles to buy right now"
             else:
                 bio = "Here's some roles you can buy, buy them by `p.shop buy number`\n\uFEFF\n"
             emb = discord.Embed(description=bio, color=discord.Color(value=0xae2323))
@@ -133,28 +142,44 @@ class PewDieCoin:
             
             c = 0 
             for _ in roles:
-                emb.add_field(name=f"#{roles[c]['shop_num']} - {ctx.guild.get_role(roles[c]['role_id']).name}", value=f"`{roles[c]['amount']}` coins to buy", inline=False)
+                emb.add_field(name=f"#{roles[c]['shop_num']} - {ctx.guild.get_role(roles[c]['role_id']).name}", value=f"Role currently costs `{roles[c]['amount']}` coins", inline=False)
                 c+=1
             emb.set_thumbnail(url=ctx.guild.icon_url)
             emb.add_field(name='\uFEFF', value="\uFEFF")
-            emb.set_footer(text="PewDieCoin | " + config['ver'])
+            emb.set_footer(text=config['ver'])
             await ctx.send(embed=emb)
 
     @shop.command()
     @commands.has_permissions(manage_roles=True)
     async def add(self, ctx, amount : int, * , role : discord.Role): 
+        if role.name == "@everyone":
+            return await ctx.send(embed=discord.Embed(description="`@everyone` is not allowed", color=discord.Color.red()))
+            
+
+
         roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
+
         for i in roles:
             if i['role_id'] == role.id:
                 return
             else:
                 continue   
+
         if ctx.author.top_role.position < role.position:
             return
+
         shop_pos = await self.bot.db.fetchval("SELECT COUNT(*) FROM shop WHERE guild_id=$1", ctx.guild.id)
+
         if shop_pos is None:
             shop_pos = 0
+
         shop_pos+=1
+
+        if len(roles) > 8:
+            return await ctx.send(embed=discord.Embed(color=discord.Color.red(), description="Sorry, but your server has reached the maximum limit of roles"))
+        else: 
+            pass        
+        
         if amount > 9999:
             return await ctx.send(embed=discord.Embed(description="Items Amounts cannot be higher then `9999`, please try again", color=discord.Color.red()))
         try:

@@ -42,7 +42,7 @@ class Main_Commands:
     @commands.command()
     async def prefix(self, ctx):
         if self.bot.user.mentioned_in(ctx.message):
-            await ctx.send("My prefix is `p.` or mention me")
+            await ctx.send("My prefix is `p.` or you can mention me for commands")
 
     @commands.command()
     async def uptime(self, ctx):
