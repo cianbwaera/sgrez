@@ -32,6 +32,7 @@ class PewDieCoin:
         after_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         await ctx.send(f"Added `75` coins to your coin bank, you now have `{after_money}` coins")
 
+
     @commands.command()
     async def rolldice(self, ctx, bet : int, guess : int):
         money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
@@ -118,7 +119,7 @@ class PewDieCoin:
 
     @commands.command(aliases=['lb'])
     async def leaderboard(self, ctx):
-        stats = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money DESC LIMIT 8")
+        stats = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money DESC LIMIT 10")
         emb = discord.Embed(color=discord.Color(value=0xae2323), title="Global Leaderboard - coins")
         emb.set_thumbnail(url=self.bot.user.avatar_url)
         c = 0
