@@ -125,7 +125,7 @@ class PewDieCoin:
         for _ in stats:
             emb.add_field(name=str(self.bot.get_user(stats[c]['user_id']).name), value=f"Currently has {(stats[c]['user_money']):,d} coins", inline=False)
             c += 1
-        emb.set_footer(text="Global Leaderboard - List of the Global Users' Coin Count")
+        emb.set_footer(text="\uFEFF")
         await ctx.send(embed=emb)
 
     @commands.group()

@@ -98,7 +98,7 @@ class PewDiePie(commands.Bot):
         print("\nLogging out!\n")
         try:
             await self.db.close()
-            print("\n\n<--->DB is Closed <--->")
+            print("\n\n<--->DB is Closed<--->")
         except:
             pass
         await super().logout()
