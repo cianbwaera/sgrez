@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS shop (
     amount BIGINT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS cooldowns (
+/*CREATE TABLE IF NOT EXISTS cooldowns (
     user_id BIGINT NOT NULL,
     end_time BIGINT NOT NULL,
     command TEXT
-    )
+    )*/
