@@ -15,16 +15,17 @@ class PewDieCoin:
 
     
     @commands.command(aliases=['$', 'balance', 'bal'])
-    async def bank(self, ctx, user : discord.Member):
+    async def bank(self, ctx, user : discord.Member=None):
         if not user:
-            user = ctx.author.id
+            user = ctx.author
+        elif user.id != self.bot.user.id and user.bot:
+            return await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"Sorry, but {user.mention} is an bot account which doesn't get coins"))
         else:
-            user = user.id
-        count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", user)
+            user = user
+        count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", user.id)
         if count is None:
             count = 0
-        await ctx.send(embed=discord.Embed(description=f"{user.mention} currently has {count:,d} coins", color=discord.Color(value=0xae2323)))
-
+        await ctx.send(embed=discord.Embed(title=f"{user.name}'s Balance", description=f"{user.mention} currently has {count:,d} coins", color=discord.Color(value=0xae2323)))
 
     @commands.cooldown(1, 3600, commands.BucketType.user)
     @commands.command()
@@ -35,7 +36,6 @@ class PewDieCoin:
         await self.bot.db.execute("INSERT INTO bank (user_id, user_money) VALUES ($1, $2 + 75) ON CONFLICT (user_id) DO UPDATE SET user_money= $2 + 75", ctx.author.id, count)
         after_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         await ctx.send(f"Added `75` coins to your coin bank, you now have `{after_money}` coins")
-
 
     @commands.command()
     async def rolldice(self, ctx, bet , guess : int):
@@ -59,6 +59,7 @@ class PewDieCoin:
                 await ctx.send(embed=discord.Embed(description=f"Congrats!, you won `{bet:,d}` coins", color=discord.Color.green()))
                 await self.bot.db.execute("UPDATE bank SET user_money = bank.user_money + $1 WHERE user_id=$2", bet, ctx.author.id)
 
+    @commands.cooldown(1, 1800.0, commands.BucketType.user)
     @commands.command()
     async def search(self, ctx):
         # c
@@ -71,7 +72,7 @@ class PewDieCoin:
             f"Some robbers drop some coins from thier recent heist, you founded {result} coins dropped",
             f"An prostitute forgot to pay your {result} owed coins!"
         ])
-        await self.bot.db.execute("INSERT INTO bank(user_id, user_money) VALUES($1,$2) ON CONFLICT DO UPDATE SET user_money=bank.user_money+$2",ctx.author.id, result)
+        await self.bot.db.execute("INSERT INTO bank(user_id, user_money) VALUES($1,$2) ON CONFLICT(user_id) DO UPDATE SET user_money=bank.user_money+$2",ctx.author.id, result)
 
         await ctx.send(embed=discord.Embed(description=place, color=discord.Color.red()))
 
@@ -85,8 +86,6 @@ class PewDieCoin:
         if amt == 'all':
             amt = int(count)
 
-        
-
         else:
             amt = int(amt)
 
@@ -95,14 +94,14 @@ class PewDieCoin:
 
         result = random.choice(['h', 't'])
         
-        if (side == 'head' or side == 'heads'):
+        if (side == 'head' or side == 'heads' or side == "h"):
             side = 'h'
 
-        elif (side == 'tail' or side == 'tails'):
+        elif (side == 'tail' or side == 'tails' or side == "t"):
             side = 't'
 
         else:
-            side = side
+            return await ctx.send(embed=discord.Embed(description=f"{side} is a invalid side!", color=discord.Color.red()))
         
         if amt > count:
             return await ctx.send("Seems like you don't have enough coin")
