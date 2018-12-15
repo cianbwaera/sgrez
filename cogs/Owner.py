@@ -34,6 +34,7 @@ class Developer_Tools:
             'channel': ctx.channel,
             'author': ctx.author,
             'guild': ctx.guild,
+            "db" : self.bot.db,
             'message': ctx.message,
             '_': self._last_result
         }
