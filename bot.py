@@ -39,15 +39,30 @@ class PewDiePie(commands.Bot):
 
     async def on_guild_remove(self, guild):
         await self.handler()
+        embed = discord.Embed(title="Lefted Guild", color=discord.Color(value=0xae2323))
+        embed.add_field(name="Server", value=f"{guild} {guild.id}", inline=False)
+        embed.add_field(name="Member Count", value=f"Currently {len(guild.members)} members", inline=False)
+        embed.add_field(name="Owner", value=f"{guild.owner} | {guild.owner.id}", inline=False)
+        embed.set_thumbnail(url=guild.icon_url)
+        embed.timestamp = datetime.datetime.utcnow()
+        await self.get_channel(523715757398556702).send(embed=embed)
 
     async def on_guild_join(self, guild):
         is_blacklisted = await self.db.fetchval("SELECT result FROM blacklisted_guilds WHERE guild_id=$1", guild.id)
         if is_blacklisted is not None:
             await guild.leave()
             print(f"Leaving Banned Guild!: {guild.id} | {guild.name}")
+            return
         else:
             pass
         await self.handler()
+        embed = discord.Embed(title="Joined Guild", color=discord.Color(value=0xae2323))
+        embed.add_field(name="Server", value=f"{guild} {guild.id}", inline=False)
+        embed.set_thumbnail(url=guild.icon_url)
+        embed.add_field(name="Member Count", value=f"Currently {len(guild.members)} members", inline=False)
+        embed.add_field(name="Owner", value=f"{guild.owner} | {guild.owner.id}", inline=False)
+        embed.timestamp = datetime.datetime.utcnow()
+        await self.get_channel(523715757398556702).send(embed=embed)
         try:
             embed = discord.Embed(color=discord.Color(value=0xae2323))
             embed.set_author(name=f"Thanks for inviting PewDiePie!")
