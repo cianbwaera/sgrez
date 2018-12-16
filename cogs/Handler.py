@@ -15,8 +15,16 @@ class Background_Handler:
                 hours, remainder = divmod(int(seconds), 3600)
                 minutes, seconds = divmod(remainder, 60)
                 return await ctx.send(embed=discord.Embed(color=discord.Color(value=0xae2323), title="Already recieved!", description=f"You already claimed your timely reward, try again in **{hours}**hrs, **{minutes}**m, **{seconds}**s"))
+
+            elif ctx.command.name == "feedback":
+                seconds = int(error.retry_after)
+                seconds = round(seconds, 2)
+                hours, remainder = divmod(int(seconds), 3600)
+                minutes, seconds = divmod(remainder, 60)
+                return await ctx.send(embed=discord.Embed(description=f"You already submitted feedback, try again in **{minutes}** minutes", color=discord.Color.red()))
+
             else:
-                return await ctx.send(f"You can run the {ctx.command} command again in **{math.ceil(error.retry_after)}** seconds") 
+                return await ctx.send(f"You can run the {ctx.command} command again in **{math.ceil(error.retry_after):,d}** seconds") 
         elif isinstance(error, commands.NoPrivateMessage):
             return await ctx.send(f"**This command cannot be used in a DM, please try this in a server**")
         elif isinstance(error, commands.BotMissingPermissions):
@@ -29,6 +37,10 @@ class Background_Handler:
             except:
                 pass
         elif isinstance(error, commands.MissingRequiredArgument):
+            try:
+                await ctx.command.reset_cooldown(ctx)
+            except:
+                pass
             return await ctx.send(f"You are missing an required argument, `{error.param.name}`")
         else:
             print("ERROR:\n\n:{}\n\nEND OF ERROR!".format(error))
