@@ -23,3 +23,8 @@ CREATE TABLE IF NOT EXISTS cooldowns (
     )
     
 */
+
+CREATE TABLE IF NOT EXISTS blacklisted_guilds (
+    guild_id BIGINT PRIMARY KEY,
+    result TEXT -- some random thing
+)

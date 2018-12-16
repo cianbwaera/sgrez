@@ -94,6 +94,37 @@ class Developer_Tools:
         except Exception as e:
             await ctx.send(embed=discord.Embed(description=f"Could Not Reload `cogs.{cog}` {config['tickno']}\n```bash\n{e}\n```", color=discord.Color.red()))
 
+    @commands.group()
+    async def blacklist(self, ctx):
+        pass
+
+    @blacklist.command()
+    async def guild(self, ctx, id : int):
+        check_if_is = await self.bot.db.fetchval("SELECT result FROM blacklisted_guilds WHERE guild_id=$1", id)
+        if check_if_is is None:
+            await self.bot.db.execute("INSERT INTO blacklisted_guilds VALUES($1,$2) ON CONFLICT(guild_id) DO NOTHING", id,"dwqdwqdwq")
+            await ctx.send(embed=discord.Embed(description=f"Successfully blacklisted {self.bot.get_guild(id).name}, i will leave the guild if its in my guild list", color=discord.Color.green()))
+            for i in self.bot.guilds:
+                if i.id == id:
+                    await i.leave()
+                else:
+                    continue
+        else:
+            await ctx.send(embed=discord.Embed(description="This server is already blacklisted!", color=discord.Color.red()))
+
+    @commands.group()
+    async def unblacklist(self,ctx):
+        pass
+    
+    @unblacklist.command(name="guild")
+    async def g(self, ctx, id : int):
+        is_it_there = await self.bot.db.fetchval("SELECT result FROM blacklisted_guilds WHERE guild_id=$1", id)
+        if is_it_there is None:
+            return await ctx.send("Guild isnt blacklisted")
+        else:
+            await self.bot.db.execute("DELETE FROM blacklisted_guilds WHERE guild_id=$1",id)
+            await ctx.send(f"Successfully unblacklisted guild")
+
     @commands.command()
     async def bash(self, ctx, * , cmd : str):
         proc = subprocess.Popen(['/bin/bash', "-c", cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE)

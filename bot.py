@@ -33,6 +33,12 @@ class PewDiePie(commands.Bot):
         await self.handler()
 
     async def on_guild_join(self, guild):
+        is_blacklisted = await self.db.fetchval("SELECT result FROM blacklisted_guilds WHERE guild_id=$1", guild.id)
+        if is_blacklisted is not None:
+            await guild.leave()
+            print(f"Leaving Banned Guild!: {guild.id} | {guild.name}")
+        else:
+            pass
         await self.handler()
         try:
             embed = discord.Embed(color=discord.Color(value=0xae2323))
