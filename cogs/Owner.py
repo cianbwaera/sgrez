@@ -129,9 +129,9 @@ class Developer_Tools:
     async def bash(self, ctx, * , cmd : str):
         proc = subprocess.Popen(['/bin/bash', "-c", cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = proc.communicate(timeout=120)
-        content = f"\n-- input --\n\n\n{cmd}\n\n\n-- stdout --\n\n\n"+ str(out.decode('utf-8')) + "\n\n-- stderr --\n\n\n"+ str(err.decode('utf-8')) + "\n"
+        content = f"\n-- input --\n\n\nenter@enn-vps:~/$ {cmd}\n\n\n-- stdout --\n\n\n"+ str(out.decode('utf-8')) + "\n\n-- stderr --\n\n\n"+ str(err.decode('utf-8')) + "\n"
         try:
-            await ctx.send(f"```fix{content}```")
+            await ctx.send(f"```bash{content}```")
         except discord.HTTPException:
             content = content.replace("```","")
             msg = await ctx.send("Output too long, uploading to Hastebin..")
