@@ -122,9 +122,9 @@ class Main_Commands:
 
         embed.add_field(name="Versions", value=f"PewDiePie: {config['ver']}\nDiscord.py: {dpy_ver}\nPython: {python_ver}", inline=False)
         embed.add_field(name="System Usage", value=f"RAM Usage: {vir_mem}\nCPU Usage: {cpu_stats}", inline=False)
-        embed.add_field(name="Commands Used", value=f"I have a total of {commands_used:,d} commands used\n\uFEFF")
-        embed.add_field(name="Uptime", value=f"I have been running for **{days}** days, **{hours}** hours, **{minutes}** minutes, and **{seconds}** seconds!\n\uFEFF")
-        embed.add_field(name="Connections", value=f"Gateway Speed: {latency}ms\nDatabase Speed: {dbping}ms\n\uFEFF")
+        embed.add_field(name="Commands Used", value=f"I have a total of {commands_used:,d} commands used")
+        embed.add_field(name="Uptime", value=f"I have been running for **{days}** days, **{hours}** hours, **{minutes}** minutes, and **{seconds}** seconds!")
+        embed.add_field(name="Connections", value=f"Gateway Speed: {latency}ms\nDatabase Speed: {dbping}ms")
         embed.add_field(name="Support the Development", value="[Discord Bot List](https://discordbots.org/bot/508143906811019269/vote)\n[Discord Bots Group](https://discordbots.group/bot/508143906811019269)\uFEFF\n", inline=False)
         embed.add_field(name="Recent GitHub Update", value=f"```fix\n[PewDiePie:{gh_branch}] | [{commit}]:\n{gh['commit']['author']['name']} - {message}\n```")
         await ctx.send(embed=embed)
