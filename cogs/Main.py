@@ -92,7 +92,9 @@ class Main_Commands:
     @commands.command()
     async def stats(self, ctx):
         time = json.load(open('db/uptime.json', "r"))['uptimestats']
+
         uptimeraw = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
+
         uptime = datetime.datetime.utcnow() - uptimeraw
         hours, remainder = divmod(int(uptime.total_seconds()), 3600)
         minutes, seconds = divmod(remainder, 60)
@@ -100,6 +102,7 @@ class Main_Commands:
 
         cpu_stats = f"{psutil.cpu_percent()}%"
         vir_mem = f"{psutil.virtual_memory()[2]}%"
+        
         commands_used = await self.bot.db.fetchval("SELECT num FROM commands")
         dpy_ver = str(pkg_resources.get_distribution('discord.py').version)
         python_ver = str(platform.python_version())
@@ -109,12 +112,21 @@ class Main_Commands:
         sha = gh['sha']
         commit = sha[0:7]        
         message = gh['commit']['message']
-        embed = discord.Embed(color=discord.Color(value=def_color), title=f"{self.bot.user}", description=f"A discord bot made from Enter New Name orginally made for showing the subcount of PewDiePie and T-Series")
-        embed.add_field(name="Bot Info", value=f"I have been running for approx. **{days}** days, **{hours}** hours, **{minutes}** minutes, and **{seconds}** seconds\nI have {len(self.bot.guilds)} servers\n{commands_used} commands were used in my guilds", inline=False)
-        embed.add_field(name="Versions:", value=f"PewDiePie's Version: {config['ver']}\nDiscord.py Version: {dpy_ver}\nPython Version: {python_ver}", inline=False)
-        embed.add_field(name="System Info:", value=f"I am using {cpu_stats} of my CPU with a latency of {latency}ms and {vir_mem} of my memory has been used", inline=False)
-        embed.add_field(name="Support Us", value="[Upvote Me on Discord Bot List](https://discordbots.org/bot/508143906811019269/vote)\n[Upvote Me on Discord Bots Group](https://discordbots.group/bot/508143906811019269)", inline=False)
-        embed.add_field(name="Updates", value=f"```fix\n[PewDiePie:{gh_branch}] | [{commit}]:\n{gh['commit']['author']['name']} - {message}\n```")
+        embed = discord.Embed(color=discord.Color.blurple(), title=f"{self.bot.user}", description=f"A discord bot made from Enter New Name orginally made for showing the subcount of PewDiePie and T-Series\n\uFEFF")
+        
+        import time
+        t1 = time.perf_counter()
+        await self.bot.db.fetch("SELECT * FROM commands LIMIT 1")
+        t2 = time.perf_counter()
+        dbping = round((t2-t1)*1000)
+
+        embed.add_field(name="Versions", value=f"PewDiePie: {config['ver']}\nDiscord.py: {dpy_ver}\nPython: {python_ver}", inline=False)
+        embed.add_field(name="System Usage", value=f"RAM Usage: {vir_mem}\nCPU Usage: {cpu_stats}", inline=False)
+        embed.add_field(name="Commands Used", value=f"I have a total of {commands_used:,d} commands used\n\uFEFF")
+        embed.add_field(name="Uptime", value=f"I have been running for **{days}** days, **{hours}** hours, **{minutes}** minutes, and **{seconds}** seconds!\n\uFEFF")
+        embed.add_field(name="Connections", value=f"Gateway Speed: {latency}ms\nDatabase Speed: {dbping}ms\n\uFEFF")
+        embed.add_field(name="Support the Development", value="[Discord Bot List](https://discordbots.org/bot/508143906811019269/vote)\n[Discord Bots Group](https://discordbots.group/bot/508143906811019269)\uFEFF\n", inline=False)
+        embed.add_field(name="Recent GitHub Update", value=f"```fix\n[PewDiePie:{gh_branch}] | [{commit}]:\n{gh['commit']['author']['name']} - {message}\n```")
         await ctx.send(embed=embed)
 
 
