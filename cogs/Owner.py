@@ -96,15 +96,21 @@ class Developer_Tools:
 
     @commands.command()
     async def bash(self, ctx, * , cmd : str):
-        out = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        content = str(out.stdout.decode('utf-8'))
-        if len(content) > 2000:
-            fp = io.BytesIO(content.encode('utf-8'))
-            return await ctx.send("Can't send full size..", file=discord.File(fp, 'bashresults.txt'))
-        if content == '':
-            return await ctx.send("Nothing to send..")
-        else:
-            await ctx.send(f"```fix\n{content}\n```")
+        proc = subprocess.Popen(['/bin/bash', "-c", cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = proc.communicate(timeout=120)
+        content = f"\n-- input --\n\n\n{cmd}\n\n\n-- stdout --\n\n\n"+ str(out.decode('utf-8')) + "\n\n-- stderr --\n\n\n"+ str(err.decode('utf-8')) + "\n"
+        try:
+            await ctx.send(f"```fix{content}```")
+        except discord.HTTPException:
+            content = content.replace("```","")
+            msg = await ctx.send("Output too long, uploading to Hastebin..")
+            async with aiohttp.ClientSession().post("https://hastebin.com/documents/", data=content.encode()) as resq:
+                a = await resq.json()
+                a = a['key']
+                url = f"https://hastebin.com/" + a
+                await msg.edit(content=f"Uploaded to Hastebin: {url}")
+            
+        
 
     @commands.command(aliases=['l'])
     async def load(self, ctx, cog):
