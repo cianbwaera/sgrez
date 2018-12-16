@@ -28,6 +28,14 @@ class PewDiePie(commands.Bot):
         print("Total Channels: " + str(len(set(self.get_all_channels()))))
         print('\uFEFF')
         await self.handler()
+        g = await self.db.fetch("SELECT * FROM blacklisted_guilds")
+        for i in self.guilds:
+            for a in g:
+                if i.id == a["guild_id"]:
+                    await i.leave()
+                    print(f"Leaving Banned Guild: {i}")
+                else:
+                    continue
 
     async def on_guild_remove(self, guild):
         await self.handler()

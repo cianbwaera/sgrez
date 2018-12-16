@@ -120,10 +120,10 @@ class Developer_Tools:
     async def g(self, ctx, id : int):
         is_it_there = await self.bot.db.fetchval("SELECT result FROM blacklisted_guilds WHERE guild_id=$1", id)
         if is_it_there is None:
-            return await ctx.send("Guild isnt blacklisted")
+            return await ctx.send(embed=discord.Embed(description="Server isn't currently blacklisted", color=discord.Color.red()))
         else:
             await self.bot.db.execute("DELETE FROM blacklisted_guilds WHERE guild_id=$1",id)
-            await ctx.send(f"Successfully unblacklisted guild")
+            await ctx.send(embed=discord.Embed(description=f"Successfully unblacklisted guild", color=discord.Color.green()))
 
     @commands.command()
     async def bash(self, ctx, * , cmd : str):
