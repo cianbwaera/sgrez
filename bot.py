@@ -79,7 +79,7 @@ class PewDiePie(commands.Bot):
         if config["debug"] is False:
             async with aiohttp.ClientSession() as session:
                await session.post("https://discordbots.org/api/bots/508143906811019269/stats", headers={'Authorization': config['tokens']['dbltoken']},data={'server_count': len(self.guilds)})
-               await session.post("https://discordbots.group/api/bot/508143906811019269", headers={'Authorization' : config['tokens']['dbgtoken']}, data={'server_count': len(self.guilds)})
+               await session.post("https://discordbots.group/api/bot/508143906811019269/", headers={'Authorization' : config['tokens']['dbgtoken']}, data={'server_count': len(self.guilds)})
 
     async def start(self, token, bot=True, reconnect=True):
         await self.login(token, bot=bot)
