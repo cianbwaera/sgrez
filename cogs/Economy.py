@@ -219,6 +219,18 @@ class PewDieCoin:
         except Exception as e:
             print(e)
 
+    
+    @shop.command()
+    @commands.has_permissions(manage_roles=True)
+    async def edit(self, ctx, shop_pos : int, new_amount : int):
+        try:
+            role_id = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_pos)
+        except:
+            return await ctx.send(embed=discord.Embed(description=f"Sorry, but there isnt any role with the number `{shop_pos}`", color=discord.Color.red()))
+        old_val = await self.bot.db.execute("SELECT amount FROM shop WHERE guild_id=$1 AND role_id=$2", ctx.guild.id, role_id)
+        await self.bot.db.execute("UPDATE shop SET amount=$1 WHERE role_id=$1 AND guild_id=$2", role_id, ctx.guild.id)
+        await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Success! `{ctx.guild.get_role(role_id).name}` amount use to been `{old_val}` coins and now its `{new_amount}` coins!`"))
+
 
     @shop.command()
     async def buy(self, ctx, shop_position : int):

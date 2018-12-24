@@ -14,15 +14,7 @@ CREATE TABLE IF NOT EXISTS shop (
     amount BIGINT NOT NULL
 );
 
-/*
 
-CREATE TABLE IF NOT EXISTS cooldowns (
-    user_id BIGINT NOT NULL,
-    end_time BIGINT NOT NULL,
-    command TEXT
-    )
-    
-*/
 
 CREATE TABLE IF NOT EXISTS blacklisted_guilds (
     guild_id BIGINT PRIMARY KEY,
