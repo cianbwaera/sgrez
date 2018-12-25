@@ -14,12 +14,12 @@ with open('db/config.json') as file:
 class Fun_Commands:
     def __init__(self, bot):
         self.bot = bot
-        #self.ts_subcount = None
-        #self.pdp_subcount = None
-        #self.task = self.bot.loop.create_task(self.get_subcounts())
+        self.ts_subcount = None
+        self.pdp_subcount = None
+        self.task = self.bot.loop.create_task(self.get_subcounts())
 
-    #def __unload(self):
-        #self.task.cancel()
+    def __unload(self):
+        self.task.cancel()
 
     async def get_subcounts(self):
         await self.bot.wait_until_ready()
@@ -61,10 +61,10 @@ class Fun_Commands:
         embed.add_field(name="PewDiePie Count", value=f"{rawsubcount:,d}", inline=False)
         embed.add_field(name="T-Series Count", value=f"{tsrawcount:,d}", inline=False)
         embed.add_field(name="Sub Difference", value=subcount, inline=False)
-        """pdp = rawsubcount- self.pdp_subcount
+        pdp = rawsubcount- self.pdp_subcount
         ts = tsrawcount - self.ts_subcount
         con = pdp - ts
-        embed.add_field(name="\uFEFF", value=f"**PewDiePie** has gained over **{pdp:,d}** subscribers per 30 minutes\n**T-Series** has gained over **{ts:,d}** subscribers per 30 minutes\n**PewDiePie** has gained over **{con:,d}** more subscribers then T-Series within 30 minutes")"""
+        embed.add_field(name="\uFEFF", value=f"**PewDiePie** has gained over **{pdp:,d}** subscribers per 30 minutes\n**T-Series** has gained over **{ts:,d}** subscribers per 30 minutes\n**PewDiePie** has gained over **{con:,d}** more subscribers then T-Series within 30 minutes")
         embed.set_footer(text="PewDiePie's Subcount Tracker™ | " + config['ver'], icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed)
 

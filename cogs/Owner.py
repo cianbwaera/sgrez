@@ -1,4 +1,4 @@
-import discord, asyncio, json, time, io, traceback, inspect, textwrap, datetime, os, sys, subprocess, copy, typing, aiohttp
+import discord, asyncio, json, time, io, traceback, inspect, textwrap, datetime, os, sys, subprocess, copy, typing, aiohttp, random
 from typing import Union
 from time import ctime
 from contextlib import redirect_stdout
@@ -99,7 +99,7 @@ class Developer_Tools:
     @commands.command()
     async def bash(self, ctx, * , cmd : str):
         proc = subprocess.Popen(['/bin/bash', "-c", cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = proc.communicate(timeout=120)
+        out, err = proc.communicate(timeout=30)
         content = f"\n-- input --\n\n\nenter@enn-vps:~/$ {cmd}\n\n\n-- stdout --\n\n\n"+ str(out.decode('utf-8')) + "\n\n-- stderr --\n\n\n"+ str(err.decode('utf-8')) + "\n"
         try:
             await ctx.send(f"```bash{content}```")
