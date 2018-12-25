@@ -149,7 +149,7 @@ class PewDieCoin:
             c += 1
         emb.set_footer(text="\uFEFF")
         await ctx.send(embed=emb)
-
+   
     @commands.group()
     async def shop(self, ctx):
         if ctx.invoked_subcommand is None:

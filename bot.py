@@ -6,6 +6,7 @@ import asyncio
 import datetime
 import asyncpg
 import pkg_resources
+import time
 import platform
 from discord.ext import commands
 
@@ -82,14 +83,12 @@ class PewDiePie(commands.AutoShardedBot):
 
     async def on_connect(self):
         await self.change_presence(status=discord.Status.dnd, activity=discord.Game(name="Connecting to DB.."))
-        print("Connecting to the database")
+        print("|====> Connecting to the database")
         creds = config['db-creds']
         try:
             self.db = await asyncpg.create_pool(**creds)
             print("Connected!")
-            with open('schema.sql', 'r') as sql:
-                await self.db.execute(sql.read())
-            print("Done Executing schema.sql")
+            await self.db.execute(open('schema.sql').read())
         except asyncio.TimeoutError:
             await self.change_presence(status=discord.Status.dnd, activity=discord.Game(name="DB Connection failed!"))
             print("Could not connect to the database:\nInvalid Host Address")
@@ -106,7 +105,7 @@ class PewDiePie(commands.AutoShardedBot):
         self.remove_command('help')
         for a in cogs:
             self.load_extension(f'cogs.{a}')
-            print(f"|====> Loaded Extension cogs.{a}") 
+            print(f"<====| Loaded Extension cogs.{a}") 
         print("|====> Posted Uptime")
         try:
             loop = asyncio.get_event_loop()
@@ -117,10 +116,13 @@ class PewDiePie(commands.AutoShardedBot):
     async def logout(self):
         print("\nLogging out!\n")
         try:
+            time1 = time.perf_counter()
             await self.db.close()
-            print("\n\n<--->DB is Closed<--->")
-        except:
-            pass
+            time2 = time.perf_counter()
+            res = round((time2-time1)*1000)
+            print(f"\n\n|====> Database closed in {res}ms <====|")
+        except Exception as e:
+            print(e)
         await super().logout()
         
 
