@@ -18,7 +18,7 @@ class PewDieCoin:
     async def bank(self, ctx, user : discord.Member=None):
         if not user:
             user = ctx.author
-        elif user.id != self.bot.user.id and user.bot:
+        elif user.id is not self.bot.user.id and user.bot:
             return await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"Sorry, but {user.mention} is an bot account which doesn't get coins"))
         else:
             user = user
@@ -33,9 +33,9 @@ class PewDieCoin:
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if count is None:
             count = 0
-        await self.bot.db.execute("INSERT INTO bank (user_id, user_money) VALUES ($1, $2 + 75) ON CONFLICT (user_id) DO UPDATE SET user_money= $2 + 75", ctx.author.id, count)
+        await self.bot.db.execute("INSERT INTO bank (user_id, user_money) VALUES ($1, $2 + 50) ON CONFLICT (user_id) DO UPDATE SET user_money= $2 + 50", ctx.author.id, count)
         after_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
-        await ctx.send(f"Added `75` coins to your coin bank, you now have `{after_money}` coins")
+        await ctx.send(f"Added `50` coins to your coin bank, you now have `{after_money}` coins")
 
     @commands.command()
     async def rolldice(self, ctx, bet , guess : int):
@@ -47,7 +47,7 @@ class PewDieCoin:
         if bet is None:
             bet = money
         if guess <= 0 or guess > 6 or bet <= 0:
-            return await ctx.send(embed=discord.Embed(description="You didn't use this command correctly, try doing:\n\n`p.rolldice {money bet} {dice bet (1 to 6)}`", color=discord.Color.red()))
+            return await ctx.send(embed=discord.Embed(description="Bet or/and guess is out of range!", color=discord.Color.red()))
         elif bet > money:
             return await ctx.send(embed=discord.Embed(description="You do not have enough funds for this bet", color=discord.Color.red()))
         else:
@@ -78,22 +78,23 @@ class PewDieCoin:
 
 
     @commands.command(aliases=['cf'])
-    async def coinflip(self, ctx, amt, side: str,):
+    async def coinflip(self, ctx, amt : int, side: str):
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if count is None:
             count = 0
-
         if amt == 'all':
             amt = int(count)
-
         else:
             amt = int(amt)
 
-        if amt <= 0:
+        if amt > 8000:
+            return await ctx.send(embed=discord.Embed(description="You have reached the gambling limit, please gamble a smaller number", color=discord.Color.red()))
+        elif amt <= 0:
             return await ctx.send(embed=discord.Embed(description="You cannot give a number that is below or equal to 0", color=discord.Color.red()))
 
         result = random.choice(['h', 't'])
-        
+        side = side.lower()
+        # to make it case insensitive
         if (side == 'head' or side == 'heads' or side == "h"):
             side = 'h'
 
@@ -110,7 +111,7 @@ class PewDieCoin:
                 await ctx.send(embed=discord.Embed(description=f"Congrats fellow Pewd, you won {amt:,d} coins", color=discord.Color.green()))
                 await self.bot.db.execute("UPDATE bank SET user_money= user_money + $1 WHERE user_id=$2", amt, ctx.author.id)
             else:
-                await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"You have lost {amt:,d}, better luck next time!"))
+                await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"You have lost {amt:,d} coins, better luck next time! ^^__^^"))
                 await self.bot.db.execute("UPDATE bank SET user_money= user_money - $1 WHERE user_id=$2", amt, ctx.author.id)
 
     @commands.command()
@@ -139,7 +140,7 @@ class PewDieCoin:
 
     @commands.command(aliases=['lb'])
     async def leaderboard(self, ctx):
-        stats = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money DESC LIMIT 10")
+        stats = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money DESC LIMIT 8")
         emb = discord.Embed(color=discord.Color(value=0xae2323), title="Global Leaderboard - coins")
         emb.set_thumbnail(url=self.bot.user.avatar_url)
         c = 0

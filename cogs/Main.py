@@ -33,11 +33,55 @@ class Main_Commands:
 
     @commands.command()
     async def help(self, ctx):
+        """
         try:
             await ctx.author.send("**Here's my Help Page**\nhttps://enternewname.me/pewdiepie")
             await ctx.send("**Check you DM's For Help:mailbox_with_mail:**")
         except:
             await ctx.send("**Here's my Help Page**\nhttps://enternewname.me/pewdiepie")
+        """
+        embed = discord.Embed(title=f"{self.bot.user.name}'s commands!'", description="An public list of commands that everyone can use!", color=discord.Color(value=def_color))
+        embed.add_field(name="Meta Commands", value=f" \
+        Pretty much the commands associated with the bot itself\n \
+        `help`: sends you here\n \
+        `invite`: sends you an invite for me\n \
+        `uptime`: shows you how long i have been running, you could invoke `stats` for this\n \
+        `{self.bot.user} prefix`: shows the availiable prefix for your server\n \
+        `ping`: sends you my ping connection info from my host to the discord api\n \
+        `support`: I send you my [Support Server]({config['server']}) invite\n \
+        `feedback`: send some helpful feedback to my developers, please do not abuse this\n \
+        `stats`: Shows full system information and general stats of the bot\n \
+        ",   
+        inline=False
+        )
+        embed.add_field(name="Fun Commands", value=f" \
+        The fun of the bot, Pewd wouldn't really be much without them\n \
+        `subcount`: The core command of the bot, why it still exists; shows the subcount of T-Series and PewDiePie\n \
+        `poll`: create a poll in your server, you must have something to poll about\n \
+        `8ball`: let the 8ball decide for you..", 
+        inline=False
+        ) 
+        embed.add_field(name="Economy Commands", value=f"\
+        The part of the bot thats being actively developed\n \
+        `search`: search for some coins\n \
+        `timely`: you get 50 coins every 4 hours\n \
+        `shop`: shows availiable roles for sell\n \
+        `shop add (amount) (role)`: adds a role to the shop\n \
+        `shop remove (role)`: removes an role from the shop\n \
+        `shop edit (new_amount) (role)`: edits the amount of an role in the shop\n\
+        `rolldice (bet) (guess): rolls a dice", inline=False)
+        embed.add_field(name="Music Group", value=f"\
+        All commands start with `p.disstrack`, plays bitch lasagna,\n \
+        `play`: plays the song,\n \
+        `pause`: pauses the song, \n \
+        `stop`: disconnects the bot from the voice channel")
+        try:
+            await ctx.author.send(embed=embed)
+            await ctx.send("**List of commands have been sent to DMs :mailbox_with_mail:**")
+        except:
+            await ctx.send("***I need DMs to be open in order to send you the help embed***")
+
+
 
     @commands.command()
     async def prefix(self, ctx):

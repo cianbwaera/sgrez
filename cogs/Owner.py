@@ -64,17 +64,19 @@ class Developer_Tools:
                 pass
         else:
             value = stdout.getvalue()
-            try:
-                await ctx.message.add_reaction(config['tickyesreact'])
-            except:
-                pass
+          
 
             if ret is None:
                 if value:
                     await ctx.send(f'```py\n{value}\n```')
+                    try:
+                        await ctx.message.add_reaction(config['ticknoreact'])
+                    except:
+                        pass
             else:
                 self._last_result = ret
                 await ctx.send(f'```py\n{value}{ret}\n```')
+               
 
     @commands.command(aliases=['rl'])
     async def reload(self, ctx, cog=None):
@@ -94,37 +96,6 @@ class Developer_Tools:
         except Exception as e:
             await ctx.send(embed=discord.Embed(description=f"Could Not Reload `cogs.{cog}` {config['tickno']}\n```bash\n{e}\n```", color=discord.Color.red()))
 
-    @commands.group()
-    async def blacklist(self, ctx):
-        pass
-
-    @blacklist.command()
-    async def guild(self, ctx, id : int):
-        check_if_is = await self.bot.db.fetchval("SELECT result FROM blacklisted_guilds WHERE guild_id=$1", id)
-        if check_if_is is None:
-            await self.bot.db.execute("INSERT INTO blacklisted_guilds VALUES($1,$2) ON CONFLICT(guild_id) DO NOTHING", id,"dwqdwqdwq")
-            await ctx.send(embed=discord.Embed(description=f"Successfully blacklisted {self.bot.get_guild(id).name}, i will leave the guild if its in my guild list", color=discord.Color.green()))
-            for i in self.bot.guilds:
-                if i.id == id:
-                    await i.leave()
-                else:
-                    continue
-        else:
-            await ctx.send(embed=discord.Embed(description="This server is already blacklisted!", color=discord.Color.red()))
-
-    @commands.group()
-    async def unblacklist(self,ctx):
-        pass
-    
-    @unblacklist.command(name="guild")
-    async def g(self, ctx, id : int):
-        is_it_there = await self.bot.db.fetchval("SELECT result FROM blacklisted_guilds WHERE guild_id=$1", id)
-        if is_it_there is None:
-            return await ctx.send(embed=discord.Embed(description="Server isn't currently blacklisted", color=discord.Color.red()))
-        else:
-            await self.bot.db.execute("DELETE FROM blacklisted_guilds WHERE guild_id=$1",id)
-            await ctx.send(embed=discord.Embed(description=f"Successfully unblacklisted guild", color=discord.Color.green()))
-
     @commands.command()
     async def bash(self, ctx, * , cmd : str):
         proc = subprocess.Popen(['/bin/bash', "-c", cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -135,11 +106,15 @@ class Developer_Tools:
         except discord.HTTPException:
             content = content.replace("```","")
             msg = await ctx.send("Output too long, uploading to Hastebin..")
-            async with aiohttp.ClientSession().post("https://hastebin.com/documents/", data=content.encode()) as resq:
-                a = await resq.json()
-                a = a['key']
-                url = f"https://hastebin.com/" + a
-                await msg.edit(content=f"Uploaded to Hastebin: {url}")
+            try:
+                async with aiohttp.ClientSession().post("https://hastebin.com/documents/", data=content.encode()) as resq:
+                    a = await resq.json()
+                    a = a['key']
+                    url = f"https://hastebin.com/" + a
+                    await msg.edit(content=f"Uploaded to Hastebin: {url}")
+            except Exception as error:
+                msg.edit(content="Slight error, \n{}".format(error))
+
             
         
 

@@ -9,22 +9,17 @@ class Background_Handler:
         if isinstance(error, commands.CommandNotFound):
             return
         elif isinstance(error, commands.CommandOnCooldown):
+            seconds = int(error.retry_after)
+            seconds = round(seconds, 2)
+            hours, remainder = divmod(int(seconds), 3600)
+            minutes, seconds = divmod(remainder, 60)
             if ctx.command.name == "timely":
-                seconds = int(error.retry_after)
-                seconds = round(seconds, 2)
-                hours, remainder = divmod(int(seconds), 3600)
-                minutes, seconds = divmod(remainder, 60)
                 return await ctx.send(embed=discord.Embed(color=discord.Color(value=0xae2323), title="Already recieved!", description=f"You already claimed your timely reward, try again in **{hours}**hrs, **{minutes}**m, **{seconds}**s"))
 
             elif ctx.command.name == "feedback":
-                seconds = int(error.retry_after)
-                seconds = round(seconds, 2)
-                hours, remainder = divmod(int(seconds), 3600)
-                minutes, seconds = divmod(remainder, 60)
                 return await ctx.send(embed=discord.Embed(description=f"You already submitted feedback, try again in **{minutes}** minutes", color=discord.Color.red()))
-
             else:
-                return await ctx.send(f"You can run the {ctx.command} command again in **{math.ceil(error.retry_after):,d}** seconds") 
+                return await ctx.send(embed=discord.Embed(description=f"You have reached the limit for the {ctx.command.name} command, please try again in **{hours}** hours and **{minutes}** minutes!", color=discord.Color.red()))
         elif isinstance(error, commands.NoPrivateMessage):
             return await ctx.send(f"**This command cannot be used in a DM, please try this in a server**")
         elif isinstance(error, commands.BotMissingPermissions):
@@ -54,7 +49,7 @@ class Background_Handler:
                 print(f"{ctx.author} used {ctx.command} at {ctx.channel.id}")
         else:
             pass
-        await self.bot.db.execute("UPDATE commands SET num = num + 1")
+        await self.bot.db.execute("UPDATE commands SET num = commands.num + 1")
         
 
 

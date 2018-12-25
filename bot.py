@@ -1,3 +1,4 @@
+
 import discord
 import json
 import aiohttp
@@ -15,8 +16,12 @@ cogs = config['cogs']
 
 class PewDiePie(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix=commands.when_mentioned_or(config['prefix']), case_insensitive=True)
+        super().__init__(command_prefix=self.prefixes, case_insensitive=True, fetch_offline_members=False)
         self.db = None
+
+    def prefixes(self, bot, message):
+        default_prefixes = ['p.', 'P.', 'pewdiepie.']
+        return commands.when_mentioned_or(*default_prefixes)(bot, message)
 
     async def on_ready(self):
         print(f"{self.user} is ready")
@@ -28,14 +33,7 @@ class PewDiePie(commands.Bot):
         print("Total Channels: " + str(len(set(self.get_all_channels()))))
         print('\uFEFF')
         await self.handler()
-        g = await self.db.fetch("SELECT * FROM blacklisted_guilds")
-        for i in self.guilds:
-            for a in g:
-                if i.id == a["guild_id"]:
-                    await i.leave()
-                    print(f"Leaving Banned Guild: {i}")
-                else:
-                    continue
+
 
     async def on_guild_remove(self, guild):
         await self.handler()
@@ -48,13 +46,6 @@ class PewDiePie(commands.Bot):
         await self.get_channel(523715757398556702).send(embed=embed)
 
     async def on_guild_join(self, guild):
-        is_blacklisted = await self.db.fetchval("SELECT result FROM blacklisted_guilds WHERE guild_id=$1", guild.id)
-        if is_blacklisted is not None:
-            await guild.leave()
-            print(f"Leaving Banned Guild!: {guild.id} | {guild.name}")
-            return
-        else:
-            pass
         await self.handler()
         embed = discord.Embed(title="Joined Guild", color=discord.Color(value=0xae2323))
         embed.add_field(name="Server", value=f"{guild} {guild.id}", inline=False)
@@ -115,8 +106,8 @@ class PewDiePie(commands.Bot):
         self.remove_command('help')
         for a in cogs:
             self.load_extension(f'cogs.{a}')
-            print(f"Loaded Extension cogs.{a}") 
-        print("Posted Uptime")
+            print(f"|====> Loaded Extension cogs.{a}") 
+        print("|====> Posted Uptime")
         try:
             loop = asyncio.get_event_loop()
             loop.run_until_complete(self.start(config['tokens']['bottoken']))
