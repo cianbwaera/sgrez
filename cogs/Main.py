@@ -33,13 +33,6 @@ class Main_Commands:
 
     @commands.command()
     async def help(self, ctx):
-        """
-        try:
-            await ctx.author.send("**Here's my Help Page**\nhttps://enternewname.me/pewdiepie")
-            await ctx.send("**Check you DM's For Help:mailbox_with_mail:**")
-        except:
-            await ctx.send("**Here's my Help Page**\nhttps://enternewname.me/pewdiepie")
-        """
         embed = discord.Embed(title=f"{self.bot.user.name}'s commands", description="An public list of commands that everyone can use!", color=discord.Color(value=def_color))
         embed.add_field(name="Meta Commands", value=f" \
         Pretty much the commands associated with the bot itself\n\n\
