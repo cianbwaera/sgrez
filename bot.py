@@ -104,8 +104,8 @@ class PewDiePie(commands.AutoShardedBot):
         json.dump({"uptimestats" : str(datetime.datetime.utcnow())}, open("db/uptime.json", "w+"))
         self.remove_command('help')
         for a in cogs:
-            self.load_extension(f'cogs.{a}')
-            print(f"<====| Loaded Extension cogs.{a}") 
+            self.load_extension(f'modules.{a}')
+            print(f"<====| Loaded Extension modules.{a}") 
         print("|====> Posted Uptime")
         try:
             loop = asyncio.get_event_loop()
