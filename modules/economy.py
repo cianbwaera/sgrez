@@ -85,7 +85,7 @@ class PewDieCoin:
 
 
     @commands.command(aliases=['cf'])
-    async def coinflip(self, ctx, amt : int, side: str):
+    async def coinflip(self, ctx, amt, side: str):
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if count is None:
             count = 0
