@@ -164,5 +164,34 @@ class Fun_Commands:
         await ctx.send(embed=embed)
 
 
+
+
+
+    @commands.command()
+    async def meme(self, ctx):
+        img = ['.jpg', 'jpeg', '.png', '.gif']
+        subreddits = ['memes', 'dankmemes', 'irl_memes']
+        async def GetJSON(r):
+            async with aiohttp.ClientSession() as session:
+                async with session.get("https://www.reddit.com/r/{0}/hot.json?limit=100".format(r)) as resp:
+                    return await resp.json()
+    
+        a = True
+        while a:
+            url = await GetJSON(random.choice(subreddits))
+            url = url['data']['children'][random.randint(0, 99)]['data']['url']
+            if url is not None:
+                for i in img:
+                    if url.endswith(i):
+                        return await ctx.send(url)
+                    else:
+                        continue
+            
+            
+            
+        
+                
+
+
 def setup(bot):
     bot.add_cog(Fun_Commands(bot))
