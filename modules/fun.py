@@ -169,24 +169,38 @@ class Fun_Commands:
 
     @commands.command()
     async def meme(self, ctx):
-        img = ['.jpg', 'jpeg', '.png', '.gif']
-        subreddits = ['memes', 'dankmemes', 'irl_memes']
+        img = [".png",".jpg",".jpeg",".gif",".gifv",".webm",".mp4"]
+        subreddits = ['memes', 'dankmemes', 'irl_memes', "deepfriedmemes", "MemeEconomy"]
+
         async def GetJSON(r):
             async with aiohttp.ClientSession() as session:
-                async with session.get("https://www.reddit.com/r/{0}/hot.json?limit=100".format(r)) as resp:
+                async with session.get("https://www.reddit.com/r/{0}/hot.json?limit=300".format(r)) as resp:
                     return await resp.json()
     
-        a = True
-        while a:
-            url = await GetJSON(random.choice(subreddits))
-            url = url['data']['children'][random.randint(0, 99)]['data']['url']
-            if url is not None:
-                for i in img:
-                    if url.endswith(i):
-                        return await ctx.send(url)
-                    else:
-                        continue
-            
+  
+        async def SearchURL():
+            a = True
+            while a:
+                urls = await GetJSON(random.choice(subreddits))
+                number_of_indexing = 100
+                passed = False
+                while not passed:
+                    try:
+                        url = urls['data']['children'][random.randint(0, number_of_indexing)]['data']['url']
+                        passed = True
+                    except IndexError:
+                        number_of_indexing-=1
+                    except ValueError:
+                        return await SearchURL()
+
+                if url is not None:
+                    for i in img:
+                        if url.endswith(i):
+                            return await ctx.send(f"{url}")
+                        else:
+                            continue
+                            
+        await SearchURL()        
             
             
         
