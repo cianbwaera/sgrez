@@ -170,7 +170,7 @@ class Fun_Commands:
     @commands.command()
     async def meme(self, ctx):
         img = [".png",".jpg",".jpeg",".gif",".gifv",".webm",".mp4"]
-        subreddits = ['memes', 'dankmemes', 'irl_memes', "deepfriedmemes", "MemeEconomy"]
+        subreddits = ['memes', "deepfriedmemes", "MemeEconomy", "PewDiePieSubmissions"]
 
         async def GetJSON(r):
             async with aiohttp.ClientSession() as session:
