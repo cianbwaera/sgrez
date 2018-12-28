@@ -74,7 +74,7 @@ class PewDieCoin:
         place = random.choice([
             f"You have founded {result} coins in the trash, now i expect you to clean your self up",
             f"An old beggar decided to give you {result} coins, that is straight up wrong!",
-            f"Hmmm, PewDiePie decided to give you a brofist and {result} coins. Don't expect to get on the bots good side",
+            f"Hmmm, PewDiePie decided to give you {result} coins. Don't expect to get on the bots good side",
             f"You have founded {result} in a alley, you smell",
             f"Some robbers drop some coins from thier recent heist, you founded {result} coins dropped",
             f"An prostitute forgot to pay your {result} owed coins!"

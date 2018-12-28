@@ -36,9 +36,9 @@ PewDiePie was made for the sole purpose of just the subcounts, then i started to
 | Command    | Usage                   | Information                                                         |
 | ---------- | ----------------------- | ------------------------------------------------------------------- |
 | `subcount` | `p.subcount`            | This command gets the subcount of T-Series and PewDiePie            |
-| `disstrack`| `p.disstrack`           | Plays the T-Series disstrack in the voice channel you're in.
+| `disstrack`| `p.disstrack`           | Plays the T-Series disstrack in the voice channel you're in.        |
 | `poll`     | `p.poll {poll_message}` | You can send a poll of what to debate over in your discord channel! |
-
+| `meme`     | `p.meme`                | Get your fresh memes off of reddit >:)                              |
 
 # PewDieCoin Commands
 
@@ -53,6 +53,6 @@ PewDiePie was made for the sole purpose of just the subcounts, then i started to
 | `Shop Add`    | `p.shop add (amount) (role name or role id)` | Sells a role to the Shop                                                       |
 | `Shop Buy`    | `p.shop buy (role_number)`                   | Buys an role off the shop                                                      |
 | `Shop Remove` | `p.shop remove (role_number)`                | Removes a role off the shop                                                    |
-
+| `Shop edit`   | `p.shop edit (role_number) (new amount)`     | Edits the price of an role
 
 Thank you for using PewDiePie and we hope you use it in the future to come
