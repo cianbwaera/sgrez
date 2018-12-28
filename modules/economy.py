@@ -238,6 +238,7 @@ class PewDieCoin:
             await self.bot.db.execute("UPDATE shop SET amount=$1 WHERE role_id=$2 AND guild_id=$3 AND shop_num=$4", new_amount, rid, ctx.guild.id, shop_pos)
             await ctx.send(embed=discord.Embed(description=f"Role: `{ctx.guild.get_role(rid).name}` price has been raised to `{new_amount}`"))
 
+
     @shop.command()
     async def buy(self, ctx, shop_position : int):
         role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)

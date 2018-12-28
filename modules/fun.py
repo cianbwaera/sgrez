@@ -164,9 +164,6 @@ class Fun_Commands:
         await ctx.send(embed=embed)
 
 
-
-
-
     @commands.command()
     async def meme(self, ctx):
         img = [".png",".jpg",".jpeg",".gif",".gifv",".webm",".mp4"]
@@ -179,8 +176,7 @@ class Fun_Commands:
     
   
         async def SearchURL():
-            a = True
-            while a:
+            while True:
                 urls = await GetJSON(random.choice(subreddits))
                 number_of_indexing = 100
                 passed = False
