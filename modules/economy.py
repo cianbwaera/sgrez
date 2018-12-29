@@ -6,10 +6,6 @@ import json
 from datetime import datetime, timedelta
 from discord.ext import commands
 
-with open('db/config.json', 'r') as file:
-    config = json.load(file)
-
-
 
 limit_timely = 50
 limit_trade = 9999
@@ -36,13 +32,17 @@ class PewDieCoin:
     @commands.cooldown(1, 3600, commands.BucketType.user)
     @commands.command()
     async def timely(self, ctx):
+        is_special = await self.bot.db.fetchval("SELECT coin_award FROM giveaways WHERE user_id=$1", ctx.author.id)
+        if is_special is None:
+            is_special = 0
+        # c
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if count is None:
             count = 0
         # There is a reason why i have f-strings for this statement
-        await self.bot.db.execute(f"INSERT INTO bank (user_id, user_money) VALUES ($1, $2 + {limit_timely}) ON CONFLICT (user_id) DO UPDATE SET user_money= $2 + {limit_timely}", ctx.author.id, count)
+        await self.bot.db.execute(f"INSERT INTO bank (user_id, user_money) VALUES ($1, $2 + {limit_timely + is_special}) ON CONFLICT (user_id) DO UPDATE SET user_money= $2 + {limit_timely + is_special}", ctx.author.id, count)
         after_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
-        await ctx.send(f"Added `50` coins to your coin bank, you now have `{after_money}` coins")
+        await ctx.send(f"Added `{after_money-count}` coins to your coin bank, you now have `{after_money}` coins")
 
     @commands.command()
     async def rolldice(self, ctx, bet , guess : int):
@@ -69,17 +69,20 @@ class PewDieCoin:
     @commands.cooldown(1, 1800.0, commands.BucketType.user)
     @commands.command()
     async def search(self, ctx):
+        is_special = await self.bot.db.fetchval("SELECT coin_award FROM giveaways WHERE user_id=$1", ctx.author.id)
+        if is_special is None:
+            is_special = 0
         # c
-        result = random.randint(0, 40)
+        result = random.randint(0, 40 )
         place = random.choice([
             f"You have founded {result} coins in the trash, now i expect you to clean your self up",
-            f"An old beggar decided to give you {result} coins, that is straight up wrong!",
-            f"Hmmm, PewDiePie decided to give you {result} coins. Don't expect to get on the bots good side",
-            f"You have founded {result} in a alley, you smell",
-            f"Some robbers drop some coins from thier recent heist, you founded {result} coins dropped",
-            f"An prostitute forgot to pay your {result} owed coins!"
+            f"An old beggar decided to give you {result + is_special} coins, that is straight up wrong!",
+            f"Hmmm, PewDiePie decided to give you {result + is_special} coins. Don't expect to get on the bots good side",
+            f"You have founded {result + is_special} in a alley, you smell",
+            f"Some robbers drop some coins from thier recent heist, you founded {result + is_special} coins dropped",
+            f"An prostitute forgot to pay your {result + is_special} owed coins!"
         ])
-        await self.bot.db.execute("INSERT INTO bank(user_id, user_money) VALUES($1,$2) ON CONFLICT(user_id) DO UPDATE SET user_money=bank.user_money+$2",ctx.author.id, result)
+        await self.bot.db.execute(f"INSERT INTO bank(user_id, user_money) VALUES($1,$2) ON CONFLICT(user_id) DO UPDATE SET user_money=bank.user_money+$2",ctx.author.id, result + is_special)
 
         await ctx.send(embed=discord.Embed(description=place, color=discord.Color.red()))
 

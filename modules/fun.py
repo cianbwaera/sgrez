@@ -8,9 +8,6 @@ async def get(url):
             return await jsonresp.json()
 
 
-with open('db/config.json') as file:
-    config = json.load(file)
-
 class Fun_Commands:
     def __init__(self, bot):
         self.bot = bot
@@ -65,7 +62,7 @@ class Fun_Commands:
         ts = tsrawcount - self.ts_subcount
         con = pdp - ts
         embed.add_field(name="\uFEFF", value=f"**PewDiePie** has gained over **{pdp:,d}** subscribers per 30 minutes\n**T-Series** has gained over **{ts:,d}** subscribers per 30 minutes\n**PewDiePie** has gained over **{con:,d}** more subscribers then T-Series within 30 minutes")
-        embed.set_footer(text="PewDiePie's Subcount Tracker™ | " + config['ver'], icon_url=self.bot.user.avatar_url)
+        embed.set_footer(text="PewDiePie's Subcount Tracker™ | " + self.bot.config['ver'], icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed)
 
     @commands.guild_only()

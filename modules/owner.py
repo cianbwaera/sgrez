@@ -4,8 +4,6 @@ from time import ctime
 from contextlib import redirect_stdout
 from discord.ext import commands
 
-with open('db/config.json') as bitch:
-    config = json.load(bitch)
 
 class Developer_Tools:
     def __init__(self, bot):
@@ -35,7 +33,7 @@ class Developer_Tools:
             'author': ctx.author,
             'guild': ctx.guild,
             "db" : self.bot.db,
-            'message': ctx.message,
+            'msg': ctx.message,
             '_': self._last_result
         }
 
@@ -58,10 +56,6 @@ class Developer_Tools:
         except Exception as e:
             value = stdout.getvalue()
             await ctx.send(f'```py\n{value}{traceback.format_exc()}```')
-            try:
-                await ctx.message.add_reaction(config['ticknoreact'])
-            except:
-                pass
         else:
             value = stdout.getvalue()
           
@@ -69,10 +63,6 @@ class Developer_Tools:
             if ret is None:
                 if value:
                     await ctx.send(f'```py\n{value}\n```')
-                    try:
-                        await ctx.message.add_reaction(config['ticknoreact'])
-                    except:
-                        pass
             else:
                 self._last_result = ret
                 await ctx.send(f'```py\n{value}{ret}\n```')
@@ -80,21 +70,21 @@ class Developer_Tools:
 
     @commands.command(aliases=['rl'])
     async def reload(self, ctx, cog=None):
-        cogs = config['cogs']
+        cogs = self.bot.config['cogs']
         if not cog:
             try:
                 for module in cogs:
                     self.bot.unload_extension("modules."+ module)
                     self.bot.load_extension("modules." + module)
-                return await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Successfully Reloaded {len(cogs)} Extensions {config['tickyes']}"))            
+                return await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Successfully Reloaded {len(cogs)} Extensions {self.bot.config['tickyes']}"))            
             except Exception as e:
-                return await ctx.send(embed=discord.Embed(description=f"Could Not Reload {len(module)} Extensions {config['tickno']}\n```bash\n{e}\n```", color=discord.Color.red()))
+                return await ctx.send(embed=discord.Embed(description=f"Could Not Reload {len(module)} Extensions {self.bot.config['tickno']}\n```bash\n{e}\n```", color=discord.Color.red()))
         try:
             self.bot.unload_extension(f"modules.{cog}")
             self.bot.load_extension(f"modules.{cog}")
-            await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Successfully Reloaded `modules.{cog}` {config['tickyes']}"))            
+            await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Successfully Reloaded `modules.{cog}` {self.bot.config['tickyes']}"))            
         except Exception as e:
-            await ctx.send(embed=discord.Embed(description=f"Could Not Reload `modules.{cog}` {config['tickno']}\n```bash\n{e}\n```", color=discord.Color.red()))
+            await ctx.send(embed=discord.Embed(description=f"Could Not Reload `modules.{cog}` {self.bot.config['tickno']}\n```bash\n{e}\n```", color=discord.Color.red()))
 
     @commands.command()
     async def bash(self, ctx, * , cmd : str):
@@ -113,7 +103,7 @@ class Developer_Tools:
                     url = f"https://hastebin.com/" + a
                     await msg.edit(content=f"Uploaded to Hastebin: {url}")
             except Exception as error:
-                msg.edit(content="Slight error, \n{}".format(error))
+                await msg.edit(content="Slight error, \n{}".format(error))
 
             
         
@@ -133,23 +123,20 @@ class Developer_Tools:
 
     @commands.command()
     async def sql(self, ctx, * , query : str):
-        if "SELECT" or "select" in ctx.message.content:
-            try:
-                meth = await self.bot.db.fetch(query)
-            except discord.HTTPException:
-                meth = "2000 word limit"
-            except Exception as e:
-                meth = e
-        else:
-            try:
-                await self.bot.db.execute(query)                
-                meth = 'Executed!'
-            except Exception as e:
-                meth = e
+        try:
+           meth = await self.bot.db.fetch(query)
+        except Exception as e:
+            meth = e
         e = discord.Embed(title="SQL Query Evaluation",color=discord.Color(value=0xae2323))                
         e.add_field(name=":inbox_tray: Input", value=f"```sql\n{query}\n```", inline=False)
         e.add_field(name=":outbox_tray: Output" , value=f'```sql\n{meth}\n```', inline=False)
         await ctx.send(embed=e)
+
+
+    @commands.command()
+    async def update(self, ctx, * , annoucement):
+        await self.bot.db.execute("INSERT INTO development(updates) VALUES($1) ON CONFLICT(updates) DO UPDATE SET updates=$1", annoucement)
+        await ctx.send("Successfully updated")
             
 def setup(bot):
     bot.add_cog(Developer_Tools(bot))

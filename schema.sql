@@ -19,3 +19,11 @@ CREATE TABLE IF NOT EXISTS shop (
 
 -- have the schema handle stuff if the table is empty
 INSERT INTO commands(num, id) VALUES(0, 342) ON CONFLICT(id) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS development (
+    updates VARCHAR(400) PRIMARY KEY
+);
+CREATE TABLE IF NOT EXISTS giveaways (
+    user_id BIGINT,
+    coin_award INT
+);

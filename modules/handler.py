@@ -38,7 +38,7 @@ class Background_Handler:
                 pass
             return await ctx.send(f"You are missing an required argument, `{error.param.name}`")
         else:
-            print("ERROR:\n\n:{}\n\nEND OF ERROR!".format(error))
+            print(f"ERROR:\n{ctx.command.name}\n:{error}\n\nEND OF ERROR!")
             
         
     async def on_command_completion(self, ctx):

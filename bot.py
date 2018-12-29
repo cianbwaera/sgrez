@@ -10,15 +10,18 @@ import time
 import platform
 from discord.ext import commands
 
-with open("./db/config.json") as f:
-    config = json.load(f)
-
-cogs = config['cogs']
-
 class PewDiePie(commands.AutoShardedBot):
     def __init__(self):
         super().__init__(command_prefix=self.prefixes, case_insensitive=True, fetch_offline_members=False)
-        self.db = None
+    
+      
+    # much easier then calling a var
+    @property
+    def config(self):
+        return json.load(open("db/config.json"))
+
+    def __str__(self):
+        return self.config
 
     def prefixes(self, bot, message):
         default_prefixes = ['p.', 'P.', 'pewdiepie.']
@@ -68,10 +71,10 @@ class PewDiePie(commands.AutoShardedBot):
 
     async def handler(self):
         await self.change_presence(activity=discord.Streaming(name=f"p.help in {len(self.guilds)} servers!", url="https://twitch.tv/PewDiePie"))
-        if config["debug"] is False:
+        if self.config["debug"] is False:
             async with aiohttp.ClientSession() as session:
-               await session.post("https://discordbots.org/api/bots/508143906811019269/stats", headers={'Authorization': config['tokens']['dbltoken']},data={'server_count': len(self.guilds)})
-               await session.post("https://discordbots.group/api/bot/508143906811019269/", headers={'Authorization' : config['tokens']['dbgtoken']}, data={'server_count': len(self.guilds)})
+               await session.post("https://discordbots.org/api/bots/508143906811019269/stats", headers={'Authorization': self.config['tokens']['dbltoken']},data={'server_count': len(self.guilds)})
+               await session.post("https://discordbots.group/api/bot/508143906811019269/", headers={'Authorization' : self.config['tokens']['dbgtoken']}, data={'server_count': len(self.guilds)})
 
     async def start(self, token, bot=True, reconnect=True):
         await self.login(token, bot=bot)
@@ -84,7 +87,7 @@ class PewDiePie(commands.AutoShardedBot):
     async def on_connect(self):
         await self.change_presence(status=discord.Status.dnd, activity=discord.Game(name="Connecting to DB.."))
         print("|====> Connecting to the database")
-        creds = config['db-creds']
+        creds = self.config['db-creds']
         try:
             self.db = await asyncpg.create_pool(**creds)
             print("Connected!")
@@ -99,17 +102,18 @@ class PewDiePie(commands.AutoShardedBot):
             await self.change_presence(status=discord.Status.dnd, activity=discord.Game(name="DB Connection failed!"))
             print(e)
             
-
     def run(self):
         json.dump({"uptimestats" : str(datetime.datetime.utcnow())}, open("db/uptime.json", "w+"))
         self.remove_command('help')
+        self.load_extension("jishaku")
+        cogs = self.config['cogs']
         for a in cogs:
             self.load_extension(f'modules.{a}')
-            print(f"<====| Loaded Extension modules.{a}") 
+            print(f"<====|= Loaded Extension modules.{a}") 
         print("|====> Posted Uptime")
         try:
             loop = asyncio.get_event_loop()
-            loop.run_until_complete(self.start(config['tokens']['bottoken']))
+            loop.run_until_complete(self.start(self.config['tokens']['bottoken']))
         except KeyboardInterrupt:
             loop.run_until_complete(self.logout())
         
@@ -120,7 +124,7 @@ class PewDiePie(commands.AutoShardedBot):
             await self.db.close()
             time2 = time.perf_counter()
             res = round((time2-time1)*1000)
-            print(f"\n\n|====> Database closed in {res}ms <====|")
+            print(f"\n\n|====>\/Database closed in {res}ms\/<====|")
         except Exception as e:
             print(e)
         await super().logout()
