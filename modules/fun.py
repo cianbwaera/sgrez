@@ -21,8 +21,8 @@ class Fun_Commands:
     async def get_subcounts(self):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
-            pewdiepie = await get(f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UC-lHJZR3Gqxm24_Vd_AJ5Yw&key=" + config['yt'])
-            tes = await get(f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UCq-Fj5jknLsUf-MWSy4_brA&key=" + config['yt'])
+            pewdiepie = await get(f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UC-lHJZR3Gqxm24_Vd_AJ5Yw&key=" + self.config['yt'])
+            tes = await get(f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UCq-Fj5jknLsUf-MWSy4_brA&key=" + self.config['yt'])
             rawsubcount = int(pewdiepie['items'][0]['statistics']['subscriberCount'])
             tsrawcount = int(tes['items'][0]['statistics']['subscriberCount']) 
             self.ts_subcount = tsrawcount
@@ -31,7 +31,7 @@ class Fun_Commands:
 
     @commands.command(aliases=['8ball'])
     async def eightball(self, ctx, * , query):
-        choices = config['8ball']
+        choices = self.config['8ball']
         embed = discord.Embed(color=discord.Color(value=0xae2323), title=query, description=random.choice(choices))
         embed.set_author(name="8Ball Generator")
         embed.set_footer(text=config['ver'], icon_url=self.bot.user.avatar_url)
@@ -43,8 +43,8 @@ class Fun_Commands:
 
     @commands.command()
     async def subcount(self, ctx):
-        pewdiepie = await get(f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UC-lHJZR3Gqxm24_Vd_AJ5Yw&key=" + config['yt'])
-        tes = await get(f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UCq-Fj5jknLsUf-MWSy4_brA&key=" + config['yt'])        
+        pewdiepie = await get(f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UC-lHJZR3Gqxm24_Vd_AJ5Yw&key=" + self.config['yt'])
+        tes = await get(f"https://www.googleapis.com/youtube/v3/channels?part=statistics&id=UCq-Fj5jknLsUf-MWSy4_brA&key=" + self.config['yt'])        
         rawsubcount = int(pewdiepie['items'][0]['statistics']['subscriberCount'])
         tsrawcount = int(tes['items'][0]['statistics']['subscriberCount'])
 
