@@ -110,7 +110,7 @@ class Main_Commands:
         embed.add_field(name="Support the Development", value="[Donate to us on Patreon](https://patreon.com/pewdiepiebot)\n[Discord Bot List](https://discordbots.org/bot/508143906811019269/vote)\n[Discord Bots Group](https://discordbots.group/bot/508143906811019269)\uFEFF\n", inline=False)
         embed.add_field(name="Recent GitHub Update", value=f"```fix\n[PewDiePie:{gh_branch}] | [{commit}]:\n{gh['commit']['author']['name']} - {message}\n```")
         dev_update = await self.bot.db.fetchval("SELECT updates FROM development")
-        embed.add_field(name=f"Recent Developer Update", value=f"```md\n{dev_update}\n```")
+        embed.add_field(name=f"Recent Developer Update", value=f"```md\n{dev_update}\n```", inline=False)
         await ctx.send(embed=embed)
 
 
