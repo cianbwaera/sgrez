@@ -128,13 +128,11 @@ class Main_Commands:
         non_log_cpus = psutil.cpu_count(logical=False)
 
         t1 = time.perf_counter()
-        await self.bot.db.fetch("SELECT * FROM commands LIMIT 1")
+        tcu = await self.bot.db.fetchval("SELECT COUNT(*) FROM bank")
         t2 = time.perf_counter()
         dbping = round((t2-t1)*1000)
         
         dpy_ver = str(pkg_resources.get_distribution('discord.py').version)
-        tcu = await self.bot.db.fetchval("SELECT COUNT(*) FROM bank")
-
 
         # Make the embed
 
