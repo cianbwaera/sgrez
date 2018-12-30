@@ -157,13 +157,9 @@ class PewDieCoin:
             try:
                 _id = self.bot.get_user(stats[c]['user_id']).name
             except AttributeError:
-                _id = None
-            if _id is not None:
-                emb.add_field(name=_id, value=f"Currently has {(stats[c]['user_money']):,d} coins", inline=False)
-                c += 1
-            else:
-                c += 1
-                continue
+                _id = "invalid-user"
+            emb.add_field(name=_id, value=f"Currently has {(stats[c]['user_money']):,d} coins", inline=False)
+            c += 1
         emb.set_footer(text="\uFEFF")
         await ctx.send(embed=emb)
    
