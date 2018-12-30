@@ -135,7 +135,7 @@ class Fun_Commands:
         embed.add_field(name="Joined Discord", value=f"{joined_discord}, {created_account_length} Days ago", inline=False)
         if ctx.guild:
             embed.add_field(name="Roles", value=roles)
-        embed.set_footer(text=f"User ID: {user.id} | " + config['ver'], icon_url=self.bot.user.avatar_url)
+        embed.set_footer(text=f"User ID: {user.id} | " + self.bot.config['ver'], icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed)
 
     @commands.guild_only()
@@ -157,7 +157,7 @@ class Fun_Commands:
         embed.add_field(name="Online", value=f"{online_count}/{membercount}", inline=False)
         embed.add_field(name="Server Region", value=server.region, inline=False)
         embed.add_field(name="Roles", value=len(roles), inline=False)
-        embed.set_footer(text=f"Server ID: {server.id} | "+ config['ver'], icon_url=self.bot.user.avatar_url)
+        embed.set_footer(text=f"Server ID: {server.id} | "+ self.bot.config['ver'], icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed)
 
 
