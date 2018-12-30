@@ -149,7 +149,8 @@ class PewDieCoin:
 
     @commands.command(aliases=['lb'])
     async def leaderboard(self, ctx):
-        stats = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money DESC LIMIT 8")
+        count = 8
+        stats = await self.bot.db.fetch(f"SELECT * FROM bank ORDER BY user_money DESC LIMIT {count}")
         emb = discord.Embed(color=discord.Color(value=0xae2323), title="Global Leaderboard - coins")
         emb.set_thumbnail(url=self.bot.user.avatar_url)
         c = 0
@@ -163,6 +164,7 @@ class PewDieCoin:
                 c += 1
             else:
                 c += 1
+                count+=1
                 continue
         emb.set_footer(text="\uFEFF")
         await ctx.send(embed=emb)
