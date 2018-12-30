@@ -16,11 +16,11 @@ class PewDiePie(commands.AutoShardedBot):
 
     
     @property
-    def config(self):
-        return json.load(open("db/config.json"))
+    def self.bot.config(self):
+        return json.load(open("db/self.bot.config.json"))
 
     def __str__(self):
-        return self.config
+        return self.self.bot.config
 
     def prefixes(self, bot, message):
         default_prefixes = ['p.', 'P.', 'pewdiepie.']
@@ -61,7 +61,7 @@ class PewDiePie(commands.AutoShardedBot):
             embed = discord.Embed(color=discord.Color(value=0xae2323))
             embed.set_author(name=f"Thanks for inviting PewDiePie!")
             embed.set_thumbnail(url=self.user.avatar_url)
-            embed.add_field(name="Getting Started", value=f"Send`p.help` for a list of my commands and if you ever need any support, [click here]({config['server']})")
+            embed.add_field(name="Getting Started", value=f"Send`p.help` for a list of my commands and if you ever need any support, [click here]({self.bot.config['server']})")
             embed.add_field(name="Helping ", value="Although this isnt required, it would be appreciated of you upvote me at the following links\n[Discord Bot List](https://discordbots.org/bot/508143906811019269/vote)\n[Discord Bots Group](https://discordbots.group/bot/508143906811019269)")
             embed.set_footer(text=f"I use to have {len(self.guilds-1)} servers, but thanks to you, i now have {len(self.guilds)} servers!")
             await guild.system_channel.send(embed=embed)
@@ -70,10 +70,10 @@ class PewDiePie(commands.AutoShardedBot):
 
     async def handler(self):
         await self.change_presence(activity=discord.Streaming(name=f"p.help in {len(self.guilds)} servers!", url="https://twitch.tv/PewDiePie"))
-        if self.config["debug"] is False:
+        if self.self.bot.config["debug"] is False:
             async with aiohttp.ClientSession() as session:
-               await session.post("https://discordbots.org/api/bots/508143906811019269/stats", headers={'Authorization': self.config['tokens']['dbltoken']},data={'server_count': len(self.guilds)})
-               await session.post("https://discordbots.group/api/bot/508143906811019269/", headers={'Authorization' : self.config['tokens']['dbgtoken']}, data={'server_count': len(self.guilds)})
+               await session.post("https://discordbots.org/api/bots/508143906811019269/stats", headers={'Authorization': self.self.bot.config['tokens']['dbltoken']},data={'server_count': len(self.guilds)})
+               await session.post("https://discordbots.group/api/bot/508143906811019269/", headers={'Authorization' : self.self.bot.config['tokens']['dbgtoken']}, data={'server_count': len(self.guilds)})
 
     async def start(self, token, bot=True, reconnect=True):
         await self.login(token, bot=bot)
@@ -86,7 +86,7 @@ class PewDiePie(commands.AutoShardedBot):
     async def on_connect(self):
         await self.change_presence(status=discord.Status.dnd, activity=discord.Game(name="Connecting to DB.."))
         print("|====> Connecting to the database")
-        creds = self.config['db-creds']
+        creds = self.self.bot.config['db-creds']
         try:
             self.db = await asyncpg.create_pool(**creds)
             print("Connected!")
@@ -105,14 +105,14 @@ class PewDiePie(commands.AutoShardedBot):
         json.dump({"uptimestats" : str(datetime.datetime.utcnow())}, open("db/uptime.json", "w+"))
         self.remove_command('help')
         self.load_extension("jishaku")
-        cogs = self.config['cogs']
+        cogs = self.self.bot.config['cogs']
         for a in cogs:
             self.load_extension(f'modules.{a}')
             print(f"<====|= Loaded Extension modules.{a}") 
         print("|====> Posted Uptime")
         try:
             loop = asyncio.get_event_loop()
-            loop.run_until_complete(self.start(self.config['tokens']['bottoken']))
+            loop.run_until_complete(self.start(self.self.bot.config['tokens']['bottoken']))
         except KeyboardInterrupt:
             loop.run_until_complete(self.logout())
         

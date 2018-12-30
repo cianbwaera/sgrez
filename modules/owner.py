@@ -74,14 +74,14 @@ class Developer_Tools:
         if not cog:
             try:
                 for module in cogs:
-                    self.bot.unload_extension("modules."+ module)
-                    self.bot.load_extension("modules." + module)
+                    self.bot.unload_extension(module)
+                    self.bot.load_extension(module)
                 return await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Successfully Reloaded {len(cogs)} Extensions {self.bot.config['tickyes']}"))            
             except Exception as e:
                 return await ctx.send(embed=discord.Embed(description=f"Could Not Reload {len(module)} Extensions {self.bot.config['tickno']}\n```bash\n{e}\n```", color=discord.Color.red()))
         try:
-            self.bot.unload_extension(f"modules.{cog}")
-            self.bot.load_extension(f"modules.{cog}")
+            self.bot.unload_extension(cog)
+            self.bot.load_extension(cog)
             await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Successfully Reloaded `modules.{cog}` {self.bot.config['tickyes']}"))            
         except Exception as e:
             await ctx.send(embed=discord.Embed(description=f"Could Not Reload `modules.{cog}` {self.bot.config['tickno']}\n```bash\n{e}\n```", color=discord.Color.red()))
@@ -105,21 +105,18 @@ class Developer_Tools:
             except Exception as error:
                 await msg.edit(content="Slight error, \n{}".format(error))
 
-            
-        
-
     @commands.command(aliases=['l'])
     async def load(self, ctx, cog):
         try:
-            self.bot.load_extension(f"modules.{cog}")
-            await ctx.send(embed=discord.Embed(description=f"Loaded Extension `modules.{cog}` {config['tickyes']}", color=discord.Color.green()))
+            self.bot.load_extension(cog)
+            await ctx.send(embed=discord.Embed(description=f"Loaded Extension `modules.{cog}` {self.bot.config['tickyes']}", color=discord.Color.green()))
         except Exception as e:
-            await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"Could Not Load Extension: `modules.{cog}` {config['tickno']}\n```fix\n{e}\n```"))
+            await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"Could Not Load Extension: `modules.{cog}` {self.bot.config['tickno']}\n```fix\n{e}\n```"))
 
     @commands.command(aliases=['ul'])
     async def unload(self, ctx, cog):
-        self.bot.unload_extension(f"modules.{cog}")
-        await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Unloaded Extension `modules.{cog}` {config['tickyes']}"))
+        self.bot.unload_extension(cog)
+        await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Unloaded Extension `modules.{cog}` {self.bot.config['tickyes']}"))
 
     @commands.command()
     async def sql(self, ctx, * , query : str):

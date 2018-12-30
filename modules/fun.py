@@ -34,7 +34,7 @@ class Fun_Commands:
         choices = self.bot.config['8ball']
         embed = discord.Embed(color=discord.Color(value=0xae2323), title=query, description=random.choice(choices))
         embed.set_author(name="8Ball Generator")
-        embed.set_footer(text=config['ver'], icon_url=self.bot.user.avatar_url)
+        embed.set_footer(text=self.bot.config['ver'], icon_url=self.bot.user.avatar_url)
         try:
             await ctx.message.delete()
         except:
