@@ -12,7 +12,7 @@ from discord.ext import commands
 
 class PewDiePie(commands.AutoShardedBot):
     def __init__(self):
-        super().__init__(command_prefix=self.prefixes, case_insensitive=True, fetch_offline_members=False)
+        super().__init__(command_prefix=self.prefixes, case_insensitive=True)
     
       
     # much easier then calling a var
