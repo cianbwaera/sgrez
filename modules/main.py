@@ -11,12 +11,8 @@ class Main_Commands:
   
     @commands.command(aliases=['server'])
     async def support(self, ctx):
-        try:
-            await ctx.author.send(f"**Here's My Support Server**\n{self.bot.config['server']}")
-            await ctx.send("**Check DMs for Support Server :mailbox_with_mail:**")
-        except:
-            await ctx.send(f"**Here's My Support Server**\n{self.bot.config['server']}")
-
+        await ctx.send(f"**Here's My Support Server**\n{self.bot.config['server']}")
+          
     @commands.command()
     async def perms(self, ctx, user: discord.Member=None):
         if not user:
@@ -84,7 +80,7 @@ class Main_Commands:
 
     @commands.command()
     async def stats(self, ctx):
-        timess = json.load(open('db/uptime.json', "r"))['uptimestats']
+        timess = json.load(open('db/uptime.json'))['uptimestats']
 
         uptimeraw = datetime.datetime.strptime(timess, "%Y-%m-%d %H:%M:%S.%f")
 
@@ -94,19 +90,20 @@ class Main_Commands:
         days, hours = divmod(hours, 24)
 
         commands_used = await self.bot.db.fetchval("SELECT num FROM commands")
-      
+        dpy_ver = str(pkg_resources.get_distribution('discord.py').version)
         latency = str(round(self.bot.latency * 1000))
         gh_branch = "master"
         gh = await self.get("https://api.github.com/repos/EnterNewName/PewDiePie/commits/" + gh_branch)
+        dev_update = await self.bot.db.fetchval("SELECT updates FROM development WHERE rid=1")
         sha = gh['sha']
         commit = sha[0:7]        
         message = gh['commit']['message']
         embed = discord.Embed(color=discord.Color.blurple(), title=f"{self.bot.user}", description=f"A discord bot made from Enter New Name orginally made for showing the subcount of PewDiePie and T-Series\n\uFEFF")
         embed.add_field(name="Commands Used", value=f"I have a total of {commands_used:,d} commands used")
+        embed.add_field(name="General Stats", value=f"<:python3:490607334876381204> Python Version: {platform.python_version()}\n<:discord:528452385023066112> Discord.py Version: {dpy_ver}\n<:pewdiepie:529073598636228609> Bot Version: {self.bot.config['ver']}", inline=False)
         embed.add_field(name="Uptime", value=f"I have been running for **{days}** days, **{hours}** hours, **{minutes}** minutes, and **{seconds}** seconds!")
         embed.add_field(name="Support the Development", value="[Donate to us on Patreon](https://patreon.com/pewdiepiebot)\n[Discord Bot List](https://discordbots.org/bot/508143906811019269/vote)\n[Discord Bots Group](https://discordbots.group/bot/508143906811019269)\uFEFF\n", inline=False)
         embed.add_field(name="Recent GitHub Update", value=f"```fix\n[PewDiePie:{gh_branch}] | [{commit}]:\n{gh['commit']['author']['name']} - {message}\n```")
-        dev_update = await self.bot.db.fetchval("SELECT updates FROM development WHERE rid=1")
         embed.add_field(name=f"Recent Developer Update", value=f"```md\n{dev_update}\n```", inline=False)
         await ctx.send(embed=embed)
 
@@ -116,28 +113,16 @@ class Main_Commands:
     async def systeminfo(self, ctx):
         
         # Get some information before sending embed to make it look better
-
         cpu_stats = f"{psutil.cpu_percent(interval=None)}%"
         vir_mem = f"{psutil.virtual_memory()[2]}%"
-
         all_cpus = psutil.cpu_count()
-
-        non_log_cpus = psutil.cpu_count(logical=False)
-
-        t1 = time.perf_counter()
-        tcu = await self.bot.db.fetchval("SELECT COUNT(*) FROM bank")
-        t2 = time.perf_counter()
-        dbping = round((t2-t1)*1000)
         
-        dpy_ver = str(pkg_resources.get_distribution('discord.py').version)
-
+        non_log_cpus = psutil.cpu_count(logical=False)
         # Make the embed
 
         embed = discord.Embed(color=discord.Color.blurple(), title="System Usage and Info", description="This is my runtime stats, how much speed i have, and how much data i process. If you want to help me run faster, donate to the [patreon](https://patreon.com/pewdiepiebot)")
         embed.add_field(name="RAM Usage :gear:", value=f"Memory Usage: {vir_mem}\n", inline=False)
         embed.add_field(name="CPU Stats", value=f"CPU Count: {all_cpus}\nCPU Count (non-logical): {non_log_cpus}", inline=False)
-        embed.add_field(name="Database Information :bar_chart:", value=f"Database Provider: postgresql\nPing: {dbping}ms\nTotal Currency Users: {tcu:,d}", inline=False)
-        embed.add_field(name="General Stats", value=f"<:python3:490607334876381204> Python Version: {platform.python_version()}\n<:discord:528452385023066112> Discord.py Version: {dpy_ver}", inline=False)
         await ctx.send(embed=embed)
        
         

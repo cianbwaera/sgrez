@@ -3,6 +3,7 @@ import asyncio
 import asyncpg
 import random
 import json
+import string
 from datetime import datetime, timedelta
 from discord.ext import commands
 
@@ -147,66 +148,52 @@ class PewDieCoin:
                 a = 0
             await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"I have given {user.mention} `{amt:,d}` coins, You now have {a:,d}"))
 
-    @commands.command(aliases=['lb'])
+    @commands.command()
     async def leaderboard(self, ctx):
-        stats = await self.bot.db.fetch(f"SELECT * FROM bank ORDER BY user_money DESC LIMIT {count}")
-        emb = discord.Embed(color=discord.Color(value=0xae2323), title="Global Leaderboard - coins")
-        emb.set_thumbnail(url=self.bot.user.avatar_url)
-        c = 0
-        for _ in stats:
-            try:
-                _id = self.bot.get_user(stats[c]['user_id']).name
-            except AttributeError:
-                _id = "invalid-user"
-            emb.add_field(name=_id, value=f"Currently has {(stats[c]['user_money']):,d} coins", inline=False)
-            c += 1
-        emb.set_footer(text="\uFEFF")
-        await ctx.send(embed=emb)
+       pass
    
+
     @commands.group()
+    @commands.guild_only()
     async def shop(self, ctx):
         if ctx.invoked_subcommand is None:
-            roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1 ORDER BY shop_num", ctx.guild.id)
-            if roles == []:
-                bio = "Your server currently has no available roles to buy right now"
-            else:
-                bio = f"Here's some roles you can buy in {ctx.guild}\n\uFEFF\n"
-            emb = discord.Embed(description=bio, color=discord.Color(value=0xae2323))
-            
-            emb.set_author(name=f"{ctx.guild.name}'s Shop")
-            
-            c = 0 
-            for _ in roles:
-                emb.add_field(name=f"#{roles[c]['shop_num']} - {ctx.guild.get_role(roles[c]['role_id']).name}", value=f"Role costs `{roles[c]['amount']}` coins, buy it by `p.shop buy {roles[c]['shop_num']}`", inline=False)
-                c+=1
-            emb.set_thumbnail(url=ctx.guild.icon_url)
-            emb.add_field(name='\uFEFF', value="\uFEFF")
-            emb.set_footer(text=self.bot.config['ver'])
-            await ctx.send(embed=emb)
+            # do stuff
+            await ctx.send(await ctx.send("dwqwq"), gay=3)
 
     @shop.command()
     @commands.has_permissions(manage_roles=True)
     async def add(self, ctx, amount : int, * , role : discord.Role): 
+        roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id) # so we wont process over chunks of worthless data
+        # Check before we even start with anything
+        for i in roles:
+            if i['role_id'] == role.id:
+                return await ctx.send(embed=discord.Embed(description=f"Hey, {role.name} is already in the shop, just do `p.shop edit (shop_id) (new amount)` to change its cost", color=discord.Color.red()))
+            else:
+                continue 
+
+        # id generator will do some stuff thats important
+        # it takes random strings and the role id to come up with the id
+        # then it checks over the other ids to see if it isnt implemented and
+        # if not it will append it to the role's column
+        def id_gen(self, role):
+            data = self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
+            ''.join(random.choices(string.ascii_uppercase + string.digits, k=3))
+
+            
+
+
+
+
         if role.name == "@everyone":
             return await ctx.send(embed=discord.Embed(description="`@everyone` is not allowed, it is a role everyone has..", color=discord.Color.red()))
           
         roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
 
-        for i in roles:
-            if i['role_id'] == role.id:
-                return
-            else:
-                continue   
+        
 
         if ctx.author.top_role.position < role.position:
             return
 
-        shop_pos = await self.bot.db.fetchval("SELECT COUNT(*) FROM shop WHERE guild_id=$1", ctx.guild.id)
-
-        if shop_pos is None:
-            shop_pos = 0
-
-        shop_pos+=1
 
         if len(roles) > 8:
             return await ctx.send(embed=discord.Embed(color=discord.Color.red(), description="Sorry, but your server has reached the maximum limit of roles"))
@@ -216,7 +203,7 @@ class PewDieCoin:
         if amount > limit_trade:
             return await ctx.send(embed=discord.Embed(description=f"Items Amounts cannot be higher then `{limit_trade}`, please try again", color=discord.Color.red()))
         try:
-            await self.bot.db.execute('INSERT INTO shop VALUES($1,$2,$3,$4);', role.id, ctx.guild.id,shop_pos, amount)
+            a # exec
             await ctx.send(embed=discord.Embed(description=f"Role: `{role}` has been sold for `{amount}` coins", color=discord.Color.green()))
         except Exception as e:
             print(e)

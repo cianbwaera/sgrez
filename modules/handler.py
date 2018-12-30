@@ -1,7 +1,7 @@
-import discord, asyncio, math, datetime
+import discord, asyncio, math, datetime, platform, pkg_resources
 from discord.ext import commands
 
-class Background_Handler:
+class Handler:
     def __init__(self, bot):
         self.bot = bot
 
@@ -15,9 +15,6 @@ class Background_Handler:
             minutes, seconds = divmod(remainder, 60)
             if ctx.command.name == "timely":
                 return await ctx.send(embed=discord.Embed(color=discord.Color(value=0xae2323), title="Already recieved!", description=f"You already claimed your timely reward, try again in **{hours}**hrs, **{minutes}**m, **{seconds}**s"))
-
-            elif ctx.command.name == "feedback":
-                return await ctx.send(embed=discord.Embed(description=f"You already submitted feedback, try again in **{minutes}** minutes", color=discord.Color.red()))
             else:
                 return await ctx.send(embed=discord.Embed(description=f"You have reached the limit for the {ctx.command.name} command, please try again in **{hours}** hours and **{minutes}** minutes!", color=discord.Color.red()))
         elif isinstance(error, commands.NoPrivateMessage):
@@ -36,9 +33,13 @@ class Background_Handler:
                 await ctx.command.reset_cooldown(ctx)
             except:
                 pass
-            return await ctx.send(f"You are missing an required argument, `{error.param.name}`")
+            return await ctx.send(f"You are missing an required argument: `{error.param.name}`")
         else:
-            print(f"ERROR:\n{ctx.command.name}\n:{error}\n\nEND OF ERROR!")
+            embed = discord.Embed(title=f"There is an error -> {ctx.command.name}", color=discord.Color.red())
+            embed.add_field(name="Type", value=str(error.__class__.__name__), inline=False)
+            embed.add_field(name="Traceback", value=error, inline=False)
+            embed.timestamp = datetime.datetime.utcnow()
+            return await self.bot.get_channel(523715757398556702).send(embed=embed)
             
         
     async def on_command_completion(self, ctx):
@@ -51,7 +52,16 @@ class Background_Handler:
             pass
         await self.bot.db.execute("UPDATE commands SET num = commands.num + 1")
         
-
+    async def on_ready(self):
+        print(f"{self.bot.user} is ready")
+        print("Python Version: " + str(platform.python_version()))
+        print("Discord.py Version: " + str(pkg_resources.get_distribution('discord.py').version))
+        print("Stats:\n")
+        print("Guild Count: " + str(len(self.bot.guilds)))
+        print("Members Count: " + str(len(set(self.bot.get_all_members()))))
+        print("Total Channels: " + str(len(set(self.bot.get_all_channels()))))
+        print('\uFEFF')
+        await self.handler()
 
     # Helper for the shop
     async def on_guild_role_delete(self, role):
@@ -61,7 +71,44 @@ class Background_Handler:
                 await self.bot.db.execute("DELETE FROM shop WHERE role_id=$1 AND guild_id=$2", role.id, role.guild.id)
             else:
                 continue
+  
+    async def on_guild_remove(self, guild):
+        await self.handler()
+        try:
+            await self.bot.db.execute("DELETE FROM shop WHERE guild_id=$1", guild.id)
+        except:
+            pass
+        embed = discord.Embed(title="Lefted Guild", color=discord.Color(value=0xae2323))
+        embed.add_field(name="Server", value=f"{guild} {guild.id}", inline=False)
+        embed.add_field(name="Member Count", value=f"Currently {len(guild.members)} members", inline=False)
+        embed.add_field(name="Owner", value=f"{guild.owner} | {guild.owner.id}", inline=False)
+        embed.set_thumbnail(url=guild.icon_url)
+        embed.timestamp = datetime.datetime.utcnow()
+        await self.bot.get_channel(523715757398556702).send(embed=embed)
+
+    async def on_guild_join(self, guild):
+        await self.handler()
+        embed = discord.Embed(title="Joined Guild", color=discord.Color(value=0xae2323))
+        embed.add_field(name="Server", value=f"{guild} {guild.id}", inline=False)
+        embed.set_thumbnail(url=guild.icon_url)
+        embed.add_field(name="Member Count", value=f"Currently {len(guild.members)} members", inline=False)
+        embed.add_field(name="Owner", value=f"{guild.owner} | {guild.owner.id}", inline=False)
+        embed.timestamp = datetime.datetime.utcnow()
+        await self.bot.get_channel(523715757398556702).send(embed=embed)
+        try:
+            embed = discord.Embed(title="Thanks for inviting me cool humans :>)", description="For any other support or help, you can get detailed information at https://discord.gg/vtJJmWQ. Any feedback is appreciated too while your at it")
+            await guild.system_channel.send(embed=embed)
+        except:
+            pass
+
+    async def handler(self):
+        await self.bot.change_presence(status=discord.Status.dnd, activity=discord.Streaming(name=f"the new years @ 2018", url="https://twitch.tv/PewDiePie"))
+        if self.bot.config["debug"] is False:
+            async with aiohttp.ClientSession() as session:
+               await session.post("https://discordbots.org/api/bots/" + str(self.bot.user.id) + "/stats", headers={'Authorization': self.bot.config['tokens']['dbltoken']},data={'server_count': len(self.bot.guilds)})
+               await session.post("https://discordbots.group/api/bot/" + str(self.bot.user.id), headers={'Authorization' : self.bot.config['tokens']['dbgtoken']}, data={'server_count': len(self.bot.guilds)})
+
 
 
 def setup(bot):
-    bot.add_cog(Background_Handler(bot))
+    bot.add_cog(Handler(bot))

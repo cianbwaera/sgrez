@@ -16,8 +16,8 @@ class PewDiePie(commands.AutoShardedBot):
 
     
     @property
-    def self.bot.config(self):
-        return json.load(open("db/self.bot.config.json"))
+    def config(self):
+        return json.load(open("db/config.json"))
 
     def __str__(self):
         return self.self.bot.config
@@ -26,54 +26,6 @@ class PewDiePie(commands.AutoShardedBot):
         default_prefixes = ['p.', 'P.', 'pewdiepie.']
         return commands.when_mentioned_or(*default_prefixes)(bot, message)
 
-    async def on_ready(self):
-        print(f"{self.user} is ready")
-        print("Python Version: " + str(platform.python_version()))
-        print("Discord.py Version: " + str(pkg_resources.get_distribution('discord.py').version))
-        print("Stats:\n")
-        print("Guild Count: " + str(len(self.guilds)))
-        print("Members Count: " + str(len(set(self.get_all_members()))))
-        print("Total Channels: " + str(len(set(self.get_all_channels()))))
-        print('\uFEFF')
-        await self.handler()
-
-
-    async def on_guild_remove(self, guild):
-        await self.handler()
-        embed = discord.Embed(title="Lefted Guild", color=discord.Color(value=0xae2323))
-        embed.add_field(name="Server", value=f"{guild} {guild.id}", inline=False)
-        embed.add_field(name="Member Count", value=f"Currently {len(guild.members)} members", inline=False)
-        embed.add_field(name="Owner", value=f"{guild.owner} | {guild.owner.id}", inline=False)
-        embed.set_thumbnail(url=guild.icon_url)
-        embed.timestamp = datetime.datetime.utcnow()
-        await self.get_channel(523715757398556702).send(embed=embed)
-
-    async def on_guild_join(self, guild):
-        await self.handler()
-        embed = discord.Embed(title="Joined Guild", color=discord.Color(value=0xae2323))
-        embed.add_field(name="Server", value=f"{guild} {guild.id}", inline=False)
-        embed.set_thumbnail(url=guild.icon_url)
-        embed.add_field(name="Member Count", value=f"Currently {len(guild.members)} members", inline=False)
-        embed.add_field(name="Owner", value=f"{guild.owner} | {guild.owner.id}", inline=False)
-        embed.timestamp = datetime.datetime.utcnow()
-        await self.get_channel(523715757398556702).send(embed=embed)
-        try:
-            embed = discord.Embed(color=discord.Color(value=0xae2323))
-            embed.set_author(name=f"Thanks for inviting PewDiePie!")
-            embed.set_thumbnail(url=self.user.avatar_url)
-            embed.add_field(name="Getting Started", value=f"Send`p.help` for a list of my commands and if you ever need any support, [click here]({self.bot.config['server']})")
-            embed.add_field(name="Helping ", value="Although this isnt required, it would be appreciated of you upvote me at the following links\n[Discord Bot List](https://discordbots.org/bot/508143906811019269/vote)\n[Discord Bots Group](https://discordbots.group/bot/508143906811019269)")
-            embed.set_footer(text=f"I use to have {len(self.guilds-1)} servers, but thanks to you, i now have {len(self.guilds)} servers!")
-            await guild.system_channel.send(embed=embed)
-        except:
-            pass
-
-    async def handler(self):
-        await self.change_presence(activity=discord.Streaming(name=f"p.help in {len(self.guilds)} servers!", url="https://twitch.tv/PewDiePie"))
-        if self.self.bot.config["debug"] is False:
-            async with aiohttp.ClientSession() as session:
-               await session.post("https://discordbots.org/api/bots/508143906811019269/stats", headers={'Authorization': self.self.bot.config['tokens']['dbltoken']},data={'server_count': len(self.guilds)})
-               await session.post("https://discordbots.group/api/bot/508143906811019269/", headers={'Authorization' : self.self.bot.config['tokens']['dbgtoken']}, data={'server_count': len(self.guilds)})
 
     async def start(self, token, bot=True, reconnect=True):
         await self.login(token, bot=bot)
@@ -86,7 +38,7 @@ class PewDiePie(commands.AutoShardedBot):
     async def on_connect(self):
         await self.change_presence(status=discord.Status.dnd, activity=discord.Game(name="Connecting to DB.."))
         print("|====> Connecting to the database")
-        creds = self.self.bot.config['db-creds']
+        creds = self.config['db-creds']
         try:
             self.db = await asyncpg.create_pool(**creds)
             print("Connected!")
@@ -105,14 +57,14 @@ class PewDiePie(commands.AutoShardedBot):
         json.dump({"uptimestats" : str(datetime.datetime.utcnow())}, open("db/uptime.json", "w+"))
         self.remove_command('help')
         self.load_extension("jishaku")
-        cogs = self.self.bot.config['cogs']
+        cogs = self.config['cogs']
         for a in cogs:
             self.load_extension(f'modules.{a}')
             print(f"<====|= Loaded Extension modules.{a}") 
         print("|====> Posted Uptime")
         try:
             loop = asyncio.get_event_loop()
-            loop.run_until_complete(self.start(self.self.bot.config['tokens']['bottoken']))
+            loop.run_until_complete(self.start(self.config['tokens']['bottoken']))
         except KeyboardInterrupt:
             loop.run_until_complete(self.logout())
         

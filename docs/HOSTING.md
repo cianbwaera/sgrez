@@ -27,7 +27,7 @@ CREATE DATABASE "my_db" OWNER "my_role";
 
 ```
 
-# Setting up the self.bot.config.json
+# Setting up the config.json
 
 just configure this
 make a file named `db/config.json`

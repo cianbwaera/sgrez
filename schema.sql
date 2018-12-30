@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS bank (
 CREATE TABLE IF NOT EXISTS shop (
     role_id BIGINT UNIQUE NOT NULL,
     guild_id BIGINT NOT NULL,
-    shop_num INT NOT NULL,
+    shop_id TEXT NOT NULL,
     amount BIGINT NOT NULL
 );
 
