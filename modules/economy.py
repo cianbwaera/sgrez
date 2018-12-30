@@ -35,7 +35,6 @@ class PewDieCoin:
         is_special = await self.bot.db.fetchval("SELECT coin_award FROM giveaways WHERE user_id=$1", ctx.author.id)
         if is_special is None:
             is_special = 0
-        # c
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if count is None:
             count = 0
@@ -66,14 +65,14 @@ class PewDieCoin:
                 await ctx.send(embed=discord.Embed(description=f"Congrats!, you won `{bet:,d}` coins", color=discord.Color.green()))
                 await self.bot.db.execute("UPDATE bank SET user_money = bank.user_money + $1 WHERE user_id=$2", bet, ctx.author.id)
 
-    @commands.cooldown(1, 1800.0, commands.BucketType.user)
+    @commands.cooldown(1, 1800, commands.BucketType.user)
     @commands.command()
     async def search(self, ctx):
         is_special = await self.bot.db.fetchval("SELECT coin_award FROM giveaways WHERE user_id=$1", ctx.author.id)
         if is_special is None:
             is_special = 0
         # c
-        result = random.randint(0, 40 )
+        result = random.randint(0, 40)
         place = random.choice([
             f"You have founded {result} coins in the trash, now i expect you to clean your self up",
             f"An old beggar decided to give you {result + is_special} coins, that is straight up wrong!",
