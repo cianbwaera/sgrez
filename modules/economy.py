@@ -154,8 +154,12 @@ class PewDieCoin:
         emb.set_thumbnail(url=self.bot.user.avatar_url)
         c = 0
         for _ in stats:
-            emb.add_field(name=self.bot.get_user(stats[c]['user_id']).name, value=f"Currently has {(stats[c]['user_money']):,d} coins", inline=False)
-            c += 1
+            _id = stats[c]['user_id']
+            if _id is not None:
+                emb.add_field(name=self.bot.get_user(_id).name, value=f"Currently has {(stats[c]['user_money']):,d} coins", inline=False)
+                c += 1
+            else:
+                pass
         emb.set_footer(text="\uFEFF")
         await ctx.send(embed=emb)
    

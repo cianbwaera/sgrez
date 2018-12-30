@@ -23,11 +23,9 @@ i will never give you support in anything relating to this file
 
 CREATE ROLE "my_role" WITH LOGIN PASSWORD "my_password";
 CREATE DATABASE "my_db" OWNER "my_role";
--- Then when that is setted up do
+-- Then when that is setted up the schema handles whatever other shit i add
 
 ```
-
-the schema.sql shall handle the rest
 
 # Setting up the config.json
 
@@ -95,4 +93,37 @@ and there its done
 
 # Running
 
-just do `run` in the cmd prompt and it will run it regardless of what platform your on
+just do `.\Scripts\run` + `.sh (if linux)` in the cmd prompt and it will run it regardless of what platform your on
+
+> note linux you might have to do 
+> chmod +x ./run.sh to make it executable
+
+# Folders and files you should have after running the bot
+
+<pre>
+
+\db -- 
+    - config.json
+    + uptime.json   | PewDiePie made this file, PewDiePie handles this file, leave it alone <<= w+ write mode so you should know the rest
+\docs --
+    - HOSTING.md
+
+\modules --
+    + \_\_pycache\_\_/..
+    - economy.py
+    - fun.py
+    - handler.py
+    - main.py
+    - owner.py
+  
+\Scripts --
+    - run.sh
+    - run.bat
+    - requirements.txt
+.gitignore
+build.py
+README.md
+schema.sql
+
+
+</pre>

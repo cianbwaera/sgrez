@@ -13,9 +13,8 @@ from discord.ext import commands
 class PewDiePie(commands.AutoShardedBot):
     def __init__(self):
         super().__init__(command_prefix=self.prefixes, case_insensitive=True)
+
     
-      
-    # much easier then calling a var
     @property
     def config(self):
         return json.load(open("db/config.json"))
@@ -125,8 +124,8 @@ class PewDiePie(commands.AutoShardedBot):
             time2 = time.perf_counter()
             res = round((time2-time1)*1000)
             print(f"\n\n|====>\/Database closed in {res}ms\/<====|")
-        except Exception as e:
-            print(e)
+        except:
+            pass
         await super().logout()
         
 
