@@ -135,7 +135,7 @@ class Developer_Tools:
 
     @commands.command()
     async def update(self, ctx, * , annoucement):
-        await self.bot.db.execute("INSERT INTO development(updates) VALUES($1) ON CONFLICT(updates) DO UPDATE SET updates=$1", annoucement)
+        await self.bot.db.execute("INSERT INTO development(updates, rid) VALUES($1, 1) ON CONFLICT(rid) DO UPDATE SET updates=$1", annoucement)
         await ctx.send("Successfully updated")
             
 def setup(bot):
