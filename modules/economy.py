@@ -178,7 +178,7 @@ class PewDieCoin:
                 c+=1
             emb.set_thumbnail(url=ctx.guild.icon_url)
             emb.add_field(name='\uFEFF', value="\uFEFF")
-            emb.set_footer(text=config['ver'])
+            emb.set_footer(text=self.bot.config['ver'])
             await ctx.send(embed=emb)
 
     @shop.command()
