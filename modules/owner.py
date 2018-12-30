@@ -84,7 +84,7 @@ class Developer_Tools:
             self.bot.load_extension(cog)
             await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Successfully Reloaded `{cog}` {self.bot.config['tickyes']}"))            
         except Exception as e:
-            await ctx.send(embed=discord.Embed(description=f"Could Not Reload `modules.{cog}` {self.bot.config['tickno']}\n```bash\n{e}\n```", color=discord.Color.red()))
+            await ctx.send(embed=discord.Embed(description=f"Could Not Reload `{cog}` {self.bot.config['tickno']}\n```bash\n{e}\n```", color=discord.Color.red()))
 
     @commands.command()
     async def bash(self, ctx, * , cmd : str):
