@@ -162,7 +162,8 @@ class PewDieCoin:
                 emb.add_field(name=_id, value=f"Currently has {(stats[c]['user_money']):,d} coins", inline=False)
                 c += 1
             else:
-                pass
+                c += 1
+                continue
         emb.set_footer(text="\uFEFF")
         await ctx.send(embed=emb)
    
