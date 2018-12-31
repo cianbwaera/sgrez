@@ -13,8 +13,7 @@ from discord.ext import commands
 class PewDiePie(commands.AutoShardedBot):
     def __init__(self):
         super().__init__(command_prefix=self.prefix, case_insensitive=True)
-        self.prefixs = {}
-
+       
     @property
     def config(self):
         return json.load(open("db/config.json"))
@@ -22,8 +21,8 @@ class PewDiePie(commands.AutoShardedBot):
     def __str__(self):
         return self.config
 
-    def prefix(self, bot, message):
-        prefix = await self.bot.db.fetchval("SELECT prefix FROM prefixes WHERE guild_id=$1", message.guild.id)
+    async def prefix(self, bot, message):
+        prefix = await self.db.fetchval("SELECT prefix FROM prefixes WHERE guild_id=$1", message.guild.id)
         if prefix is None:
             prefix = 'p.'
         return commands.when_mentioned_or(prefix)(bot, message)

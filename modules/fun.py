@@ -45,19 +45,20 @@ class Fun_Commands:
         tsrawcount = int(tes['items'][0]['statistics']['subscriberCount'])
 
         rawdiff = (int(rawsubcount) - int(tsrawcount))
-        subcount = f"T-Series needs {rawdiff:,d} subscribers to beat PewDiePie"
+        subcount = f"**T-Series** needs **{rawdiff:,d}** subscribers to beat **PewDiePie**"
 
         if rawdiff <= 0:
             subcount = "T-Series has beaten PewDiePie :cry:"
 
-        embed = discord.Embed(color=discord.Color(value=0xae2323))
-        embed.add_field(name="PewDiePie Count", value=f"{rawsubcount:,d}", inline=False)
-        embed.add_field(name="T-Series Count", value=f"{tsrawcount:,d}", inline=False)
-        embed.add_field(name="Sub Difference", value=subcount, inline=False)
         pdp = rawsubcount- self.pdp_subcount
         ts = tsrawcount - self.ts_subcount
         con = pdp - ts
-        embed.add_field(name="\uFEFF", value=f"**PewDiePie** has gained over **{pdp:,d}** subscribers per hour\n**T-Series** has gained over **{ts:,d}** subscribers per hour\n**PewDiePie** has gained over **{con:,d}** more subscribers then T-Series within an hour")
+
+        embed = discord.Embed(color=discord.Color(value=0xae2323))
+        embed.set_thumbnail(url=self.bot.user.avatar_url)
+        embed.add_field(name="PewDiePie", value=f"Currently has **{rawsubcount:,d}** subs, he has gained over **{pdp:,d}** subscribers per hour", inline=False)
+        embed.add_field(name="T-Series", value=f"Currently has **{tsrawcount:,d}** subs, they have gained over **{ts:,d}** subscribers per hour", inline=False)
+        embed.add_field(name="Sub Difference", value=f"{subcount}, and he has gained over **{con:,d}** more subscribers then T-Series within an hour", inline=False)
         embed.set_footer(text="PewDiePie's Subcount Tracker™ | " + self.bot.config['ver'], icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed)
 
@@ -139,6 +140,7 @@ class Fun_Commands:
         embed.set_footer(text=f"User ID: {user.id} | " + self.bot.config['ver'], icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed)
 
+    
     @commands.guild_only()
     @commands.command()
     async def serverinfo(self, ctx):
@@ -165,7 +167,7 @@ class Fun_Commands:
     @commands.command()
     async def meme(self, ctx):
         img = [".png",".jpg",".jpeg",".gif",".gifv",".webm",".mp4"]
-        subreddits = ['memes', "deepfriedmemes", "MemeEconomy", "PewDiePieSubmissions"]
+        subreddits = ['dankmemes', "deepfriedmemes", "MemeEconomy", "PewDiePieSubmissions", "DonaldTrumpPepe", "DonaldTrumpMemes"]
 
         async def GetJSON(r):
             async with aiohttp.ClientSession() as session:
@@ -190,7 +192,7 @@ class Fun_Commands:
                 if url is not None:
                     for i in img:
                         if url.endswith(i):
-                            return await ctx.send(f"{url}")
+                            return await ctx.send(url)
                         else:
                             continue
                             

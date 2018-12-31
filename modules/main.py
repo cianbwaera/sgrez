@@ -1,4 +1,4 @@
-import discord, asyncio, aiohttp, time, random, datetime, json, psutil, platform, pkg_resources
+import discord, asyncio, aiohttp, time, random, datetime, json, psutil, platform, pkg_resources, asyncpg
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 from time import ctime
@@ -28,15 +28,24 @@ class Main_Commands:
     async def help(self, ctx):
         await ctx.send(f"**Here's My Help Page**\n<https://enternewname.me/pewdiepie>")
 
+    @commands.has_permissions(manage_messages=True, manage_channels=True)
     @commands.command()
-    async def prefix(self, ctx):
-        if self.bot.user.mentioned_in(ctx.message):
-            await ctx.send("My prefix is `p.` or you can mention me for commands")
-
-    
-    @commands.command()
-    async def prefix(self, ctx, *, new):
-        await self.bot.db.execute("INSERT INTO prefixes(guild_id, prefix, edited_at) VALUES($1,$2,$3) ON CONFLICT (guild_id) DO UPDATE SET prefix=$2, edited_at=$3", ctx.guild.id, new, datetime.datetime.utcnow())
+    async def prefix(self, ctx, * , new_prefix=None):
+        prefix = await self.bot.db.fetchval("SELECT prefix FROM prefixes WHERE guild_id=$1", ctx.guild.id)
+        if prefix is None:
+            prefix = 'p.'
+        if self.bot.user.mentioned_in(ctx.message) and new_prefix is None:
+            return await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=prefix).set_author(name=f"{ctx.guild.name}'s prefix"))
+        elif new_prefix is None:
+            await self.bot.db.execute("DELETE FROM prefixes WHERE guild_id=$1", ctx.guild.id)
+            await ctx.send(embed=discord.Embed(description=f"Prefix has been resetted to default", color=discord.Color.dark_green()))
+        else:
+            try:
+                await self.bot.db.execute("INSERT INTO prefixes(guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET prefix=$2", ctx.guild.id, new_prefix)
+                await ctx.send(embed=discord.Embed(description=f"Prefix: `{prefix}` has been successfully changed to `{new_prefix}` !", color=discord.Color.dark_green()))
+            except Exception as e:
+                await ctx.send(embed=discord.Embed(description="Woah there, your prefix is too long, please use something under `10` chars limit", color=discord.Color.dark_red()))
+                print(e)
 
     @commands.command()
     async def uptime(self, ctx):
