@@ -8,6 +8,24 @@ gonna let you know when you selfhost
 
 i will never give you support in anything relating to this file
 
+
+# Mininium Requirements
+
+1.3 GBs for RAM
+1GB disk
+
+
+VPS Specs that pewds runs off of:
+- 20GBs HDD
+- 2GBS RAM
+
+
+Prefered Enviroment:
+
+- 20GBS SSD
+- 5GBS RAM
+
+
 # Dependencies
 
 - asyncpg
@@ -93,7 +111,7 @@ and there its done
 
 # Running
 
-just do `.\Scripts\run` + `.sh (if linux)` in the cmd prompt and it will run it regardless of what platform your on
+just do `run` + `.sh (if linux)` in the cmd prompt and it will run it regardless of what platform your on
 
 > note linux you might have to do 
 > chmod +x ./run.sh to make it executable
@@ -104,12 +122,10 @@ just do `.\Scripts\run` + `.sh (if linux)` in the cmd prompt and it will run it 
 
 \db -- 
     - config.json
-    + uptime.json   | PewDiePie made this file, PewDiePie handles this file, leave it alone <<= w+ write mode so you should know the rest
 \docs --
     - HOSTING.md
 
 \modules --
-    + \_\_pycache\_\_/..
     - economy.py
     - fun.py
     - handler.py

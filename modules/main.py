@@ -35,9 +35,7 @@ class Main_Commands:
 
     @commands.command()
     async def uptime(self, ctx):
-        time = json.load(open('db/uptime.json', "r"))['uptimestats']
-        uptimeraw = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
-        uptime = datetime.datetime.utcnow() - uptimeraw
+        uptime = datetime.datetime.utcnow() - self.bot.uptime
         hours, remainder = divmod(int(uptime.total_seconds()), 3600)
         minutes, seconds = divmod(remainder, 60)
         days, hours = divmod(hours, 24)
@@ -80,11 +78,7 @@ class Main_Commands:
 
     @commands.command()
     async def stats(self, ctx):
-        timess = json.load(open('db/uptime.json'))['uptimestats']
-
-        uptimeraw = datetime.datetime.strptime(timess, "%Y-%m-%d %H:%M:%S.%f")
-
-        uptime = datetime.datetime.utcnow() - uptimeraw
+        uptime = datetime.datetime.utcnow() - self.bot.uptime
         hours, remainder = divmod(int(uptime.total_seconds()), 3600)
         minutes, seconds = divmod(remainder, 60)
         days, hours = divmod(hours, 24)

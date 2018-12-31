@@ -15,8 +15,6 @@ class PewDieCoin:
     def __init__(self, bot):
         self.bot = bot
        
-
-    
     @commands.command(aliases=['$', 'balance', 'bal'])
     async def bank(self, ctx, user : discord.Member=None):
         if not user:
@@ -104,7 +102,6 @@ class PewDieCoin:
 
         result = random.choice(['h', 't'])
         side = side.lower()
-        # to make it case insensitive
         if (side == 'head' or side == 'heads' or side == "h"):
             side = 'h'
 
@@ -142,7 +139,7 @@ class PewDieCoin:
             if current_money is None:
                 current_money = 0
             await self.bot.db.execute("UPDATE bank SET user_money = user_money - $1 WHERE user_id = $2", amt, ctx.author.id)
-            await self.bot.db.execute("INSERT INTO bank (user_id, user_money) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET user_money = $3 + $2", user.id, amt, current_money)
+            await self.bot.db.execute("INSERT INTO bank (user_id, user_money) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET user_money = bank.user_money + $2", user.id, amt)
             a = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
             if a is None:
                 a = 0
@@ -157,43 +154,43 @@ class PewDieCoin:
     @commands.guild_only()
     async def shop(self, ctx):
         if ctx.invoked_subcommand is None:
-            # do stuff
-            await ctx.send(await ctx.send("dwqwq"), gay=3)
+            # preparing the shop data
+            shop_data = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
+            for role in shop_data:
+                await ctx.send(ctx.guild.get_role(role['role_id']).name)
+
 
     @shop.command()
     @commands.has_permissions(manage_roles=True)
     async def add(self, ctx, amount : int, * , role : discord.Role): 
         roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id) # so we wont process over chunks of worthless data
-        # Check before we even start with anything
         for i in roles:
-            if i['role_id'] == role.id:
+            if int(i['role_id']) == int(role.id):
                 return await ctx.send(embed=discord.Embed(description=f"Hey, {role.name} is already in the shop, just do `p.shop edit (shop_id) (new amount)` to change its cost", color=discord.Color.red()))
             else:
                 continue 
 
-        # id generator will do some stuff thats important
-        # it takes random strings and the role id to come up with the id
-        # then it checks over the other ids to see if it isnt implemented and
-        # if not it will append it to the role's column
-        def id_gen(self, role):
-            data = self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
-            ''.join(random.choices(string.ascii_uppercase + string.digits, k=3))
+        async def id_gen(role : int):
+            going = True
+            while going:
+                new_id = ''.join(random.choices(string.ascii_uppercase + str(role), k=2))
+                if len(roles) == 0:
+                    return new_id
+                for a in roles:
+                    if str(a["shop_id"]) == str(new_id):
+                        pass
+                    else:
+                        going = False
+                        print(new_id)
+                        return new_id
 
             
-
-
-
-
         if role.name == "@everyone":
             return await ctx.send(embed=discord.Embed(description="`@everyone` is not allowed, it is a role everyone has..", color=discord.Color.red()))
           
-        roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
-
-        
-
+        result = await id_gen(role.id)
         if ctx.author.top_role.position < role.position:
-            return
-
+            return 
 
         if len(roles) > 8:
             return await ctx.send(embed=discord.Embed(color=discord.Color.red(), description="Sorry, but your server has reached the maximum limit of roles"))
@@ -203,38 +200,38 @@ class PewDieCoin:
         if amount > limit_trade:
             return await ctx.send(embed=discord.Embed(description=f"Items Amounts cannot be higher then `{limit_trade}`, please try again", color=discord.Color.red()))
         try:
-            a # exec
+            await self.bot.db.execute("INSERT INTO shop VALUES ($1, $2, $3, $4)", role.id, ctx.guild.id, str(result), int(amount))
             await ctx.send(embed=discord.Embed(description=f"Role: `{role}` has been sold for `{amount}` coins", color=discord.Color.green()))
         except Exception as e:
             print(e)
 
     @commands.has_permissions(manage_roles=True)
     @shop.command()
-    async def remove(self, ctx, shop_position : int):
-        role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
+    async def remove(self, ctx, shop_id : int):
+        role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_id=$2", ctx.guild.id, shop_id)
         if role is None:
-            return await ctx.send(embed=discord.Embed(description=f'Role: `{shop_position}` is not in the shop, maybe someone has removed it!', color=discord.Color.red()))
-        await self.bot.db.execute("DELETE FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
+            return await ctx.send(embed=discord.Embed(description=f'Shop Role ID: `{shop_id}` is not in the shop, maybe someone has removed it!', color=discord.Color.red()))
+        await self.bot.db.execute("DELETE FROM shop WHERE guild_id=$1 AND shop_id=$2", ctx.guild.id, shop_id)
         await ctx.send(embed=discord.Embed(description=f"Role: `{ctx.guild.get_role(role).name}` has been removed from the shop!", color=discord.Color.green()))
 
     
     @shop.command()
     @commands.has_permissions(manage_roles=True)
-    async def edit(self, ctx, shop_pos : int, new_amount : int):
-        rid = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_pos)
+    async def edit(self, ctx, shop_id : int, new_amount : int):
+        rid = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_id=$2", ctx.guild.id, shop_id)
 
         if new_amount > limit_trade:
             await ctx.send(embed=discord.Embed(description=f"`{new_amount}` is over the `{limit_trade}` limit!", color=discord.Color.red()))
         elif rid is None:
-            await ctx.send(embed=discord.Embed(description=f"`{shop_pos}` is not in your shop!", color=discord.Color.red()))
+            await ctx.send(embed=discord.Embed(description=f"Shop Role ID: `{shop_id}` is not in your shop!", color=discord.Color.red()))
         else:
-            await self.bot.db.execute("UPDATE shop SET amount=$1 WHERE role_id=$2 AND guild_id=$3 AND shop_num=$4", new_amount, rid, ctx.guild.id, shop_pos)
+            await self.bot.db.execute("UPDATE shop SET amount=$1 WHERE role_id=$2 AND guild_id=$3 AND shop_id=$4", new_amount, rid, ctx.guild.id, shop_id)
             await ctx.send(embed=discord.Embed(description=f"Role: `{ctx.guild.get_role(rid).name}` price has been raised to `{new_amount}`"))
 
 
     @shop.command()
-    async def buy(self, ctx, shop_position : int):
-        role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_num=$2", ctx.guild.id, shop_position)
+    async def buy(self, ctx, shop_id : str):
+        role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_id=$2", ctx.guild.id, shop_id)
         for i in ctx.author.roles:
             if i.id == role:
                 return
@@ -246,7 +243,7 @@ class PewDieCoin:
         buyer_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
         if buyer_money is None:
             buyer_money = 0
-        role_cost = await self.bot.db.fetchval("SELECT amount FROM shop WHERE shop_num=$1 AND guild_id=$2", shop_position, ctx.guild.id)
+        role_cost = await self.bot.db.fetchval("SELECT amount FROM shop WHERE shop_id=$1 AND guild_id=$2", shop_id, ctx.guild.id)
 
         if buyer_money < role_cost:
             return await ctx.send(embed=discord.Embed(description="You have insufficient funds to buy this role", color=discord.Color.red()))

@@ -27,18 +27,14 @@ class Fun_Commands:
             tsrawcount = int(tes['items'][0]['statistics']['subscriberCount']) 
             self.ts_subcount = tsrawcount
             self.pdp_subcount = rawsubcount
-            await asyncio.sleep(1800)
+            await asyncio.sleep(3600)
 
     @commands.command(aliases=['8ball'])
     async def eightball(self, ctx, * , query):
         choices = self.bot.config['8ball']
-        embed = discord.Embed(color=discord.Color(value=0xae2323), title=query, description=random.choice(choices))
+        embed = discord.Embed(color=discord.Color(value=0xae2323), title=query, description="\uFEFF\n"+random.choice(choices))
         embed.set_author(name="8Ball Generator")
         embed.set_footer(text=self.bot.config['ver'], icon_url=self.bot.user.avatar_url)
-        try:
-            await ctx.message.delete()
-        except:
-            pass
         await ctx.send(embed=embed)
 
     @commands.command()
@@ -61,14 +57,14 @@ class Fun_Commands:
         pdp = rawsubcount- self.pdp_subcount
         ts = tsrawcount - self.ts_subcount
         con = pdp - ts
-        embed.add_field(name="\uFEFF", value=f"**PewDiePie** has gained over **{pdp:,d}** subscribers per 30 minutes\n**T-Series** has gained over **{ts:,d}** subscribers per 30 minutes\n**PewDiePie** has gained over **{con:,d}** more subscribers then T-Series within 30 minutes")
+        embed.add_field(name="\uFEFF", value=f"**PewDiePie** has gained over **{pdp:,d}** subscribers per hour\n**T-Series** has gained over **{ts:,d}** subscribers per hour\n**PewDiePie** has gained over **{con:,d}** more subscribers then T-Series within an hour")
         embed.set_footer(text="PewDiePie's Subcount Tracker™ | " + self.bot.config['ver'], icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed)
 
     @commands.guild_only()
     @commands.command()
-    async def poll(self, ctx, *, poll_message):
-        embed = discord.Embed(description=poll_message, color=discord.Color(value=0xae2323))
+    async def poll(self, ctx, *, message):
+        embed = discord.Embed(description=message, color=discord.Color(value=0xae2323))
         embed.set_author(name=f"New Poll from {ctx.author}", icon_url=ctx.author.avatar_url)
         try:
             await ctx.message.delete()
@@ -83,14 +79,14 @@ class Fun_Commands:
             await ctx.send("Error!, i can't add reactions to the embed")
 
 
-    async def activitytype(self, activitytype):
-        if str(activitytype) == "ActivityType.playing":
+    async def activitytype(self, status_type):
+        if str(status_type) == "ActivityType.playing":
             return "Playing"
-        elif str(activitytype) == "ActivityType.streaming":
+        elif str(status_type) == "ActivityType.streaming":
             return "Streaming"
-        elif str(activitytype) == "ActivityType.listening":
+        elif str(status_type) == "ActivityType.listening":
             return "Listening To"
-        elif str(activitytype) == 'ActivityType.watching':
+        elif str(status_type) == 'ActivityType.watching':
             return "Watching"
         else:
             pass
@@ -106,8 +102,13 @@ class Fun_Commands:
         created_account_length = (ctx.message.created_at - user.created_at).days
         if user.id == self.bot.owner_id:
             username = f"{user} (My Owner)"
+        
+        elif user == self.bot.user:
+            username = f"{user} (PewDiePie Bot)"
+            
         elif user.bot:
             username = f"{user} (Bot)"
+        
         else:
             username = user
         if ctx.guild and len(user.roles) > 1:
