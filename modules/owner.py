@@ -74,8 +74,8 @@ class Developer_Tools:
         if not cog:
             try:
                 for module in cogs:
-                    self.bot.unload_extension("modules." + module)
-                    self.bot.load_extension("modules." + module)
+                    self.bot.unload_extension(module)
+                    self.bot.load_extension(module)
                 return await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Successfully Reloaded {len(cogs)} Extensions {self.bot.config['tickyes']}"))            
             except Exception as e:
                 return await ctx.send(embed=discord.Embed(description=f"Could Not Reload {len(module)} Extensions {self.bot.config['tickno']}\n```bash\n{e}\n```", color=discord.Color.red()))

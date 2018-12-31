@@ -156,13 +156,33 @@ class PewDieCoin:
         if ctx.invoked_subcommand is None:
             # preparing the shop data
             shop_data = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id)
-            for role in shop_data:
-                await ctx.send(ctx.guild.get_role(role['role_id']).name)
+            embed = discord.Embed(title=f"{ctx.guild.name}'s shop")
+            embed.set_thumbnail(url=ctx.guild.icon_url)
+            if shop_data == []:
+                embed.description = "Your server currently has no roles in the shop"
+                embed.color = discord.Color.dark_red()
+            else:
+                embed.color = discord.Color.dark_green()
+                rolecount = len(shop_data)
+                if rolecount == 1:
+                    rmsg = "role"
+                else:
+                    rmsg = "roles"
+                embed.description = f"{rolecount} {rmsg} has been detected in your server's shop"
+                for i in shop_data:
+                    embed.add_field(name=f"#{i['shop_id']} - {ctx.guild.get_role(i['role_id']).name}", value=f"Role currently costs `{i['amount']}` coins", inline=False)
+                embed.set_footer(text="Thanks for shopping with PewDiePie!")
+            await ctx.send(embed=embed)
+                
 
 
     @shop.command()
     @commands.has_permissions(manage_roles=True)
     async def add(self, ctx, amount : int, * , role : discord.Role): 
+            
+        if role.name == "@everyone":
+            return await ctx.send(embed=discord.Embed(description="`@everyone` is not allowed, it is a role everyone has..", color=discord.Color.red()))
+          
         roles = await self.bot.db.fetch("SELECT * FROM shop WHERE guild_id=$1", ctx.guild.id) # so we wont process over chunks of worthless data
         for i in roles:
             if int(i['role_id']) == int(role.id):
@@ -173,7 +193,7 @@ class PewDieCoin:
         async def id_gen(role : int):
             going = True
             while going:
-                new_id = ''.join(random.choices(string.ascii_uppercase + str(role), k=2))
+                new_id = ''.join(random.choices(string.ascii_uppercase + str(role), k=3))
                 if len(roles) == 0:
                     return new_id
                 for a in roles:
@@ -184,10 +204,6 @@ class PewDieCoin:
                         print(new_id)
                         return new_id
 
-            
-        if role.name == "@everyone":
-            return await ctx.send(embed=discord.Embed(description="`@everyone` is not allowed, it is a role everyone has..", color=discord.Color.red()))
-          
         result = await id_gen(role.id)
         if ctx.author.top_role.position < role.position:
             return 
@@ -207,7 +223,7 @@ class PewDieCoin:
 
     @commands.has_permissions(manage_roles=True)
     @shop.command()
-    async def remove(self, ctx, shop_id : int):
+    async def remove(self, ctx, shop_id : str):
         role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_id=$2", ctx.guild.id, shop_id)
         if role is None:
             return await ctx.send(embed=discord.Embed(description=f'Shop Role ID: `{shop_id}` is not in the shop, maybe someone has removed it!', color=discord.Color.red()))

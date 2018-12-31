@@ -8,23 +8,19 @@ gonna let you know when you selfhost
 
 i will never give you support in anything relating to this file
 
-
 # Mininium Requirements
 
 1.3 GBs for RAM
 1GB disk
 
-
 VPS Specs that pewds runs off of:
 - 20GBs HDD
 - 2GBS RAM
-
 
 Prefered Enviroment:
 
 - 20GBS SSD
 - 5GBS RAM
-
 
 # Dependencies
 
@@ -67,11 +63,11 @@ make a file named `db/config.json`
     "server": "https://discord.gg/vtJJmWQ",
     "debug": true,
     "cogs": [
-        "main",
-        "owner",
-        "fun",
-        "handler",
-        "economy"
+        "modules.main",
+        "modules.owner",
+        "modules.fun",
+        "modules.handler",
+        "modules.economy"
     ],
     "yt": " api key ",
     "tickno": "<:tickNo:490607198443929620>",

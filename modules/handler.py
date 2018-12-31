@@ -102,7 +102,7 @@ class Handler:
             pass
 
     async def handler(self):
-        await self.bot.change_presence(status=discord.Status.dnd, activity=discord.Streaming(name=f"the new years @ 2018", url="https://twitch.tv/PewDiePie"))
+        await self.bot.change_presence(status=discord.Status.dnd, activity=discord.Game(name=f"at the new years @ 2018", url="https://twitch.tv/PewDiePie"))
         if self.bot.config["debug"] is False:
             async with aiohttp.ClientSession() as session:
                await session.post("https://discordbots.org/api/bots/" + str(self.bot.user.id) + "/stats", headers={'Authorization': self.bot.config['tokens']['dbltoken']},data={'server_count': len(self.bot.guilds)})
