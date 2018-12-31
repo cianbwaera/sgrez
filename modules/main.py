@@ -33,6 +33,11 @@ class Main_Commands:
         if self.bot.user.mentioned_in(ctx.message):
             await ctx.send("My prefix is `p.` or you can mention me for commands")
 
+    
+    @commands.command()
+    async def prefix(self, ctx, *, new):
+        await self.bot.db.execute("INSERT INTO prefixes(guild_id, prefix, edited_at) VALUES($1,$2,$3) ON CONFLICT (guild_id) DO UPDATE SET prefix=$2, edited_at=$3", ctx.guild.id, new, datetime.datetime.utcnow())
+
     @commands.command()
     async def uptime(self, ctx):
         uptime = datetime.datetime.utcnow() - self.bot.uptime

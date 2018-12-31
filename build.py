@@ -12,20 +12,21 @@ from discord.ext import commands
 
 class PewDiePie(commands.AutoShardedBot):
     def __init__(self):
-        super().__init__(command_prefix=self.prefixes, case_insensitive=True)
+        super().__init__(command_prefix=self.prefix, case_insensitive=True)
+        self.prefixs = {}
 
-    
     @property
     def config(self):
         return json.load(open("db/config.json"))
 
-    def __dict__(self):
-        return self.bot.config
+    def __str__(self):
+        return self.config
 
-    def prefixes(self, bot, message):
-        default_prefixes = ['p.', 'P.', 'pewdiepie.']
-        return commands.when_mentioned_or(*default_prefixes)(bot, message)
-
+    def prefix(self, bot, message):
+        prefix = await self.bot.db.fetchval("SELECT prefix FROM prefixes WHERE guild_id=$1", message.guild.id)
+        if prefix is None:
+            prefix = 'p.'
+        return commands.when_mentioned_or(prefix)(bot, message)
 
     async def start(self, token, bot=True, reconnect=True):
         await self.login(token, bot=bot)
@@ -68,11 +69,8 @@ class PewDiePie(commands.AutoShardedBot):
     async def logout(self):
         print("\nLogging out!\n")
         try:
-            time1 = time.perf_counter()
             await self.db.close()
-            time2 = time.perf_counter()
-            res = round((time2-time1)*1000)
-            print(f"\n\n|====>\/ Database closed in {res}ms \/<====|")
+            print(f"\n\n|====>\/ Database closed \/<====|")
         except:
             pass
         await super().logout()

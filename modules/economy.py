@@ -26,7 +26,8 @@ class PewDieCoin:
         count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", user.id)
         if count is None:
             count = 0
-        await ctx.send(embed=discord.Embed(title=f"{user.name}'s Balance", description=f"{user.mention} currently has {count:,d} coins", color=discord.Color(value=0xae2323)))
+
+        await ctx.send(embed=discord.Embed(description=f"\uFEFF\n{user.mention} currently has {count:,d} coins", color=discord.Color(value=0xae2323)).set_author(name=str(user), icon_url=user.avatar_url))
 
     @commands.cooldown(1, 3600, commands.BucketType.user)
     @commands.command()

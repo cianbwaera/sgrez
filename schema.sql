@@ -28,3 +28,8 @@ CREATE TABLE IF NOT EXISTS giveaways (
     user_id BIGINT,
     coin_award INT
 );
+
+CREATE TABLE IF NOT EXISTS prefixes (
+    guild_id BIGINT PRIMARY KEY,
+    prefix VARCHAR(10)
+);
