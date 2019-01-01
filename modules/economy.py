@@ -149,8 +149,10 @@ class PewDieCoin:
     @commands.command(aliases=['lb'])
     async def leaderboard(self, ctx):
         embed = discord.Embed()
+        embed.title = f"PewDieCoin's Leaderboard"
+        embed.description = f"Here, {ctx.author.name}, you can see the list of the top 8 leading people with the most coins!"
         shop = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money DESC LIMIT 8")
-        embed.color = discord.Color.dark_gold()
+        embed.color = discord.Color(value=0xae2324)
         counter = 0
         for a in shop:
             counter+=1
