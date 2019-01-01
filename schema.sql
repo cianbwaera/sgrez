@@ -31,5 +31,5 @@ CREATE TABLE IF NOT EXISTS giveaways (
 
 CREATE TABLE IF NOT EXISTS prefixes (
     guild_id BIGINT PRIMARY KEY,
-    prefix VARCHAR(10)
+    prefix VARCHAR(12)
 );

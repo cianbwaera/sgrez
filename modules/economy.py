@@ -148,8 +148,20 @@ class PewDieCoin:
 
     @commands.command()
     async def leaderboard(self, ctx):
-       pass
-   
+        embed = discord.Embed()
+        shop = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money LIMIT 8")
+        embed.color = discord.Color.dark_gold()
+        counter = 0
+        for a in shop:
+            counter+=1
+            try:
+                user = self.bot.get_user(a['user_id']).name
+            except AttributeError:
+                user = "@invalid-user"
+            embed.add_field(name=f"#{counter} - {user}", value=f"Holding `{a['user_money']}` coins in their pouch", inline=False)
+        await ctx.send(embed=embed)
+           
+
 
     @commands.group()
     @commands.guild_only()

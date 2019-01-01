@@ -36,7 +36,6 @@ PewDiePie was made for the sole purpose of just the subcounts, then i started to
 | Command    | Usage                   | Information                                                         |
 | ---------- | ----------------------- | ------------------------------------------------------------------- |
 | `subcount` | `p.subcount`            | This command gets the subcount of T-Series and PewDiePie            |
-| `disstrack`| `p.disstrack`           | Plays the T-Series disstrack in the voice channel you're in.        |
 | `poll`     | `p.poll {poll_message}` | You can send a poll of what to debate over in your discord channel! |
 | `meme`     | `p.meme`                | Get your fresh memes off of reddit >:)                              |
 
