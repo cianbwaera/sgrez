@@ -1,4 +1,4 @@
-import discord, asyncio, math, datetime, platform, pkg_resources
+import discord, asyncio, math, datetime, platform, pkg_resources, aiohttp
 from discord.ext import commands
 
 class Handler:

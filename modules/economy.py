@@ -146,10 +146,10 @@ class PewDieCoin:
                 a = 0
             await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"I have given {user.mention} `{amt:,d}` coins, You now have {a:,d}"))
 
-    @commands.command()
+    @commands.command(aliases=['lb'])
     async def leaderboard(self, ctx):
         embed = discord.Embed()
-        shop = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money LIMIT 8")
+        shop = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money DESC LIMIT 8")
         embed.color = discord.Color.dark_gold()
         counter = 0
         for a in shop:
