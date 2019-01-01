@@ -159,7 +159,7 @@ class PewDieCoin:
             try:
                 user = self.bot.get_user(a['user_id']).name
             except AttributeError:
-                user = "@invalid-user"
+                user = "user-not-found"
             embed.add_field(name=f"#{counter} - {user}", value=f"Holding `{a['user_money']}` coins in their pouch", inline=False)
         await ctx.send(embed=embed)
            
