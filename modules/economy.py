@@ -75,7 +75,7 @@ class PewDieCoin:
     @commands.cooldown(1, 1800, commands.BucketType.user)
     @commands.command()
     async def search(self, ctx):
-        
+        is_special = 0
         result = random.randint(0, 40)
         place = random.choice([
             f"You have founded {result} coins in the trash, now i expect you to clean your self up",
