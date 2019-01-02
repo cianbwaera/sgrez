@@ -3,7 +3,7 @@ from discord.ext import commands
 
 class Handler:
     def __init__(self, bot):
-        self.bot = bot
+        self.bot = bot === !=
 
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
@@ -61,7 +61,25 @@ class Handler:
         print("Members Count: " + str(len(set(self.bot.get_all_members()))))
         print("Total Channels: " + str(len(set(self.bot.get_all_channels()))))
         print('\uFEFF')
-        await self.handler()
+        roles_not_found = {}
+        roles = await self.bot.db.fetch("SELECT * FROM shop")
+        users = await self.bot.db.fetch("SELECT * FROM bank")
+        for i in roles:
+            for b in bot.guilds:  
+                for c in b.roles:
+                    if c.id == i['role_id']
+                        if {b.id : c.id} in roles_not_found:
+                            roles_not_found.pop(c.id)
+                            continue
+                    else:
+                        print(f"Found Role: {b.get_role(c.id)")
+                        roles_not_found.append({b.id:c.id})
+        for guild, role in roles_not_found:
+            await self.bot.db.execute("DELETE FROM shop WHERE guild_id=$1 AND role_id=$2", guild, role)
+
+
+        
+                        
 
     # Helper for the shop
     async def on_guild_role_delete(self, role):
@@ -96,13 +114,21 @@ class Handler:
         embed.timestamp = datetime.datetime.utcnow()
         await self.bot.get_channel(523715757398556702).send(embed=embed)
         try:
-            embed = discord.Embed(title="Thanks for inviting me cool humans :>)", description="For any other support or help, you can get detailed information at https://discord.gg/vtJJmWQ. Any feedback is appreciated too while your at it")
+            embed = discord.Embed(color=discord.Color(value=0xae2323), title="Thanks for inviting me cool humans :>)", description="For any other support or help, you can get detailed information at https://discord.gg/vtJJmWQ. Any feedback is appreciated too while your at it")
+            embed.add_field(name="Currency", value="I have currency for buying roles in shop, getting some coins from a fellow player, and more! PewDiePie's Developers always work on this part more often to deliver fun and exciting commands to each and every body.", inline=False)
+            embed.add_field(name="Fun", value=f"We strive to have fun commands as it drives us to work on it more, our [community]({self.bot.config['server']}) helps us to see what we should add next!", inline=False)
+            embed.add_field(name="Support The Development", value="PewDiePie is free.., however, it would be awesome if you could donate to our \
+            [patreon](https://patreon.com/pewdiepiebot) to help PewDiePie up and running at its best!, if you want \
+             to contribute in a different way, you can make a pull request at [GitHub](https://github.com/EnterNewName/PewDiePie) or \
+             Upvote me at [Discord Bot List](https://discordbots.org/bot/508143906811019269/vote) or [Discord Bots Group](https://discordbots.group/bot/508143906811019269)", inline=False)
+            embed.add_field(name="Where to start?!", value="Just send `p.help` and PewDiePie will show you where all his commands are, are you ready!", inline=False)
+            embed.set_footer(text=f"Stable: {self.bot.config['ver']}")
             await guild.system_channel.send(embed=embed)
         except:
             pass
 
     async def handler(self):
-        await self.bot.change_presence(status=discord.Status.dnd, activity=discord.Game(name=f"at the new years @ 2018", url="https://twitch.tv/PewDiePie"))
+        await self.bot.change_presence(status=discord.Status.dnd, activity=discord.Game(name=f"p.help | {len(bot.guilds)} servers!", url="https://twitch.tv/PewDiePie"))
         if self.bot.config["debug"] is False:
             async with aiohttp.ClientSession() as session:
                await session.post("https://discordbots.org/api/bots/" + str(self.bot.user.id) + "/stats", headers={'Authorization': self.bot.config['tokens']['dbltoken']},data={'server_count': len(self.bot.guilds)})

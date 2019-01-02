@@ -12,16 +12,16 @@ PewDiePie was made for the sole purpose of just the subcounts, then i started to
 # General Commands
 
 
-| Command             | Usage                   | Information                                                                        |
-| ------------------- | ----------------------- | ---------------------------------------------------------------------------------- |
-| `@PewDiePie prefix` | `@PewDiePie prefix`     | The prefix is `p.`, but it is here just in case                                    |
-| `invite`            | `p.invite`              | PewDiePie sends you his invite                                                     |
-| `support`           | `p.support`             | PewDiePie sends you his super awesome [Support Server](https://discord.gg/vtJJmWQ) |
-| `ping`              | `p.ping`                | You can get my speed of the discord websocket connection                           |
-| `stats`             | `p.stats`               | You can get my current statistics such as guild count, commands used, etc          |
-| `uptime`            | `p.uptime`              | You can get how long i have been running for                                       |
-| `feedback`          | `p.feedback {feedback}` | Send feedback to us, please do not abuse                                           |
-
+| Command             | Usage                                       | Information                                                                                          |
+| ------------------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `@PewDiePie prefix` | `@PewDiePie prefix [optional: new prefix ]` | The prefix is `p.`, but it is here just in case, you can also do p.prefix newprefix for a custom one |
+| `invite`            | `p.invite`                                  | PewDiePie sends you his invite                                                                       |
+| `support`           | `p.support`                                 | PewDiePie sends you his super awesome [Support Server](https://discord.gg/vtJJmWQ)                   |
+| `ping`              | `p.ping`                                    | You can get my speed of the discord websocket connection                                             |
+| `stats`             | `p.stats`                                   | You can get my current statistics such as guild count, commands used, etc                            |
+| `uptime`            | `p.uptime`                                  | You can get how long i have been running for                                                         |
+| `feedback`          | `p.feedback {feedback}`                     | Send feedback to us, please do not abuse                                                             |
+ 
 # Utility Commands 
 
 | Command      | Usage                                   | Information                                                   |
@@ -41,17 +41,17 @@ PewDiePie was made for the sole purpose of just the subcounts, then i started to
 
 # PewDieCoin Commands
 
-| Command       | Usage                                        | Information                                                                    |
-| ------------- | -------------------------------------------- | ------------------------------------------------------------------------------ |
-| `balance`     | `p.balance` or `p.bank` or `p.$`             | Gets how much coins you have in your pouch                                     |
-| `timely`      | `p.timely`                                   | Get 75 coins each 4 hours                                                      |
-| `coinflip`    | `p.coinflip (h or t) (amount to gamble)`     | Flips a coin, you either win that amount or lose that amount                   |
-| `give`        | `p.give (amount) @User#1234`                 | PewDiePie gives away a specific amount of coins away to that user (No Refunds) |
-| `leaderboard` | `p.lb` or `p.leaderboard`                    | Who has the most pewdiecoins >:)                                               |
-| `Shop`        | `p.shop`                                     | Shows you roles for sell                                                       |
-| `Shop Add`    | `p.shop add (amount) (role name or role id)` | Sells a role to the Shop                                                       |
-| `Shop Buy`    | `p.shop buy (role_number)`                   | Buys an role off the shop                                                      |
-| `Shop Remove` | `p.shop remove (role_number)`                | Removes a role off the shop                                                    |
-| `Shop edit`   | `p.shop edit (role_number) (new amount)`     | Edits the price of an role
+| Command       | Usage                                            | Information                                                                    |
+| ------------- | ------------------------------------------------ | ------------------------------------------------------------------------------ |
+| `balance`     | `p.balance` or `p.bank` or `p.$`                 | Gets how much coins you have in your pouch                                     |
+| `timely`      | `p.timely`                                       | Get 75 coins each 4 hours                                                      |
+| `coinflip`    | `p.coinflip (heads or tails) (amount to gamble)` | Flips a coin, you either win that amount or lose that amount                   |
+| `give`        | `p.give (amount) @User#1234`                     | PewDiePie gives away a specific amount of coins away to that user (No Refunds) |
+| `leaderboard` | `p.lb` or `p.leaderboard`                        | Who has the most pewdiecoins >:)                                               |
+| `Shop`        | `p.shop`                                         | Shows you roles for sell                                                       |
+| `Shop Add`    | `p.shop add (amount) (role name or role id)`     | Sells a role to the Shop                                                       |
+| `Shop Buy`    | `p.shop buy (shop_role_id)`                      | Buys an role off the shop                                                      |
+| `Shop Remove` | `p.shop remove (shop_role_id)`                   | Removes a role off the shop                                                    |
+| `Shop edit`   | `p.shop edit (shop_role_id) (new amount)`        | Edits the price of an role                                                     |
 
 Thank you for using PewDiePie and we hope you use it in the future to come
