@@ -75,10 +75,7 @@ class PewDieCoin:
     @commands.cooldown(1, 1800, commands.BucketType.user)
     @commands.command()
     async def search(self, ctx):
-        is_special = await self.bot.db.fetchval("SELECT coin_award FROM giveaways WHERE user_id=$1", ctx.author.id)
-        if is_special is None:
-            is_special = 0
-        # c
+        
         result = random.randint(0, 40)
         place = random.choice([
             f"You have founded {result} coins in the trash, now i expect you to clean your self up",
@@ -90,7 +87,7 @@ class PewDieCoin:
         ])
         res = await self.bot.db.fetchrow("SELECT user_id FROM bank WHERE guild_id=$1 AND user_id=$2", ctx.guild.id, ctx.author.id)
         if res is None:
-            await self.bot.db.execute("INSERT INTO bank VALUES($1,$2,$3)", ctx.guild.id, ctx.author.id, result + is_special)
+            await self.bot.db.execute("INSERT INTO bank VALUES($1,$2,$3)", ctx.guild.id, ctx.author.id, result)
         else:
             await self.bot.db.execute("update bank set user_money = user_money + $1 where guild_id=$2 and user_id=$3", result, ctx.guild.id, ctx.author.id)
         await ctx.send(embed=discord.Embed(description=place, color=discord.Color.red()))
