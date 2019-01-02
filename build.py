@@ -23,8 +23,12 @@ class PewDiePie(commands.AutoShardedBot):
         return self.config
 
     async def prefix(self, bot, message):
-        return commands.when_mentioned_or(self.cp(message.guild.id if message.guild.id else None, "p."))(bot, message)
-
+        #return commands.when_mentioned_or(self.cp.get(message.guild.id if message.guild.id else None, "p."))(bot, message)
+        prefix = await self.db.fetchval("SELECT prefix FROM prefixes WHERE guild_id=$1", message.guild.id)
+        if prefix is None:
+            prefix = 'p.'
+        return commands.when_mentioned_or(prefix)(bot, message)
+        
     async def start(self, token, bot=True, reconnect=True):
         await self.login(token, bot=bot)
         try:
@@ -41,8 +45,7 @@ class PewDiePie(commands.AutoShardedBot):
             self.db = await asyncpg.create_pool(**creds)
             print("Connected!")
             await self.db.execute(open('schema.sql').read())
-            gdata = await self.bot.db.fetch("SELECT * FROM prefixes")
-            for guild_id, prefix
+     
         except asyncio.TimeoutError:
             print("Could not connect to the database:\nInvalid Host Address")
         except asyncpg.InvalidPasswordError:

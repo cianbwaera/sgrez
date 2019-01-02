@@ -23,7 +23,7 @@ class PewDieCoin:
             return await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"Sorry, but {user.mention} is an bot account which doesn't get coins"))
         else:
             user = user
-        count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", user.id)
+        count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1 AND guild_id=$2", user.id, ctx.guild.id)
         if count is None:
             count = 0
 
@@ -32,20 +32,27 @@ class PewDieCoin:
     @commands.cooldown(1, 3600, commands.BucketType.user)
     @commands.command()
     async def timely(self, ctx):
-        is_special = await self.bot.db.fetchval("SELECT coin_award FROM giveaways WHERE user_id=$1", ctx.author.id)
-        if is_special is None:
-            is_special = 0
-        count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
+        count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1 AND guild_id=$2", ctx.author.id, ctx.guild.id)
         if count is None:
             count = 0
-        # There is a reason why i have f-strings for this statement
-        await self.bot.db.execute(f"INSERT INTO bank (user_id, user_money) VALUES ($1, $2 + {limit_timely + is_special}) ON CONFLICT (user_id) DO UPDATE SET user_money= $2 + {limit_timely + is_special}", ctx.author.id, count)
-        after_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
+ 
+        a = await self.bot.db.fetchrow("SELECT user_id FROM bank WHERE guild_id=$1 and user_id=$2", ctx.guild.id, ctx.author.id) 
+        if a == None:
+            await self.bot.db.execute("INSERT INTO bank VALUES($1,$2,$3)", ctx.guild.id, ctx.author.id, limit_timely)
+        
+        else:
+            await self.bot.db.execute("UPDATE bank SET user_money=bank.user_money + $1 WHERE guild_id=$2 and user_id=$3", limit_timely , ctx.guild.id, ctx.author.id)       
+        
+        after_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1 AND guild_id=$2", ctx.author.id, ctx.guild.id)
+
+            
+        if after_money is None:
+            after_money = 0
         await ctx.send(f"Added `{after_money-count}` coins to your coin bank, you now have `{after_money}` coins")
 
     @commands.command()
     async def rolldice(self, ctx, bet , guess : int):
-        money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
+        money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1 AND guild_id=$2", ctx.author.id, ctx.guild.id)
         if money is None:
             money = 0
         else:
@@ -60,10 +67,10 @@ class PewDieCoin:
             result = random.randint(1, 6)
             if result != guess:
                 await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"You lost {bet:,d}, better luck next time!"))
-                await self.bot.db.execute("UPDATE bank SET user_money = bank.user_money - $1 WHERE user_id=$2", bet, ctx.author.id)
+                await self.bot.db.execute("UPDATE bank SET user_money = bank.user_money - $1 WHERE user_id=$2 AND guild_id=$3", bet, ctx.author.id, ctx.guild.id)
             else:
                 await ctx.send(embed=discord.Embed(description=f"Congrats!, you won `{bet:,d}` coins", color=discord.Color.green()))
-                await self.bot.db.execute("UPDATE bank SET user_money = bank.user_money + $1 WHERE user_id=$2", bet, ctx.author.id)
+                await self.bot.db.execute("UPDATE bank SET user_money = bank.user_money + $1 WHERE user_id=$2 AND guild_id=$3", bet, ctx.author.id, ctx.guild.id)
 
     @commands.cooldown(1, 1800, commands.BucketType.user)
     @commands.command()
@@ -81,14 +88,17 @@ class PewDieCoin:
             f"Some robbers drop some coins from thier recent heist, you founded {result + is_special} coins dropped",
             f"An prostitute forgot to pay your {result + is_special} owed coins!"
         ])
-        await self.bot.db.execute(f"INSERT INTO bank(user_id, user_money) VALUES($1,$2) ON CONFLICT(user_id) DO UPDATE SET user_money=bank.user_money+$2",ctx.author.id, result + is_special)
-
+        res = await self.bot.db.fetchrow("SELECT user_id FROM bank WHERE guild_id=$1 AND user_id=$2", ctx.guild.id, ctx.author.id)
+        if res is None:
+            await self.bot.db.execute("INSERT INTO bank VALUES($1,$2,$3)", ctx.guild.id, ctx.author.id, result + is_special)
+        else:
+            await self.bot.db.execute("update bank set user_money = user_money + $1 where guild_id=$2 and user_id=$3", result, ctx.guild.id, ctx.author.id)
         await ctx.send(embed=discord.Embed(description=place, color=discord.Color.red()))
 
 
     @commands.command(aliases=['cf'])
     async def coinflip(self, ctx, amt, side: str):
-        count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
+        count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1 AND guild_id=$2", ctx.author.id, ctx.guild.id)
         if count is None:
             count = 0
         if amt == 'all':
@@ -117,16 +127,16 @@ class PewDieCoin:
         else:
             if result == side:
                 await ctx.send(embed=discord.Embed(description=f"Congrats fellow Pewd, you won {amt:,d} coins", color=discord.Color.green()))
-                await self.bot.db.execute("UPDATE bank SET user_money= user_money + $1 WHERE user_id=$2", amt, ctx.author.id)
+                await self.bot.db.execute("UPDATE bank SET user_money= bank.user_money + $1 WHERE user_id=$2 AND guild_id=$3", amt, ctx.author.id, ctx.guild.id)
             else:
                 await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"You have lost {amt:,d} coins, better luck next time! ^^__^^"))
-                await self.bot.db.execute("UPDATE bank SET user_money= user_money - $1 WHERE user_id=$2", amt, ctx.author.id)
+                await self.bot.db.execute("UPDATE bank SET user_money= bank.user_money - $1 WHERE user_id=$2 AND guild_id=$3", amt, ctx.author.id, ctx.guild.id)
 
     @commands.command()
     async def give(self, ctx, amt: int, user: discord.Member):
         if amt <= 0:
             return await ctx.send(embed=discord.Embed(description="You cannot give a number that is below or equal to 0", color=discord.Color.red()))
-        author_count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
+        author_count = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1 AND guild_id=$2", ctx.author.id, ctx.guild.id)
         if author_count is None:
             author_count = 0
         if user.bot:
@@ -136,31 +146,46 @@ class PewDieCoin:
         if amt > author_count:
             return await ctx.send(embed=discord.Embed(description=f"You have insufficient funds to give to {user.name}", color=discord.Color.red()))
         else:
-            current_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", user.id)
+            current_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1 AND guild_id=$2", user.id, ctx.guild.id)
             if current_money is None:
                 current_money = 0
-            await self.bot.db.execute("UPDATE bank SET user_money = user_money - $1 WHERE user_id = $2", amt, ctx.author.id)
-            await self.bot.db.execute("INSERT INTO bank (user_id, user_money) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET user_money = bank.user_money + $2", user.id, amt)
+            await self.bot.db.execute("UPDATE bank SET user_money = user_money - $1 WHERE user_id = $2 AND guild_id = $3", amt, ctx.author.id, ctx.guild.id)
+            res = await self.bot.db.fetchrow("SELECT user_id FROM bank WHERE guild_id=$1 AND user_id=$2", ctx.guild.id, ctx.author.id)
+            if res is None:
+                await self.bot.db.execute("INSERT INTO bank VALUES($1,$2,$3)", ctx.guild.id, ctx.author.id, amt)
+            else:
+                await self.bot.db.execute("update bank set user_money = user_money + $1 where guild_id=$2 and user_id=$3", amt, ctx.guild.id, ctx.author.id)
             a = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
             if a is None:
                 a = 0
             await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"I have given {user.mention} `{amt:,d}` coins, You now have {a:,d}"))
 
     @commands.command(aliases=['lb'])
-    async def leaderboard(self, ctx):
+    async def leaderboard(self, ctx, want_global=None):
+        
         embed = discord.Embed()
-        embed.title = f"PewDieCoin's Leaderboard"
-        embed.description = f"Here, {ctx.author.name}, you can see the list of the top 8 leading people with the most coins!"
-        shop = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money DESC LIMIT 8")
-        embed.color = discord.Color(value=0xae2324)
-        counter = 0
-        for a in shop:
-            counter+=1
-            try:
+
+        if want_global is None:
+
+            embed.title = f"{ctx.guild.name} Leaderboard"
+            embed.description = f"Here, {ctx.author.name}, you can see the list of the top 8 leading people in your server with the most coins!"
+            shop = await self.bot.db.fetch("SELECT * FROM bank WHERE guild_id=$1 ORDER BY user_money DESC LIMIT 8", ctx.guild.id)
+            embed.color = discord.Color(value=0xae2324)
+            counter = 0
+            for a in shop:
+                counter+=1
                 user = self.bot.get_user(a['user_id']).name
-            except AttributeError:
-                user = "user-not-found"
-            embed.add_field(name=f"#{counter} - {user}", value=f"Holding `{a['user_money']}` coins in their pouch", inline=False)
+                embed.add_field(name=f"#{counter} - {user}", value=f"Holding `{a['user_money']}` coins in their pouch", inline=False)
+        elif want_global.lower() == "global":
+            embed.title = "Global Leaderboard"
+            embed.color = discord.Color(value=0xae2323)
+            embed.description = f"Here, {ctx.author.name}, you can find the global top list for all users using pewdiepie!"
+            data = await self.bot.db.fetch("SELECT * FROM bank ORDER BY user_money DESC LIMIT 8")
+
+            counter = 0
+            for i in data:
+                counter+=1
+                embed.add_field(name=f"#{counter}: {self.bot.get_user(i['user_id']).name} - {self.bot.get_guild(i['guild_id']).name}", value=f"Currently has {int(i['user_money']):,d} coins in that server", inline=False)
         await ctx.send(embed=embed)
            
 
@@ -230,11 +255,8 @@ class PewDieCoin:
         
         if amount > limit_trade:
             return await ctx.send(embed=discord.Embed(description=f"Items Amounts cannot be higher then `{limit_trade}`, please try again", color=discord.Color.red()))
-        try:
-            await self.bot.db.execute("INSERT INTO shop VALUES ($1, $2, $3, $4)", role.id, ctx.guild.id, str(result), int(amount))
-            await ctx.send(embed=discord.Embed(description=f"Role: `{role}` has been sold for `{amount}` coins", color=discord.Color.green()))
-        except Exception as e:
-            print(e)
+        await self.bot.db.execute("INSERT INTO shop VALUES ($1, $2, $3, $4)", role.id, ctx.guild.id, str(result), int(amount))
+        await ctx.send(embed=discord.Embed(description=f"Role: `{role}` has been sold for `{amount}` coins", color=discord.Color.green()))
 
     @commands.has_permissions(manage_roles=True)
     @shop.command()
@@ -265,23 +287,25 @@ class PewDieCoin:
         role = await self.bot.db.fetchval("SELECT role_id FROM shop WHERE guild_id=$1 AND shop_id=$2", ctx.guild.id, shop_id)
         for i in ctx.author.roles:
             if i.id == role:
-                return
+                return await ctx.send(embed=discord.Embed(description="Hmm, it seems if you already have this role, :thinking:", color=discord.Color.red()))
             else:
                 continue   
         if ctx.me.top_role.position <= ctx.guild.get_role(role).position:
             return await ctx.send(embed=discord.Embed(description="Seems like i can't give you this role due to my role position, don't panic, your money is not touched", color=discord.Color.red()))
         # Helpers
-        buyer_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1", ctx.author.id)
+        buyer_money = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1 AND guild_id=$2", ctx.author.id, ctx.guild.id)
         if buyer_money is None:
             buyer_money = 0
         role_cost = await self.bot.db.fetchval("SELECT amount FROM shop WHERE shop_id=$1 AND guild_id=$2", shop_id, ctx.guild.id)
 
         if buyer_money < role_cost:
-            return await ctx.send(embed=discord.Embed(description="You have insufficient funds to buy this role", color=discord.Color.red()))
+            needs = role_cost - buyer_money
+            return await ctx.send(embed=discord.Embed(description=f"You have insufficient funds to buy this role, you need {needs:,d} coins to buy it", color=discord.Color.red()))
         else:
-            await self.bot.db.execute("UPDATE bank SET user_money=user_money - $1 WHERE user_id=$2", role_cost, ctx.author.id)
+            await self.bot.db.execute("UPDATE bank SET user_money=bank.user_money - $1 WHERE user_id=$2 AND guild_id=$3", role_cost, ctx.author.id, ctx.guild.id)
             await ctx.author.add_roles(ctx.guild.get_role(role), reason=f"User: {ctx.author.name} bought this")
-            await ctx.send(embed=discord.Embed(description=f"Successfully Withdrawed `{role_cost}` coins", color=discord.Color.green()))
+            mon = await self.bot.db.fetchval("SELECT user_money FROM bank WHERE user_id=$1 AND guild_id=$2", ctx.author.id, ctx.guild.id)
+            await ctx.send(embed=discord.Embed(description=f"Successfully Withdrawed `{role_cost}` coins. You now have {mon:,d} coins", color=discord.Color.green()))
 
 
 def setup(bot):

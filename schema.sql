@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS commands (
 
 
 CREATE TABLE IF NOT EXISTS bank (
-    user_id BIGINT PRIMARY KEY NOT NULL,
+    guild_id BIGINT NULL,
+    user_id BIGINT NOT NULL,
     user_money BIGINT NOT NULL
 );
 
@@ -24,10 +25,7 @@ CREATE TABLE IF NOT EXISTS development (
     updates TEXT,
     rid INT NOT NULL PRIMARY KEY
 );
-CREATE TABLE IF NOT EXISTS giveaways (
-    user_id BIGINT,
-    coin_award INT
-);
+
 
 CREATE TABLE IF NOT EXISTS prefixes (
     guild_id BIGINT PRIMARY KEY,
