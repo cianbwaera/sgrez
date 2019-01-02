@@ -60,13 +60,14 @@ class Handler:
         print("Guild Count: " + str(len(self.bot.guilds)))
         print("Members Count: " + str(len(set(self.bot.get_all_members()))))
         print("Total Channels: " + str(len(set(self.bot.get_all_channels()))))
+        print(" ")
         roles = await self.bot.db.fetch("SELECT * FROM shop")
         for i in roles:
             for b in self.bot.guilds:  
                 for c in b.roles:
                     role = b.get_role(c.id)
                     if role is None:
-                       print(f"Deleting Invalid Role: {role} ({c.id})")
+                       print(f"[manager]: Deleting Invalid Role: {role} ({c.id})")
                        await self.bot.db.execute("DELETE FROM shop WHERE guild_id=$1 AND role_id=$2", c.id, b.id)
                     else:
                         continue
@@ -76,7 +77,7 @@ class Handler:
         for i in data:
             if self.bot.get_guild(i['guild_id']) is None:
                 await self.bot.db.execute("delete from bank where guild_id=$1", i['guild_id'])
-                print(f"Deleted Guild Bank: ({i['guild_id']})")
+                print(f"[manager]: Deleted Guild Bank: ({i['guild_id']})")
             else:
                 continue
 
