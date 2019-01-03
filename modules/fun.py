@@ -48,17 +48,21 @@ class Fun_Commands:
         subcount = f"**T-Series** needs **{rawdiff:,d}** subscribers to beat **PewDiePie**"
 
         if rawdiff <= 0:
-            subcount = "T-Series has beaten PewDiePie :cry:"
+            subcount = "**T-Series has beaten PewDiePie :cry:**" # this is NOT EPIC
 
         pdp = rawsubcount- self.pdp_subcount
         ts = tsrawcount - self.ts_subcount
         con = pdp - ts
+        
+        mol = "more" # mol == 'more or less' ;)
+        if con < 0:
+            mol = "less"
 
         embed = discord.Embed(color=discord.Color(value=0xae2323))
         embed.set_thumbnail(url=self.bot.user.avatar_url)
         embed.add_field(name="PewDiePie", value=f"Currently has **{rawsubcount:,d}** subs, he has gained over **{pdp:,d}** subscribers per hour", inline=False)
         embed.add_field(name="T-Series", value=f"Currently has **{tsrawcount:,d}** subs, they have gained over **{ts:,d}** subscribers per hour", inline=False)
-        embed.add_field(name="Sub Difference", value=f"{subcount}, and he has gained over **{con:,d}** more subscribers then T-Series within an hour", inline=False)
+        embed.add_field(name="Sub Difference", value=f"{subcount}, and he has gained over **{con:,d}** {mol} subscribers than T-Series within an hour", inline=False)
         embed.set_footer(text="PewDiePie's Subcount Tracker™ | " + self.bot.config['ver'], icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed)
 
